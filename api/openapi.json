@@ -1,0 +1,724 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "tcmrsv",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [],
+  "paths": {
+    "/authorize": {
+      "post": {
+        "summary": "ログイン",
+        "deprecated": false,
+        "description": "",
+        "operationId": "authorize",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "user_id",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Authorization"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/rooms": {
+      "get": {
+        "summary": "練習室の取得",
+        "deprecated": false,
+        "description": "",
+        "operationId": "getRooms",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "piano_number",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "piano_type",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "grand",
+                "upright",
+                "none"
+              ]
+            }
+          },
+          {
+            "name": "floor",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "is_basement",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "campus_code",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "rooms": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Room"
+                          }
+                        }
+                      },
+                      "required": [
+                        "rooms"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/reservations/create": {
+      "post": {
+        "summary": "予約の作成",
+        "deprecated": false,
+        "description": "",
+        "operationId": "createReservation",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "campus_code": {
+                    "type": "integer",
+                    "enum": [
+                      1,
+                      2
+                    ]
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "from_hour": {
+                    "type": "integer"
+                  },
+                  "from_minute": {
+                    "type": "string"
+                  },
+                  "to_hour": {
+                    "type": "string"
+                  },
+                  "to_minute": {
+                    "type": "string"
+                  },
+                  "is_auto_select": {
+                    "type": "boolean"
+                  },
+                  "room_id": {
+                    "type": "string"
+                  },
+                  "booker_name": {
+                    "type": "string"
+                  },
+                  "piano_numbers": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "piano_types": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "grand",
+                        "upright",
+                        "none"
+                      ]
+                    }
+                  },
+                  "floors": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "is_basement": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "campus_code",
+                  "date",
+                  "from_hour",
+                  "from_minute",
+                  "to_hour",
+                  "to_minute",
+                  "is_auto_select"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response",
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/reservations/{reservation_id}/delete": {
+      "delete": {
+        "summary": "予約の削除",
+        "deprecated": false,
+        "description": "",
+        "operationId": "deleteReservation",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "reservation_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response",
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/reservations/{reservation_id}/update": {
+      "put": {
+        "summary": "予約の更新",
+        "deprecated": false,
+        "description": "",
+        "operationId": "updateReservation",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "reservation_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "campus_code": {
+                    "type": "integer",
+                    "enum": [
+                      1,
+                      2
+                    ]
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "from_hour": {
+                    "type": "integer"
+                  },
+                  "from_minute": {
+                    "type": "string"
+                  },
+                  "to_hour": {
+                    "type": "string"
+                  },
+                  "to_minute": {
+                    "type": "string"
+                  },
+                  "is_auto_select": {
+                    "type": "boolean"
+                  },
+                  "room_id": {
+                    "type": "string"
+                  },
+                  "booker_name": {
+                    "type": "string"
+                  },
+                  "piano_numbers": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "piano_types": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "grand",
+                        "upright",
+                        "none"
+                      ]
+                    }
+                  },
+                  "floors": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "is_basement": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "campus_code",
+                  "date",
+                  "from_hour",
+                  "from_minute",
+                  "to_hour",
+                  "to_minute",
+                  "is_auto_select"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response",
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/reservations/{reservation_id}": {
+      "get": {
+        "summary": "予約の取得",
+        "deprecated": false,
+        "description": "",
+        "operationId": "getReservation",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "reservation_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Reservation"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/reservations/mine": {
+      "get": {
+        "summary": "自分の予約を取得",
+        "deprecated": false,
+        "description": "",
+        "operationId": "getMyReservations",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ReservationList"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Room": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "piano_type": {
+            "type": "string"
+          },
+          "piano_number": {
+            "type": "integer"
+          },
+          "is_classroom": {
+            "type": "boolean"
+          },
+          "is_basement": {
+            "type": "boolean"
+          },
+          "campus_code": {
+            "type": "integer"
+          },
+          "floor": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "id",
+          "piano_number",
+          "piano_type",
+          "is_classroom",
+          "is_basement",
+          "campus_code",
+          "floor"
+        ]
+      },
+      "RoomList": {
+        "type": "object",
+        "properties": {
+          "rooms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Room"
+            }
+          }
+        },
+        "required": [
+          "rooms"
+        ]
+      },
+      "Reservation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "campus_code": {
+            "type": "string",
+            "enum": [
+              "1",
+              "2"
+            ]
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "room_id": {
+            "type": "string"
+          },
+          "fromHour": {
+            "type": "integer"
+          },
+          "fromMinute": {
+            "type": "integer"
+          },
+          "toHour": {
+            "type": "integer"
+          },
+          "toMinute": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "campus_code",
+          "date",
+          "room_id",
+          "fromHour",
+          "fromMinute",
+          "toHour",
+          "toMinute"
+        ]
+      },
+      "ReservationList": {
+        "type": "object",
+        "properties": {
+          "reservations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reservation"
+            }
+          }
+        },
+        "required": [
+          "reservations"
+        ]
+      },
+      "Authorization": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "refresh_token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token",
+          "refresh_token"
+        ]
+      },
+      "Response": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "integer"
+          },
+          "data": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        "required": [
+          "ok",
+          "data",
+          "code"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "servers": []
+}

@@ -1,0 +1,24 @@
+services:
+  api:
+    container_name: api
+    build:
+      context: ./docker/api/development
+      dockerfile: Dockerfile
+    ports:
+      - 1323:1323
+    volumes:
+      - .:/api
+    env_file:
+      - ./server/.env
+    depends_on:
+      - db
+  db:
+    container_name: db
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - TZ="Asia/Tokyo"
+    ports:
+      - 5432:5432
