@@ -49,7 +49,7 @@ func Run(cfg *config.Config) {
 	e.Use(echomiddleware.Logger())
 	e.Use(echomiddleware.CORSWithConfig(middlewarecfg))
 	e.Use(middleware.Config(cfg))
-	e.Use(middleware.JWT(pool, []string{"^/authorize/.*"}))
+	e.Use(middleware.JWT(pool, []string{"/authorize"}))
 	e.Use(middleware.RequestValidator(swagger))
 
 	querier := db.New(pool)

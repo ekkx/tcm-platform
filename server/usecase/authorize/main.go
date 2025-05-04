@@ -8,7 +8,7 @@ import (
 )
 
 type AuthorizeUsecase interface {
-	Login(ctx context.Context, input *LoginInput) (*LoginOutput, error)
+	Authorize(ctx context.Context, input *AuthorizeInput) (*AuthorizeOutput, error)
 }
 
 type AuthorizeUsecaseImpl struct {

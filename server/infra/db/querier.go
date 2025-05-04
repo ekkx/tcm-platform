@@ -9,8 +9,11 @@ import (
 )
 
 type Querier interface {
+	CheckReservationConflict(ctx context.Context, arg CheckReservationConflictParams) (bool, error)
+	CreateReservation(ctx context.Context, arg CreateReservationParams) (Reservation, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (string, error)
-	GetUserByStudentID(ctx context.Context, id string) (User, error)
+	GetMyReservations(ctx context.Context, arg GetMyReservationsParams) ([]Reservation, error)
+	GetUserByID(ctx context.Context, id string) (GetUserByIDRow, error)
 	UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (int32, error)
 }
 

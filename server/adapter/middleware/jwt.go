@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/ekkx/tcmrsv-web/server/infra/db"
@@ -19,13 +18,10 @@ import (
 func JWT(pool *pgxpool.Pool, excludePaths []string) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
-			// デバッグログ
 			path := ctx.Path()
-			fmt.Printf("JWT Middleware - Path: %s\n", path)
 
 			// 認証が不必要なパスの除外
 			if utils.IsExcludedPath(path, excludePaths) {
-				fmt.Printf("JWT Middleware - Path excluded: %s\n", path)
 				return next(ctx)
 			}
 
@@ -53,7 +49,7 @@ func JWT(pool *pgxpool.Pool, excludePaths []string) echo.MiddlewareFunc {
 					return apperrors.ErrInvalidToken
 				}
 
-				u, err := db.New(pool).GetUserByStudentID(ctx.Request().Context(), *uID)
+				u, err := db.New(pool).GetUserByID(ctx.Request().Context(), *uID)
 				if err != nil {
 					if errors.Is(err, pgx.ErrNoRows) {
 						return apperrors.ErrRequestUserNotFound

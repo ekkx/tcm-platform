@@ -6,7 +6,7 @@ toolchain go1.23.8
 
 require (
 	github.com/caarlos0/env/v11 v11.3.1
-	github.com/ekkx/tcmrsv v0.0.0-20250503115332-6ef6130068f7
+	github.com/ekkx/tcmrsv v0.0.0-20250503171039-7b16d445352a
 	github.com/getkin/kin-openapi v0.132.0
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/jackc/pgx/v5 v5.7.4

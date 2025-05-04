@@ -1,4 +1,4 @@
--- name: GetUserByStudentID :one
+-- name: GetUserByID :one
 SELECT
     users.id,
     users.encrypted_password

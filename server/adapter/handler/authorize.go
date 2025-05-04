@@ -15,7 +15,7 @@ func (h *Handler) Authorize(ctx echo.Context) error {
 		return err
 	}
 
-	output, err := h.authorizeUsecase.Login(ctx.Request().Context(), &authorize.LoginInput{
+	output, err := h.authorizeUsecase.Authorize(ctx.Request().Context(), &authorize.AuthorizeInput{
 		UserID:   body.UserId,
 		Password: body.Password,
 	})

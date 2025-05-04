@@ -13,12 +13,12 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-type LoginInput struct {
+type AuthorizeInput struct {
 	UserID   string
 	Password string
 }
 
-type LoginOutput struct {
+type AuthorizeOutput struct {
 	AccessToken  string
 	RefreshToken string
 }
@@ -28,7 +28,7 @@ func generateToken(jwtSecret []byte, claims jwt.Claims) (string, error) {
 	return token.SignedString(jwtSecret)
 }
 
-func (uc *AuthorizeUsecaseImpl) Login(ctx context.Context, input *LoginInput) (*LoginOutput, error) {
+func (uc *AuthorizeUsecaseImpl) Authorize(ctx context.Context, input *AuthorizeInput) (*AuthorizeOutput, error) {
 	if err := uc.tcmClient.Login(&tcmrsv.LoginParams{
 		UserID:   input.UserID,
 		Password: input.Password,
@@ -36,12 +36,13 @@ func (uc *AuthorizeUsecaseImpl) Login(ctx context.Context, input *LoginInput) (*
 		return nil, err
 	}
 
-	_, err := uc.querier.GetUserByStudentID(ctx, input.UserID)
+	_, err := uc.querier.GetUserByID(ctx, input.UserID)
 	if err != nil {
 		if !errors.Is(err, pgx.ErrNoRows) {
 			return nil, err
 		}
 
+		// ユーザーが存在しない場合は新規作成
 		encryptedPassword, err := cryptohelper.EncryptAES(input.Password, []byte(ctxhelper.GetConfig(ctx).PasswordAESKey))
 		if err != nil {
 			return nil, err
@@ -82,7 +83,7 @@ func (uc *AuthorizeUsecaseImpl) Login(ctx context.Context, input *LoginInput) (*
 		return nil, err
 	}
 
-	return &LoginOutput{
+	return &AuthorizeOutput{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil

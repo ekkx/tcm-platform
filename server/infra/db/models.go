@@ -5,12 +5,59 @@
 package db
 
 import (
+	"database/sql/driver"
+	"fmt"
+
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type Campus string
+
+const (
+	Campus1 Campus = "1"
+	Campus2 Campus = "2"
+)
+
+func (e *Campus) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = Campus(s)
+	case string:
+		*e = Campus(s)
+	default:
+		return fmt.Errorf("unsupported scan type for Campus: %T", src)
+	}
+	return nil
+}
+
+type NullCampus struct {
+	Campus Campus `json:"campus"`
+	Valid  bool   `json:"valid"` // Valid is true if Campus is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullCampus) Scan(value interface{}) error {
+	if value == nil {
+		ns.Campus, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.Campus.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullCampus) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.Campus), nil
+}
+
 type Reservation struct {
-	ID         string             `json:"id"`
+	ID         int32              `json:"id"`
+	ExternalID *string            `json:"external_id"`
 	UserID     string             `json:"user_id"`
+	Campus     Campus             `json:"campus"`
 	RoomID     string             `json:"room_id"`
 	Date       pgtype.Timestamptz `json:"date"`
 	FromHour   int32              `json:"from_hour"`
@@ -18,9 +65,11 @@ type Reservation struct {
 	ToHour     int32              `json:"to_hour"`
 	ToMinute   int32              `json:"to_minute"`
 	BookerName *string            `json:"booker_name"`
+	CreatedAt  pgtype.Timestamptz `json:"created_at"`
 }
 
 type User struct {
-	ID                string `json:"id"`
-	EncryptedPassword string `json:"encrypted_password"`
+	ID                string             `json:"id"`
+	EncryptedPassword string             `json:"encrypted_password"`
+	CreatedAt         pgtype.Timestamptz `json:"created_at"`
 }

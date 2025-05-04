@@ -9,6 +9,7 @@ import (
 
 type ReservationUsecase interface {
 	GetMyReservations(ctx context.Context, input *GetMyReservationsInput) (*GetMyReservationsOutput, error)
+	CreateReservation(ctx context.Context, input *CreateReservationInput) (*CreateReservationOutput, error)
 }
 
 type ReservationUsecaseImpl struct {

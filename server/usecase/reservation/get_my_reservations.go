@@ -2,15 +2,21 @@ package reservation
 
 import (
 	"context"
+	"time"
 
 	"github.com/ekkx/tcmrsv"
+	"github.com/ekkx/tcmrsv-web/server/adapter/db/mapper"
 	"github.com/ekkx/tcmrsv-web/server/domain"
-	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/infra/db"
 )
 
 type GetMyReservationsInput struct {
 	UserID   string
 	Password string
+
+	Campus    *domain.Campus
+	PianoType *domain.PianoType
+	Date      *time.Time
 }
 
 type GetMyReservationsOutput struct {
@@ -18,36 +24,29 @@ type GetMyReservationsOutput struct {
 }
 
 func (uc *ReservationUsecaseImpl) GetMyReservations(ctx context.Context, input *GetMyReservationsInput) (*GetMyReservationsOutput, error) {
-	if err := uc.tcmClient.Login(&tcmrsv.LoginParams{
-		UserID:   input.UserID,
-		Password: input.Password,
-	}); err != nil {
-		return nil, apperrors.ErrUnauthorized
+	var date time.Time
+	if input.Date != nil {
+		date = time.Date(input.Date.Year(), input.Date.Month(), input.Date.Day(), 0, 0, 0, 0, tcmrsv.JST())
+	} else {
+		now := time.Now()
+		date = time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, tcmrsv.JST())
 	}
 
-	// TODO: 予約データはすでにデータベースに保存されているので、DBから取得するようにする
-	reservations, err := uc.tcmClient.GetMyReservations()
+	rsvs, err := uc.querier.GetMyReservations(ctx, db.GetMyReservationsParams{
+		UserID: input.UserID,
+		Date:   date,
+		// TODO: キャンパスコードとピアノの種類で絞り込みできるようにする
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	rooms := uc.tcmClient.GetRooms()
-
-	roomNameToID := make(map[string]string, len(rooms))
-	for _, room := range rooms {
-		roomNameToID[room.Name] = room.ID
-	}
-
-	var domainReservations []domain.Reservation
-	for _, rsv := range reservations {
-		domainReservations = append(domainReservations, domain.Reservation{
-			ID:     rsv.ID,
-			RoomID: roomNameToID[rsv.RoomName],
-			// TODO: map other fields
-		})
+	var domainRsvs = make([]domain.Reservation, 0, len(rsvs))
+	for _, rsv := range rsvs {
+		domainRsvs = append(domainRsvs, mapper.ToReservation(rsv))
 	}
 
 	return &GetMyReservationsOutput{
-		Reservations: domainReservations,
+		Reservations: domainRsvs,
 	}, nil
 }

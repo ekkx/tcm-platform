@@ -17,6 +17,16 @@ var errorCodeMap = map[error]int{
 
 	ErrUserNotFound:        -120000,
 	ErrRequestUserNotFound: -120001,
+
+	// -- reservations --
+
+	ErrReservationNotFound: -130000,
+	ErrReservationConflict: -130001,
+
+	// -- rooms --
+
+	ErrRoomNotFound:   -140000,
+	ErrRoomIDRequired: -140001,
 }
 
 func getErrorCode(err error) int {

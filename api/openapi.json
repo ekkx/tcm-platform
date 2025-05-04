@@ -141,10 +141,10 @@
             "description": "",
             "required": false,
             "schema": {
-              "type": "integer",
+              "type": "string",
               "enum": [
-                1,
-                2
+                "1",
+                "2"
               ]
             }
           }
@@ -211,10 +211,10 @@
                 "type": "object",
                 "properties": {
                   "campus_code": {
-                    "type": "integer",
+                    "type": "string",
                     "enum": [
-                      1,
-                      2
+                      "1",
+                      "2"
                     ]
                   },
                   "date": {
@@ -225,13 +225,13 @@
                     "type": "integer"
                   },
                   "from_minute": {
-                    "type": "string"
+                    "type": "integer"
                   },
                   "to_hour": {
-                    "type": "string"
+                    "type": "integer"
                   },
                   "to_minute": {
-                    "type": "string"
+                    "type": "integer"
                   },
                   "is_auto_select": {
                     "type": "boolean"
@@ -288,8 +288,21 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Response",
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Reservation"
+                    }
+                  },
                   "required": [
+                    "ok",
+                    "code",
                     "data"
                   ]
                 }
@@ -371,10 +384,10 @@
                 "type": "object",
                 "properties": {
                   "campus_code": {
-                    "type": "integer",
+                    "type": "string",
                     "enum": [
-                      1,
-                      2
+                      "1",
+                      "2"
                     ]
                   },
                   "date": {
@@ -526,7 +539,45 @@
         "description": "",
         "operationId": "getMyReservations",
         "tags": [],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "campus_code",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1",
+                "2"
+              ]
+            }
+          },
+          {
+            "name": "piano_type",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "grand",
+                "upright",
+                "none"
+              ]
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -588,7 +639,7 @@
             "type": "boolean"
           },
           "campus_code": {
-            "type": "integer"
+            "type": "string"
           },
           "floor": {
             "type": "number"
@@ -623,6 +674,9 @@
         "type": "object",
         "properties": {
           "id": {
+            "type": "integer"
+          },
+          "external_id": {
             "type": "string"
           },
           "campus_code": {
@@ -639,17 +693,24 @@
           "room_id": {
             "type": "string"
           },
-          "fromHour": {
+          "from_hour": {
             "type": "integer"
           },
-          "fromMinute": {
+          "from_minute": {
             "type": "integer"
           },
-          "toHour": {
+          "to_hour": {
             "type": "integer"
           },
-          "toMinute": {
+          "to_minute": {
             "type": "integer"
+          },
+          "booker_name": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "required": [
@@ -657,10 +718,11 @@
           "campus_code",
           "date",
           "room_id",
-          "fromHour",
-          "fromMinute",
-          "toHour",
-          "toMinute"
+          "from_hour",
+          "from_minute",
+          "to_hour",
+          "to_minute",
+          "created_at"
         ]
       },
       "ReservationList": {

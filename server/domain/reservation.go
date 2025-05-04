@@ -3,7 +3,9 @@ package domain
 import "time"
 
 type Reservation struct {
-	ID         string    `json:"id"`
+	ID         int       `json:"id"`
+	ExternalID *string   `json:"external_id"`
+	Campus     Campus    `json:"campus"`
 	RoomID     string    `json:"room_id"`
 	Date       time.Time `json:"date"`
 	FromHour   int       `json:"from_hour"`

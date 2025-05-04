@@ -34,8 +34,8 @@ const (
 
 // Defines values for CreateReservationJSONBodyCampusCode.
 const (
-	CreateReservationJSONBodyCampusCodeN1 CreateReservationJSONBodyCampusCode = 1
-	CreateReservationJSONBodyCampusCodeN2 CreateReservationJSONBodyCampusCode = 2
+	CreateReservationJSONBodyCampusCodeN1 CreateReservationJSONBodyCampusCode = "1"
+	CreateReservationJSONBodyCampusCodeN2 CreateReservationJSONBodyCampusCode = "2"
 )
 
 // Defines values for CreateReservationJSONBodyPianoTypes.
@@ -45,10 +45,23 @@ const (
 	CreateReservationJSONBodyPianoTypesUpright CreateReservationJSONBodyPianoTypes = "upright"
 )
 
+// Defines values for GetMyReservationsParamsCampusCode.
+const (
+	GetMyReservationsParamsCampusCodeN1 GetMyReservationsParamsCampusCode = "1"
+	GetMyReservationsParamsCampusCodeN2 GetMyReservationsParamsCampusCode = "2"
+)
+
+// Defines values for GetMyReservationsParamsPianoType.
+const (
+	GetMyReservationsParamsPianoTypeGrand   GetMyReservationsParamsPianoType = "grand"
+	GetMyReservationsParamsPianoTypeNone    GetMyReservationsParamsPianoType = "none"
+	GetMyReservationsParamsPianoTypeUpright GetMyReservationsParamsPianoType = "upright"
+)
+
 // Defines values for UpdateReservationJSONBodyCampusCode.
 const (
-	UpdateReservationJSONBodyCampusCodeN1 UpdateReservationJSONBodyCampusCode = 1
-	UpdateReservationJSONBodyCampusCodeN2 UpdateReservationJSONBodyCampusCode = 2
+	UpdateReservationJSONBodyCampusCodeN1 UpdateReservationJSONBodyCampusCode = "1"
+	UpdateReservationJSONBodyCampusCodeN2 UpdateReservationJSONBodyCampusCode = "2"
 )
 
 // Defines values for UpdateReservationJSONBodyPianoTypes.
@@ -60,15 +73,15 @@ const (
 
 // Defines values for GetRoomsParamsPianoType.
 const (
-	Grand   GetRoomsParamsPianoType = "grand"
-	None    GetRoomsParamsPianoType = "none"
-	Upright GetRoomsParamsPianoType = "upright"
+	GetRoomsParamsPianoTypeGrand   GetRoomsParamsPianoType = "grand"
+	GetRoomsParamsPianoTypeNone    GetRoomsParamsPianoType = "none"
+	GetRoomsParamsPianoTypeUpright GetRoomsParamsPianoType = "upright"
 )
 
 // Defines values for GetRoomsParamsCampusCode.
 const (
-	GetRoomsParamsCampusCodeN1 GetRoomsParamsCampusCode = 1
-	GetRoomsParamsCampusCodeN2 GetRoomsParamsCampusCode = 2
+	N1 GetRoomsParamsCampusCode = "1"
+	N2 GetRoomsParamsCampusCode = "2"
 )
 
 // Authorization defines model for Authorization.
@@ -79,14 +92,17 @@ type Authorization struct {
 
 // Reservation defines model for Reservation.
 type Reservation struct {
+	BookerName *string               `json:"booker_name,omitempty"`
 	CampusCode ReservationCampusCode `json:"campus_code"`
+	CreatedAt  time.Time             `json:"created_at"`
 	Date       time.Time             `json:"date"`
-	FromHour   int                   `json:"fromHour"`
-	FromMinute int                   `json:"fromMinute"`
-	Id         string                `json:"id"`
+	ExternalId *string               `json:"external_id,omitempty"`
+	FromHour   int                   `json:"from_hour"`
+	FromMinute int                   `json:"from_minute"`
+	Id         int                   `json:"id"`
 	RoomId     string                `json:"room_id"`
-	ToHour     int                   `json:"toHour"`
-	ToMinute   int                   `json:"toMinute"`
+	ToHour     int                   `json:"to_hour"`
+	ToMinute   int                   `json:"to_minute"`
 }
 
 // ReservationCampusCode defines model for Reservation.CampusCode.
@@ -106,7 +122,7 @@ type Response struct {
 
 // Room defines model for Room.
 type Room struct {
-	CampusCode  int     `json:"campus_code"`
+	CampusCode  string  `json:"campus_code"`
 	Floor       float32 `json:"floor"`
 	Id          string  `json:"id"`
 	IsBasement  bool    `json:"is_basement"`
@@ -129,21 +145,34 @@ type CreateReservationJSONBody struct {
 	Date         time.Time                              `json:"date"`
 	Floors       *[]int                                 `json:"floors,omitempty"`
 	FromHour     int                                    `json:"from_hour"`
-	FromMinute   string                                 `json:"from_minute"`
+	FromMinute   int                                    `json:"from_minute"`
 	IsAutoSelect bool                                   `json:"is_auto_select"`
 	IsBasement   *bool                                  `json:"is_basement,omitempty"`
 	PianoNumbers *[]int                                 `json:"piano_numbers,omitempty"`
 	PianoTypes   *[]CreateReservationJSONBodyPianoTypes `json:"piano_types,omitempty"`
 	RoomId       *string                                `json:"room_id,omitempty"`
-	ToHour       string                                 `json:"to_hour"`
-	ToMinute     string                                 `json:"to_minute"`
+	ToHour       int                                    `json:"to_hour"`
+	ToMinute     int                                    `json:"to_minute"`
 }
 
 // CreateReservationJSONBodyCampusCode defines parameters for CreateReservation.
-type CreateReservationJSONBodyCampusCode int
+type CreateReservationJSONBodyCampusCode string
 
 // CreateReservationJSONBodyPianoTypes defines parameters for CreateReservation.
 type CreateReservationJSONBodyPianoTypes string
+
+// GetMyReservationsParams defines parameters for GetMyReservations.
+type GetMyReservationsParams struct {
+	CampusCode *GetMyReservationsParamsCampusCode `form:"campus_code,omitempty" json:"campus_code,omitempty"`
+	PianoType  *GetMyReservationsParamsPianoType  `form:"piano_type,omitempty" json:"piano_type,omitempty"`
+	Date       *time.Time                         `form:"date,omitempty" json:"date,omitempty"`
+}
+
+// GetMyReservationsParamsCampusCode defines parameters for GetMyReservations.
+type GetMyReservationsParamsCampusCode string
+
+// GetMyReservationsParamsPianoType defines parameters for GetMyReservations.
+type GetMyReservationsParamsPianoType string
 
 // UpdateReservationJSONBody defines parameters for UpdateReservation.
 type UpdateReservationJSONBody struct {
@@ -163,7 +192,7 @@ type UpdateReservationJSONBody struct {
 }
 
 // UpdateReservationJSONBodyCampusCode defines parameters for UpdateReservation.
-type UpdateReservationJSONBodyCampusCode int
+type UpdateReservationJSONBodyCampusCode string
 
 // UpdateReservationJSONBodyPianoTypes defines parameters for UpdateReservation.
 type UpdateReservationJSONBodyPianoTypes string
@@ -183,7 +212,7 @@ type GetRoomsParams struct {
 type GetRoomsParamsPianoType string
 
 // GetRoomsParamsCampusCode defines parameters for GetRooms.
-type GetRoomsParamsCampusCode int
+type GetRoomsParamsCampusCode string
 
 // AuthorizeJSONRequestBody defines body for Authorize for application/json ContentType.
 type AuthorizeJSONRequestBody AuthorizeJSONBody
@@ -278,7 +307,7 @@ type ClientInterface interface {
 	CreateReservation(ctx context.Context, body CreateReservationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetMyReservations request
-	GetMyReservations(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetMyReservations(ctx context.Context, params *GetMyReservationsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetReservation request
 	GetReservation(ctx context.Context, reservationId string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -343,8 +372,8 @@ func (c *Client) CreateReservation(ctx context.Context, body CreateReservationJS
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetMyReservations(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetMyReservationsRequest(c.Server)
+func (c *Client) GetMyReservations(ctx context.Context, params *GetMyReservationsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetMyReservationsRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -496,7 +525,7 @@ func NewCreateReservationRequestWithBody(server string, contentType string, body
 }
 
 // NewGetMyReservationsRequest generates requests for GetMyReservations
-func NewGetMyReservationsRequest(server string) (*http.Request, error) {
+func NewGetMyReservationsRequest(server string, params *GetMyReservationsParams) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -512,6 +541,60 @@ func NewGetMyReservationsRequest(server string) (*http.Request, error) {
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.CampusCode != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "campus_code", runtime.ParamLocationQuery, *params.CampusCode); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PianoType != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "piano_type", runtime.ParamLocationQuery, *params.PianoType); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Date != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "date", runtime.ParamLocationQuery, *params.Date); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -836,7 +919,7 @@ type ClientWithResponsesInterface interface {
 	CreateReservationWithResponse(ctx context.Context, body CreateReservationJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateReservationResponse, error)
 
 	// GetMyReservationsWithResponse request
-	GetMyReservationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMyReservationsResponse, error)
+	GetMyReservationsWithResponse(ctx context.Context, params *GetMyReservationsParams, reqEditors ...RequestEditorFn) (*GetMyReservationsResponse, error)
 
 	// GetReservationWithResponse request
 	GetReservationWithResponse(ctx context.Context, reservationId string, reqEditors ...RequestEditorFn) (*GetReservationResponse, error)
@@ -882,7 +965,11 @@ func (r AuthorizeResponse) StatusCode() int {
 type CreateReservationResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *Response
+	JSON200      *struct {
+		Code int         `json:"code"`
+		Data Reservation `json:"data"`
+		Ok   bool        `json:"ok"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -1060,8 +1147,8 @@ func (c *ClientWithResponses) CreateReservationWithResponse(ctx context.Context,
 }
 
 // GetMyReservationsWithResponse request returning *GetMyReservationsResponse
-func (c *ClientWithResponses) GetMyReservationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMyReservationsResponse, error) {
-	rsp, err := c.GetMyReservations(ctx, reqEditors...)
+func (c *ClientWithResponses) GetMyReservationsWithResponse(ctx context.Context, params *GetMyReservationsParams, reqEditors ...RequestEditorFn) (*GetMyReservationsResponse, error) {
+	rsp, err := c.GetMyReservations(ctx, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -1157,7 +1244,11 @@ func ParseCreateReservationResponse(rsp *http.Response) (*CreateReservationRespo
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest Response
+		var dest struct {
+			Code int         `json:"code"`
+			Data Reservation `json:"data"`
+			Ok   bool        `json:"ok"`
+		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -1322,7 +1413,7 @@ type ServerInterface interface {
 	CreateReservation(ctx echo.Context) error
 	// 自分の予約を取得
 	// (GET /reservations/mine)
-	GetMyReservations(ctx echo.Context) error
+	GetMyReservations(ctx echo.Context, params GetMyReservationsParams) error
 	// 予約の取得
 	// (GET /reservations/{reservation_id})
 	GetReservation(ctx echo.Context, reservationId string) error
@@ -1368,8 +1459,31 @@ func (w *ServerInterfaceWrapper) GetMyReservations(ctx echo.Context) error {
 
 	ctx.Set(BearerScopes, []string{})
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetMyReservationsParams
+	// ------------- Optional query parameter "campus_code" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "campus_code", ctx.QueryParams(), &params.CampusCode)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter campus_code: %s", err))
+	}
+
+	// ------------- Optional query parameter "piano_type" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "piano_type", ctx.QueryParams(), &params.PianoType)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter piano_type: %s", err))
+	}
+
+	// ------------- Optional query parameter "date" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "date", ctx.QueryParams(), &params.Date)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter date: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetMyReservations(ctx)
+	err = w.Handler.GetMyReservations(ctx, params)
 	return err
 }
 
@@ -1530,25 +1644,25 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+xYT28jNRT/Lobj0LTllht/JEBiL4s4VdXImXlJvI39XNtTFKoc6CIoXEB7WITg2BMS",
-	"q5WohIQEfJhsWvgWaOxJxp7xJA1/Slfqbcb2++P3fu/3nnxKMuQSBQijSf+U6GwMnNrPNwozRsU+poah",
-	"KBekQgnKMLDbNMtA69TgEdhdM5VA+kQbxcSIzBKiYKhAjztP2CPHBVOQk/5BqK8pfZgspXHwCDJT6n8I",
-	"GtRJh3cZ5bLQaYY5lL8gCl4a2SMJ2fe01d7m1NiTQ1ScGtK3C68ZxoFETg8V8nexUN61mDAwArXcfcBE",
-	"4TS291keDxgiTzv2DHabM9htrBFklpMkiE118dq4d7fgIisXPHsbsvI+06adGVUfsP/MALcfryoYkj55",
-	"pVcjslfBsefneraySpWi09YdAwMdLkoUGiKoqeDSjnFODfV2amV45C0PECdARcslPCKVisTZiLqFyDcC",
-	"OQK2CaIPDFHwwVqYMZ0OqAYOwsRctweyCdVaVQ61TwjKIapbMiowrVyIuutOuPVNlGDNJA60geZATcPh",
-	"8IJNtLtotcM/S4iGrFDMTD8oMeeCPwCq3EUsEG0U3NJKwdgYSWalPBNDtHdiZlLumIwrfUIScgJKW5Ii",
-	"ezu7O7sWNRIElYz0yes7uzslK0lqxtZmj1a86/CJroZKSFhIv5eT/oqabeHCcQHavIn51EFYmCqzVMoJ",
-	"y6xU75F2LOkKqg0zSbX+CFUcMYUGFSemRsKWB5NaXyTUTsrVoDW+v7v7D1zfXLTrmCXsclsVdE2gNHrN",
-	"hOSgM8Wka1EkQBnpHxwmRBecUzUlfTJ//OP87Pn87GL++Cd7sOfzWC9TUDWoOCLesvs+Tf5byBggHoFK",
-	"O0s+3mn3kv06JGFKtmmzZbWGXSLS/oJm4JpWOl7bnFPebJgBPdLCYKphUuaxiyHXU6jPVtv6X1NbKLmc",
-	"YUaKirLECqnYaFxSnEAB0aGmqXr9hNEMWrDXGbFGZUSHizolYfxrq76NVg7+Cw7ZMG24AeEGRVw3iYPD",
-	"WVDRL345v778dP7Jsxe/fn91/nWkqDkTNqIjiFT0O2AeTB/6s8wdYs3mlHervNkd8j8+/2Fx/lkZchf7",
-	"syeLr54ufvsmEvtT7y9l+WxdHkJalVRRDsYW9sEpYaWLZfcmy7mIhKqJHwKjCki8pDSL6fBuJvmuJHhV",
-	"UzfOay+HCTjiqr/CDL9t11+iJN8idy2++PLPby9uEudCLnu7LCJl9KHdvu0g3w9A9wPQ/QD0f5PI1XeX",
-	"V0+fVySC6LLZ2WztgTg5HBegpjU7WEboZoAkLlW9Kmwt13iBaMl7b27rFFRvFrX41rDu0u/eNv6OZ+GL",
-	"SUvea/Zx+RDzravFufDWZ53GO+QSiDd7gETkm18ercrY295dmJ2uf768/v3J4tmFPz7NZn8FAAD//8jv",
-	"PBsCGAAA",
+	"H4sIAAAAAAAC/+xYTW8kNRP+L37fY5PJLre58SEhJLgs4hRFLae7ZsabsatjuwNDNAeyCAIX0B4WITjm",
+	"hMRqJSIhIQE/ZjYJ/Atkuydtd7vnA0bDRNpbj+36cNVTT9X4jGTICxQgtCL9M6KyEXBqP98o9Qgl+4Rq",
+	"hsIsFBILkJqB3aZZBkqlGo/B7upJAaRPlJZMDMk0IRIGEtSo84Q9clIyCTnpH4T6mtKHyVwajx5Dpo3+",
+	"R6BAnnZ4d4R4DDIVlEPUuYzyolRphrndB1Fy48QDkpCHnjVPQALVkKdUm/MDlNx8kZxqeE0zDiQiYzZX",
+	"Pw0fa5CCjlOWR10eSOTpCEvp7TKhYQjybpszUWqIHwjUeusSkXfZ1LjAosYF9hrZZTkJg15FpzbvXzC8",
+	"Te2GbzNIyRJ8vMeUbmNE1gfsb6aB24//SxiQPvlfr66NXlUYPR910zurVEo6aV06MNDhYoFCQdu3OTDb",
+	"Uc+ppt5OrQyPveUjxDFQ0XIJj0mlInE2om4h8ohLYcm08TlG9JEiSn4UQV4twFR6RBVwEDrmuT2QjalS",
+	"svKnfaKzvgtGBaaVC9E4uhNufRk3WTOJA3GgOVDTcDi8YBP9Llrt6E8ToiArJdOTDwzkKjoDKt1FLA5t",
+	"FNzSnYKR1gWZGnkmBmjvxPTY7OiMS3VKEnIKUlm2JA/29vf2LWgKELRgpE9e39vfM/RXUD2yNnu0agAO",
+	"nuhKyCDCIvrdnPTveoQtZDgpQek3MZ84BAtdZZYWxZhlVqr3WDm6dvXURllBlfoIZRwxpQIZp6pGwuYH",
+	"k1pfJNROypWgNf5wf/9fuL68ZhcRS9hu16rnmlBp9JoJyUFlkhWuV5IAZaR/cJgQVXJO5YT0yezJT7Pz",
+	"F7Pzy9mTn+3Bnk9jPUe63Yh4y+77LLkpZGy8pa/Xnm3Bhn0i0hKDdrCBnq1SWmpMFYxNLrtYcjGN+oy1",
+	"7gVqegsl59EdSipMmZWFZMORoTmBAqLhbqreytwRHTnWHTQaWdh1JmmMKNvjkbpPHRxOA1J5+evF7dVn",
+	"s0+fv/zth5uLbyK8wpmwVx5ChFTeAf3+5JE/TRlil5SDtpA+OCPMOHRSgpyQ+VjQSH4d7GXUME3i+oJe",
+	"31a3ci106a/gWWtehZlMoHcRenbm3hH4/fnFj9cXnxv4ORyeP73++tn1799GcHjm/UpZPl2EybDLxQBp",
+	"hqk6v6Fq4odAyxL8zN+TJO8cv6yc114OY3AtpP4KM/y2Xb9HSV6SNPdXc0Nx/vKrv767XCXOZTGfs4oy",
+	"UkYf2u1tB/nVPLrGPBr8Y381jrb3OiN2T4fRLfLIzfdXN89eVDyC6LLZ2W/tgZVGP0sK3STQMYBV7zxr",
+	"yzXehFry3r+T/2aydK9N/8Sz8A2rJe/1+w3P4NueeBpvw3MsrvYojMiXvwZblbH31l2YoG5/ubr94+n1",
+	"80t/iJpO/w4AAP//paYpNyAaAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
