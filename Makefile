@@ -31,6 +31,7 @@ shell:
 #? api: OpenAPI からコードを生成
 api:
 	docker compose run --rm api bash -c "oapi-codegen -package api /api/api/openapi.json > /api/server/adapter/api/interface.go"
+	npx openapi-typescript ./api/openapi.json -o ./web/app/api/client.ts
 
 #? wire: HTTP サーバーの依存関係を自動生成
 wire:

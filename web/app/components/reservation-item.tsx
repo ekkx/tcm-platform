@@ -14,7 +14,7 @@ type Props = {
 
 export function ReservationItem(props: Props) {
   return (
-    <Card shadow="none" className="border">
+    <Card shadow="none" className="flex-shrink-0 border w-[300px]">
       <CardBody className="grid gap-2">
         <div className="flex">
           <span className="flex items-center gap-1 font-bold">
@@ -27,9 +27,9 @@ export function ReservationItem(props: Props) {
             >
               <path
                 fill="currentColor"
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M12 2c-4.418 0-8 4.003-8 8.5c0 4.462 2.553 9.312 6.537 11.174a3.45 3.45 0 0 0 2.926 0C17.447 19.812 20 14.962 20 10.5C20 6.003 16.418 2 12 2m0 10a2 2 0 1 0 0-4a2 2 0 0 0 0 4"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               />
             </svg>
             {props.campusName}
@@ -50,9 +50,9 @@ export function ReservationItem(props: Props) {
                 >
                   <path
                     fill="currentColor"
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10m-5.97-3.03a.75.75 0 0 1 0 1.06l-5 5a.75.75 0 0 1-1.06 0l-2-2a.75.75 0 1 1 1.06-1.06l1.47 1.47l2.235-2.235L14.97 8.97a.75.75 0 0 1 1.06 0"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   />
                 </svg>
               }
@@ -97,7 +97,7 @@ export function ReservationItem(props: Props) {
           <div className="grid gap-1.5">
             {props.userName && (
               <p className="flex items-center gap-1.5 text-sm font-medium">
-                <svg
+                {/* <svg
                   className="w-5 h-5 text-foreground-400"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -106,7 +106,7 @@ export function ReservationItem(props: Props) {
                 >
                   <circle cx="12" cy="6" r="4" fill="currentColor" />
                   <ellipse cx="12" cy="17" fill="currentColor" rx="7" ry="4" />
-                </svg>
+                </svg> */}
                 {props.userName}
               </p>
             )}
@@ -121,9 +121,9 @@ export function ReservationItem(props: Props) {
                 >
                   <path
                     fill="currentColor"
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M2.123 12.816c.287 1.003 1.06 1.775 2.605 3.32l1.83 1.83C9.248 20.657 10.592 22 12.262 22c1.671 0 3.015-1.344 5.704-4.033c2.69-2.69 4.034-4.034 4.034-5.705c0-1.67-1.344-3.015-4.033-5.704l-1.83-1.83c-1.546-1.545-2.318-2.318-3.321-2.605c-1.003-.288-2.068-.042-4.197.45l-1.228.283c-1.792.413-2.688.62-3.302 1.233S3.27 5.6 2.856 7.391l-.284 1.228c-.491 2.13-.737 3.194-.45 4.197m8-5.545a2.017 2.017 0 1 1-2.852 2.852a2.017 2.017 0 0 1 2.852-2.852m8.928 4.78l-6.979 6.98a.75.75 0 0 1-1.06-1.061l6.978-6.98a.75.75 0 0 1 1.061 1.061"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   />
                 </svg>
                 {props.roomName}
