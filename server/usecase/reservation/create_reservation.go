@@ -9,6 +9,7 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/domain"
 	"github.com/ekkx/tcmrsv-web/server/infra/db"
 	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/pkg/utils"
 )
 
 type CreateReservationInput struct {
@@ -70,7 +71,7 @@ func (uc ReservationUsecaseImpl) CreateReservation(ctx context.Context, input *C
 	// すでに存在する予約の部屋と時間が一致しないことを確認する
 	hasConflict, err := uc.querier.CheckReservationConflict(ctx, db.CheckReservationConflictParams{
 		RoomID: roomID,
-		Date:   time.Date(input.Date.Year(), input.Date.Month(), input.Date.Day(), 0, 0, 0, 0, tcmrsv.JST()),
+		Date:   time.Date(input.Date.Year(), input.Date.Month(), input.Date.Day(), 0, 0, 0, 0, utils.JST()),
 		FromHour: func() *int32 {
 			h := int32(input.FromHour)
 			return &h
@@ -100,7 +101,7 @@ func (uc ReservationUsecaseImpl) CreateReservation(ctx context.Context, input *C
 		UserID:     input.UserID,
 		Campus:     db.Campus(input.Campus),
 		RoomID:     roomID,
-		Date:       time.Date(input.Date.Year(), input.Date.Month(), input.Date.Day(), 0, 0, 0, 0, tcmrsv.JST()),
+		Date:       time.Date(input.Date.Year(), input.Date.Month(), input.Date.Day(), 0, 0, 0, 0, utils.JST()),
 		FromHour:   int32(input.FromHour),
 		FromMinute: int32(input.FromMinute),
 		ToHour:     int32(input.ToHour),

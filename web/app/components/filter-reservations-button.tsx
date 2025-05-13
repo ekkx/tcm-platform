@@ -35,9 +35,9 @@ export function FilterReservationsButton(props: Props) {
             height="24"
             viewBox="0 0 24 24"
           >
-            <g fill="none" stroke="currentColor" stroke-width="1.5">
+            <g fill="none" stroke="currentColor" strokeWidth="1.5">
               <circle cx="11.5" cy="11.5" r="9.5" />
-              <path stroke-linecap="round" d="M18.5 18.5L22 22" />
+              <path strokeLinecap="round" d="M18.5 18.5L22 22" />
             </g>
           </svg>
         }

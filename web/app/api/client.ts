@@ -13,8 +13,25 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** ログイン */
+        /** 認証 */
         post: operations["authorize"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/authorize/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 再認証 */
+        post: operations["reauthorize"];
         delete?: never;
         options?: never;
         head?: never;
@@ -130,11 +147,13 @@ export interface components {
         Room: {
             id: string;
             name: string;
-            piano_type: string;
+            /** @enum {string} */
+            piano_type: "grand" | "upright" | "none";
             piano_number: number;
             is_classroom: boolean;
             is_basement: boolean;
-            campus_code: string;
+            /** @enum {string} */
+            campus_code: "1" | "2";
             floor: number;
         };
         RoomList: {
@@ -207,17 +226,38 @@ export interface operations {
             };
         };
     };
+    reauthorize: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    refresh_token: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ok: boolean;
+                        code: number;
+                        data: components["schemas"]["Authorization"];
+                    };
+                };
+            };
+        };
+    };
     getRooms: {
         parameters: {
-            query?: {
-                id?: string;
-                name?: string;
-                piano_number?: number;
-                piano_type?: "grand" | "upright" | "none";
-                floor?: number;
-                is_basement?: boolean;
-                campus_code?: "1" | "2";
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -232,9 +272,7 @@ export interface operations {
                     "application/json": {
                         ok: boolean;
                         code: number;
-                        data: {
-                            rooms: components["schemas"]["Room"][];
-                        };
+                        data: components["schemas"]["RoomList"];
                     };
                 };
             };
@@ -288,7 +326,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                reservation_id: string;
+                reservation_id: number;
             };
             cookie?: never;
         };
@@ -309,7 +347,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                reservation_id: string;
+                reservation_id: number;
             };
             cookie?: never;
         };
@@ -350,7 +388,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                reservation_id: string;
+                reservation_id: number;
             };
             cookie?: never;
         };
@@ -372,11 +410,7 @@ export interface operations {
     };
     getMyReservations: {
         parameters: {
-            query?: {
-                campus_code?: "1" | "2";
-                piano_type?: "grand" | "upright" | "none";
-                date?: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;

@@ -1,13 +1,47 @@
 import {
+  addToast,
   Button,
   Modal,
   ModalBody,
   ModalContent,
   useDisclosure,
 } from "@heroui/react";
+import client from "~/api";
 
-export function CancelReservationButton() {
+type Props = {
+  reservationId: number;
+  onDelete?: () => void;
+};
+
+export function CancelReservationButton(props: Props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const onDeletePress = async ({ onClose }: { onClose: () => void }) => {
+    const response = await client.DELETE(
+      "/reservations/{reservation_id}/delete",
+      {
+        params: {
+          path: {
+            reservation_id: props.reservationId,
+          },
+        },
+      }
+    );
+
+    if (!response.data?.ok) {
+      alert("削除に失敗しました");
+      return;
+    }
+
+    onClose();
+    props.onDelete?.();
+
+    addToast({
+      title: "予約を削除しました",
+      
+      color: "success",
+    });
+  };
 
   return (
     <>
@@ -48,7 +82,7 @@ export function CancelReservationButton() {
                   <Button
                     className="w-32 font-bold"
                     color="danger"
-                    onPress={onClose}
+                    onPress={() => onDeletePress({ onClose })}
                   >
                     削除
                   </Button>

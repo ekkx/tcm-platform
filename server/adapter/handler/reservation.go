@@ -12,19 +12,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (h *Handler) GetReservation(ctx echo.Context, id string) error {
+func (h *Handler) GetReservation(ctx echo.Context, id int) error {
 	return nil
 }
 
-func (h *Handler) GetMyReservations(ctx echo.Context, params api.GetMyReservationsParams) error {
+func (h *Handler) GetMyReservations(ctx echo.Context) error {
 	stdCtx := ctx.Request().Context()
 
 	output, err := h.reservationUsecase.GetMyReservations(stdCtx, &reservation.GetMyReservationsInput{
-		UserID:    ctxhelper.GetRequestUser(stdCtx).ID,
-		Password:  ctxhelper.GetRequestUser(stdCtx).Password,
-		Campus:    (*domain.Campus)(params.CampusCode),
-		PianoType: (*domain.PianoType)(params.PianoType),
-		Date:      params.Date,
+		UserID:   ctxhelper.GetRequestUser(stdCtx).ID,
+		Password: ctxhelper.GetRequestUser(stdCtx).Password,
 	})
 	if err != nil {
 		return err
@@ -74,10 +71,18 @@ func (h *Handler) CreateReservation(ctx echo.Context) error {
 	return response.JSON(ctx, http.StatusOK, presenter.CreateReservation(output))
 }
 
-func (h *Handler) UpdateReservation(ctx echo.Context, id string) error {
+func (h *Handler) UpdateReservation(ctx echo.Context, id int) error {
 	return nil
 }
 
-func (h *Handler) DeleteReservation(ctx echo.Context, id string) error {
-	return nil
+func (h *Handler) DeleteReservation(ctx echo.Context, id int) error {
+	stdCtx := ctx.Request().Context()
+
+	if err := h.reservationUsecase.DeleteReservation(stdCtx, &reservation.DeleteReservationInput{
+		ReservationID: id,
+	}); err != nil {
+		return err
+	}
+
+	return response.JSON(ctx, http.StatusOK, struct{}{})
 }

@@ -1,19 +1,17 @@
 import { Button } from "@heroui/react";
+import { Cookie } from "~/store/cookies";
 
 export function LogoutButton() {
-  const handleLogout = () => {
-    console.log("Logging out...");
-    // clear tokens from cookies
-    window.location.href = "/login";
-  };
-
   return (
     <Button
       isIconOnly
       variant="light"
       size="lg"
       className="rounded-full"
-      onPress={handleLogout}
+      onPress={() => {
+        Cookie.destroy();
+        window.location.href = "/login";
+      }}
       startContent={
         <svg
           className="w-6 h-6 text-foreground-500"

@@ -32,6 +32,19 @@ const (
 	ReservationCampusCodeN2 ReservationCampusCode = "2"
 )
 
+// Defines values for RoomCampusCode.
+const (
+	RoomCampusCodeN1 RoomCampusCode = "1"
+	RoomCampusCodeN2 RoomCampusCode = "2"
+)
+
+// Defines values for RoomPianoType.
+const (
+	RoomPianoTypeGrand   RoomPianoType = "grand"
+	RoomPianoTypeNone    RoomPianoType = "none"
+	RoomPianoTypeUpright RoomPianoType = "upright"
+)
+
 // Defines values for CreateReservationJSONBodyCampusCode.
 const (
 	CreateReservationJSONBodyCampusCodeN1 CreateReservationJSONBodyCampusCode = "1"
@@ -45,19 +58,6 @@ const (
 	CreateReservationJSONBodyPianoTypesUpright CreateReservationJSONBodyPianoTypes = "upright"
 )
 
-// Defines values for GetMyReservationsParamsCampusCode.
-const (
-	GetMyReservationsParamsCampusCodeN1 GetMyReservationsParamsCampusCode = "1"
-	GetMyReservationsParamsCampusCodeN2 GetMyReservationsParamsCampusCode = "2"
-)
-
-// Defines values for GetMyReservationsParamsPianoType.
-const (
-	GetMyReservationsParamsPianoTypeGrand   GetMyReservationsParamsPianoType = "grand"
-	GetMyReservationsParamsPianoTypeNone    GetMyReservationsParamsPianoType = "none"
-	GetMyReservationsParamsPianoTypeUpright GetMyReservationsParamsPianoType = "upright"
-)
-
 // Defines values for UpdateReservationJSONBodyCampusCode.
 const (
 	UpdateReservationJSONBodyCampusCodeN1 UpdateReservationJSONBodyCampusCode = "1"
@@ -66,22 +66,9 @@ const (
 
 // Defines values for UpdateReservationJSONBodyPianoTypes.
 const (
-	UpdateReservationJSONBodyPianoTypesGrand   UpdateReservationJSONBodyPianoTypes = "grand"
-	UpdateReservationJSONBodyPianoTypesNone    UpdateReservationJSONBodyPianoTypes = "none"
-	UpdateReservationJSONBodyPianoTypesUpright UpdateReservationJSONBodyPianoTypes = "upright"
-)
-
-// Defines values for GetRoomsParamsPianoType.
-const (
-	GetRoomsParamsPianoTypeGrand   GetRoomsParamsPianoType = "grand"
-	GetRoomsParamsPianoTypeNone    GetRoomsParamsPianoType = "none"
-	GetRoomsParamsPianoTypeUpright GetRoomsParamsPianoType = "upright"
-)
-
-// Defines values for GetRoomsParamsCampusCode.
-const (
-	N1 GetRoomsParamsCampusCode = "1"
-	N2 GetRoomsParamsCampusCode = "2"
+	Grand   UpdateReservationJSONBodyPianoTypes = "grand"
+	None    UpdateReservationJSONBodyPianoTypes = "none"
+	Upright UpdateReservationJSONBodyPianoTypes = "upright"
 )
 
 // Authorization defines model for Authorization.
@@ -122,20 +109,36 @@ type Response struct {
 
 // Room defines model for Room.
 type Room struct {
-	CampusCode  string  `json:"campus_code"`
-	Floor       float32 `json:"floor"`
-	Id          string  `json:"id"`
-	IsBasement  bool    `json:"is_basement"`
-	IsClassroom bool    `json:"is_classroom"`
-	Name        string  `json:"name"`
-	PianoNumber int     `json:"piano_number"`
-	PianoType   string  `json:"piano_type"`
+	CampusCode  RoomCampusCode `json:"campus_code"`
+	Floor       float32        `json:"floor"`
+	Id          string         `json:"id"`
+	IsBasement  bool           `json:"is_basement"`
+	IsClassroom bool           `json:"is_classroom"`
+	Name        string         `json:"name"`
+	PianoNumber int            `json:"piano_number"`
+	PianoType   RoomPianoType  `json:"piano_type"`
+}
+
+// RoomCampusCode defines model for Room.CampusCode.
+type RoomCampusCode string
+
+// RoomPianoType defines model for Room.PianoType.
+type RoomPianoType string
+
+// RoomList defines model for RoomList.
+type RoomList struct {
+	Rooms []Room `json:"rooms"`
 }
 
 // AuthorizeJSONBody defines parameters for Authorize.
 type AuthorizeJSONBody struct {
 	Password string `json:"password"`
 	UserId   string `json:"user_id"`
+}
+
+// ReauthorizeJSONBody defines parameters for Reauthorize.
+type ReauthorizeJSONBody struct {
+	RefreshToken string `json:"refresh_token"`
 }
 
 // CreateReservationJSONBody defines parameters for CreateReservation.
@@ -161,19 +164,6 @@ type CreateReservationJSONBodyCampusCode string
 // CreateReservationJSONBodyPianoTypes defines parameters for CreateReservation.
 type CreateReservationJSONBodyPianoTypes string
 
-// GetMyReservationsParams defines parameters for GetMyReservations.
-type GetMyReservationsParams struct {
-	CampusCode *GetMyReservationsParamsCampusCode `form:"campus_code,omitempty" json:"campus_code,omitempty"`
-	PianoType  *GetMyReservationsParamsPianoType  `form:"piano_type,omitempty" json:"piano_type,omitempty"`
-	Date       *time.Time                         `form:"date,omitempty" json:"date,omitempty"`
-}
-
-// GetMyReservationsParamsCampusCode defines parameters for GetMyReservations.
-type GetMyReservationsParamsCampusCode string
-
-// GetMyReservationsParamsPianoType defines parameters for GetMyReservations.
-type GetMyReservationsParamsPianoType string
-
 // UpdateReservationJSONBody defines parameters for UpdateReservation.
 type UpdateReservationJSONBody struct {
 	BookerName   *string                                `json:"booker_name,omitempty"`
@@ -197,25 +187,11 @@ type UpdateReservationJSONBodyCampusCode string
 // UpdateReservationJSONBodyPianoTypes defines parameters for UpdateReservation.
 type UpdateReservationJSONBodyPianoTypes string
 
-// GetRoomsParams defines parameters for GetRooms.
-type GetRoomsParams struct {
-	Id          *string                   `form:"id,omitempty" json:"id,omitempty"`
-	Name        *string                   `form:"name,omitempty" json:"name,omitempty"`
-	PianoNumber *int                      `form:"piano_number,omitempty" json:"piano_number,omitempty"`
-	PianoType   *GetRoomsParamsPianoType  `form:"piano_type,omitempty" json:"piano_type,omitempty"`
-	Floor       *int                      `form:"floor,omitempty" json:"floor,omitempty"`
-	IsBasement  *bool                     `form:"is_basement,omitempty" json:"is_basement,omitempty"`
-	CampusCode  *GetRoomsParamsCampusCode `form:"campus_code,omitempty" json:"campus_code,omitempty"`
-}
-
-// GetRoomsParamsPianoType defines parameters for GetRooms.
-type GetRoomsParamsPianoType string
-
-// GetRoomsParamsCampusCode defines parameters for GetRooms.
-type GetRoomsParamsCampusCode string
-
 // AuthorizeJSONRequestBody defines body for Authorize for application/json ContentType.
 type AuthorizeJSONRequestBody AuthorizeJSONBody
+
+// ReauthorizeJSONRequestBody defines body for Reauthorize for application/json ContentType.
+type ReauthorizeJSONRequestBody ReauthorizeJSONBody
 
 // CreateReservationJSONRequestBody defines body for CreateReservation for application/json ContentType.
 type CreateReservationJSONRequestBody CreateReservationJSONBody
@@ -301,27 +277,32 @@ type ClientInterface interface {
 
 	Authorize(ctx context.Context, body AuthorizeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ReauthorizeWithBody request with any body
+	ReauthorizeWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	Reauthorize(ctx context.Context, body ReauthorizeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// CreateReservationWithBody request with any body
 	CreateReservationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	CreateReservation(ctx context.Context, body CreateReservationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetMyReservations request
-	GetMyReservations(ctx context.Context, params *GetMyReservationsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetMyReservations(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetReservation request
-	GetReservation(ctx context.Context, reservationId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetReservation(ctx context.Context, reservationId int, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteReservation request
-	DeleteReservation(ctx context.Context, reservationId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DeleteReservation(ctx context.Context, reservationId int, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UpdateReservationWithBody request with any body
-	UpdateReservationWithBody(ctx context.Context, reservationId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	UpdateReservationWithBody(ctx context.Context, reservationId int, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	UpdateReservation(ctx context.Context, reservationId string, body UpdateReservationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	UpdateReservation(ctx context.Context, reservationId int, body UpdateReservationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetRooms request
-	GetRooms(ctx context.Context, params *GetRoomsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetRooms(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 func (c *Client) AuthorizeWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -338,6 +319,30 @@ func (c *Client) AuthorizeWithBody(ctx context.Context, contentType string, body
 
 func (c *Client) Authorize(ctx context.Context, body AuthorizeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAuthorizeRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ReauthorizeWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReauthorizeRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) Reauthorize(ctx context.Context, body ReauthorizeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReauthorizeRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -372,8 +377,8 @@ func (c *Client) CreateReservation(ctx context.Context, body CreateReservationJS
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetMyReservations(ctx context.Context, params *GetMyReservationsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetMyReservationsRequest(c.Server, params)
+func (c *Client) GetMyReservations(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetMyReservationsRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -384,7 +389,7 @@ func (c *Client) GetMyReservations(ctx context.Context, params *GetMyReservation
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetReservation(ctx context.Context, reservationId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) GetReservation(ctx context.Context, reservationId int, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetReservationRequest(c.Server, reservationId)
 	if err != nil {
 		return nil, err
@@ -396,7 +401,7 @@ func (c *Client) GetReservation(ctx context.Context, reservationId string, reqEd
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeleteReservation(ctx context.Context, reservationId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) DeleteReservation(ctx context.Context, reservationId int, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteReservationRequest(c.Server, reservationId)
 	if err != nil {
 		return nil, err
@@ -408,7 +413,7 @@ func (c *Client) DeleteReservation(ctx context.Context, reservationId string, re
 	return c.Client.Do(req)
 }
 
-func (c *Client) UpdateReservationWithBody(ctx context.Context, reservationId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) UpdateReservationWithBody(ctx context.Context, reservationId int, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateReservationRequestWithBody(c.Server, reservationId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -420,7 +425,7 @@ func (c *Client) UpdateReservationWithBody(ctx context.Context, reservationId st
 	return c.Client.Do(req)
 }
 
-func (c *Client) UpdateReservation(ctx context.Context, reservationId string, body UpdateReservationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) UpdateReservation(ctx context.Context, reservationId int, body UpdateReservationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateReservationRequest(c.Server, reservationId, body)
 	if err != nil {
 		return nil, err
@@ -432,8 +437,8 @@ func (c *Client) UpdateReservation(ctx context.Context, reservationId string, bo
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetRooms(ctx context.Context, params *GetRoomsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetRoomsRequest(c.Server, params)
+func (c *Client) GetRooms(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetRoomsRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -465,6 +470,46 @@ func NewAuthorizeRequestWithBody(server string, contentType string, body io.Read
 	}
 
 	operationPath := fmt.Sprintf("/authorize")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewReauthorizeRequest calls the generic Reauthorize builder with application/json body
+func NewReauthorizeRequest(server string, body ReauthorizeJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewReauthorizeRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewReauthorizeRequestWithBody generates requests for Reauthorize with any type of body
+func NewReauthorizeRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/authorize/refresh")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -525,7 +570,7 @@ func NewCreateReservationRequestWithBody(server string, contentType string, body
 }
 
 // NewGetMyReservationsRequest generates requests for GetMyReservations
-func NewGetMyReservationsRequest(server string, params *GetMyReservationsParams) (*http.Request, error) {
+func NewGetMyReservationsRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -543,60 +588,6 @@ func NewGetMyReservationsRequest(server string, params *GetMyReservationsParams)
 		return nil, err
 	}
 
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.CampusCode != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "campus_code", runtime.ParamLocationQuery, *params.CampusCode); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.PianoType != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "piano_type", runtime.ParamLocationQuery, *params.PianoType); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.Date != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "date", runtime.ParamLocationQuery, *params.Date); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
-	}
-
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
@@ -606,7 +597,7 @@ func NewGetMyReservationsRequest(server string, params *GetMyReservationsParams)
 }
 
 // NewGetReservationRequest generates requests for GetReservation
-func NewGetReservationRequest(server string, reservationId string) (*http.Request, error) {
+func NewGetReservationRequest(server string, reservationId int) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -640,7 +631,7 @@ func NewGetReservationRequest(server string, reservationId string) (*http.Reques
 }
 
 // NewDeleteReservationRequest generates requests for DeleteReservation
-func NewDeleteReservationRequest(server string, reservationId string) (*http.Request, error) {
+func NewDeleteReservationRequest(server string, reservationId int) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -674,7 +665,7 @@ func NewDeleteReservationRequest(server string, reservationId string) (*http.Req
 }
 
 // NewUpdateReservationRequest calls the generic UpdateReservation builder with application/json body
-func NewUpdateReservationRequest(server string, reservationId string, body UpdateReservationJSONRequestBody) (*http.Request, error) {
+func NewUpdateReservationRequest(server string, reservationId int, body UpdateReservationJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -685,7 +676,7 @@ func NewUpdateReservationRequest(server string, reservationId string, body Updat
 }
 
 // NewUpdateReservationRequestWithBody generates requests for UpdateReservation with any type of body
-func NewUpdateReservationRequestWithBody(server string, reservationId string, contentType string, body io.Reader) (*http.Request, error) {
+func NewUpdateReservationRequestWithBody(server string, reservationId int, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -721,7 +712,7 @@ func NewUpdateReservationRequestWithBody(server string, reservationId string, co
 }
 
 // NewGetRoomsRequest generates requests for GetRooms
-func NewGetRoomsRequest(server string, params *GetRoomsParams) (*http.Request, error) {
+func NewGetRoomsRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -737,124 +728,6 @@ func NewGetRoomsRequest(server string, params *GetRoomsParams) (*http.Request, e
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Id != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "id", runtime.ParamLocationQuery, *params.Id); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.Name != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "name", runtime.ParamLocationQuery, *params.Name); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.PianoNumber != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "piano_number", runtime.ParamLocationQuery, *params.PianoNumber); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.PianoType != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "piano_type", runtime.ParamLocationQuery, *params.PianoType); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.Floor != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "floor", runtime.ParamLocationQuery, *params.Floor); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.IsBasement != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "is_basement", runtime.ParamLocationQuery, *params.IsBasement); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.CampusCode != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "campus_code", runtime.ParamLocationQuery, *params.CampusCode); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("GET", queryURL.String(), nil)
@@ -913,27 +786,32 @@ type ClientWithResponsesInterface interface {
 
 	AuthorizeWithResponse(ctx context.Context, body AuthorizeJSONRequestBody, reqEditors ...RequestEditorFn) (*AuthorizeResponse, error)
 
+	// ReauthorizeWithBodyWithResponse request with any body
+	ReauthorizeWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReauthorizeResponse, error)
+
+	ReauthorizeWithResponse(ctx context.Context, body ReauthorizeJSONRequestBody, reqEditors ...RequestEditorFn) (*ReauthorizeResponse, error)
+
 	// CreateReservationWithBodyWithResponse request with any body
 	CreateReservationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateReservationResponse, error)
 
 	CreateReservationWithResponse(ctx context.Context, body CreateReservationJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateReservationResponse, error)
 
 	// GetMyReservationsWithResponse request
-	GetMyReservationsWithResponse(ctx context.Context, params *GetMyReservationsParams, reqEditors ...RequestEditorFn) (*GetMyReservationsResponse, error)
+	GetMyReservationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMyReservationsResponse, error)
 
 	// GetReservationWithResponse request
-	GetReservationWithResponse(ctx context.Context, reservationId string, reqEditors ...RequestEditorFn) (*GetReservationResponse, error)
+	GetReservationWithResponse(ctx context.Context, reservationId int, reqEditors ...RequestEditorFn) (*GetReservationResponse, error)
 
 	// DeleteReservationWithResponse request
-	DeleteReservationWithResponse(ctx context.Context, reservationId string, reqEditors ...RequestEditorFn) (*DeleteReservationResponse, error)
+	DeleteReservationWithResponse(ctx context.Context, reservationId int, reqEditors ...RequestEditorFn) (*DeleteReservationResponse, error)
 
 	// UpdateReservationWithBodyWithResponse request with any body
-	UpdateReservationWithBodyWithResponse(ctx context.Context, reservationId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateReservationResponse, error)
+	UpdateReservationWithBodyWithResponse(ctx context.Context, reservationId int, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateReservationResponse, error)
 
-	UpdateReservationWithResponse(ctx context.Context, reservationId string, body UpdateReservationJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateReservationResponse, error)
+	UpdateReservationWithResponse(ctx context.Context, reservationId int, body UpdateReservationJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateReservationResponse, error)
 
 	// GetRoomsWithResponse request
-	GetRoomsWithResponse(ctx context.Context, params *GetRoomsParams, reqEditors ...RequestEditorFn) (*GetRoomsResponse, error)
+	GetRoomsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetRoomsResponse, error)
 }
 
 type AuthorizeResponse struct {
@@ -956,6 +834,32 @@ func (r AuthorizeResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r AuthorizeResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ReauthorizeResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Code int           `json:"code"`
+		Data Authorization `json:"data"`
+		Ok   bool          `json:"ok"`
+	}
+}
+
+// Status returns HTTPResponse.Status
+func (r ReauthorizeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ReauthorizeResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -1088,11 +992,9 @@ type GetRoomsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Code int `json:"code"`
-		Data struct {
-			Rooms []Room `json:"rooms"`
-		} `json:"data"`
-		Ok bool `json:"ok"`
+		Code int      `json:"code"`
+		Data RoomList `json:"data"`
+		Ok   bool     `json:"ok"`
 	}
 }
 
@@ -1129,6 +1031,23 @@ func (c *ClientWithResponses) AuthorizeWithResponse(ctx context.Context, body Au
 	return ParseAuthorizeResponse(rsp)
 }
 
+// ReauthorizeWithBodyWithResponse request with arbitrary body returning *ReauthorizeResponse
+func (c *ClientWithResponses) ReauthorizeWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReauthorizeResponse, error) {
+	rsp, err := c.ReauthorizeWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReauthorizeResponse(rsp)
+}
+
+func (c *ClientWithResponses) ReauthorizeWithResponse(ctx context.Context, body ReauthorizeJSONRequestBody, reqEditors ...RequestEditorFn) (*ReauthorizeResponse, error) {
+	rsp, err := c.Reauthorize(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReauthorizeResponse(rsp)
+}
+
 // CreateReservationWithBodyWithResponse request with arbitrary body returning *CreateReservationResponse
 func (c *ClientWithResponses) CreateReservationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateReservationResponse, error) {
 	rsp, err := c.CreateReservationWithBody(ctx, contentType, body, reqEditors...)
@@ -1147,8 +1066,8 @@ func (c *ClientWithResponses) CreateReservationWithResponse(ctx context.Context,
 }
 
 // GetMyReservationsWithResponse request returning *GetMyReservationsResponse
-func (c *ClientWithResponses) GetMyReservationsWithResponse(ctx context.Context, params *GetMyReservationsParams, reqEditors ...RequestEditorFn) (*GetMyReservationsResponse, error) {
-	rsp, err := c.GetMyReservations(ctx, params, reqEditors...)
+func (c *ClientWithResponses) GetMyReservationsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMyReservationsResponse, error) {
+	rsp, err := c.GetMyReservations(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -1156,7 +1075,7 @@ func (c *ClientWithResponses) GetMyReservationsWithResponse(ctx context.Context,
 }
 
 // GetReservationWithResponse request returning *GetReservationResponse
-func (c *ClientWithResponses) GetReservationWithResponse(ctx context.Context, reservationId string, reqEditors ...RequestEditorFn) (*GetReservationResponse, error) {
+func (c *ClientWithResponses) GetReservationWithResponse(ctx context.Context, reservationId int, reqEditors ...RequestEditorFn) (*GetReservationResponse, error) {
 	rsp, err := c.GetReservation(ctx, reservationId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -1165,7 +1084,7 @@ func (c *ClientWithResponses) GetReservationWithResponse(ctx context.Context, re
 }
 
 // DeleteReservationWithResponse request returning *DeleteReservationResponse
-func (c *ClientWithResponses) DeleteReservationWithResponse(ctx context.Context, reservationId string, reqEditors ...RequestEditorFn) (*DeleteReservationResponse, error) {
+func (c *ClientWithResponses) DeleteReservationWithResponse(ctx context.Context, reservationId int, reqEditors ...RequestEditorFn) (*DeleteReservationResponse, error) {
 	rsp, err := c.DeleteReservation(ctx, reservationId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -1174,7 +1093,7 @@ func (c *ClientWithResponses) DeleteReservationWithResponse(ctx context.Context,
 }
 
 // UpdateReservationWithBodyWithResponse request with arbitrary body returning *UpdateReservationResponse
-func (c *ClientWithResponses) UpdateReservationWithBodyWithResponse(ctx context.Context, reservationId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateReservationResponse, error) {
+func (c *ClientWithResponses) UpdateReservationWithBodyWithResponse(ctx context.Context, reservationId int, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateReservationResponse, error) {
 	rsp, err := c.UpdateReservationWithBody(ctx, reservationId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -1182,7 +1101,7 @@ func (c *ClientWithResponses) UpdateReservationWithBodyWithResponse(ctx context.
 	return ParseUpdateReservationResponse(rsp)
 }
 
-func (c *ClientWithResponses) UpdateReservationWithResponse(ctx context.Context, reservationId string, body UpdateReservationJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateReservationResponse, error) {
+func (c *ClientWithResponses) UpdateReservationWithResponse(ctx context.Context, reservationId int, body UpdateReservationJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateReservationResponse, error) {
 	rsp, err := c.UpdateReservation(ctx, reservationId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -1191,8 +1110,8 @@ func (c *ClientWithResponses) UpdateReservationWithResponse(ctx context.Context,
 }
 
 // GetRoomsWithResponse request returning *GetRoomsResponse
-func (c *ClientWithResponses) GetRoomsWithResponse(ctx context.Context, params *GetRoomsParams, reqEditors ...RequestEditorFn) (*GetRoomsResponse, error) {
-	rsp, err := c.GetRooms(ctx, params, reqEditors...)
+func (c *ClientWithResponses) GetRoomsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetRoomsResponse, error) {
+	rsp, err := c.GetRooms(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -1208,6 +1127,36 @@ func ParseAuthorizeResponse(rsp *http.Response) (*AuthorizeResponse, error) {
 	}
 
 	response := &AuthorizeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Code int           `json:"code"`
+			Data Authorization `json:"data"`
+			Ok   bool          `json:"ok"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseReauthorizeResponse parses an HTTP response from a ReauthorizeWithResponse call
+func ParseReauthorizeResponse(rsp *http.Response) (*ReauthorizeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ReauthorizeResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -1387,11 +1336,9 @@ func ParseGetRoomsResponse(rsp *http.Response) (*GetRoomsResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Code int `json:"code"`
-			Data struct {
-				Rooms []Room `json:"rooms"`
-			} `json:"data"`
-			Ok bool `json:"ok"`
+			Code int      `json:"code"`
+			Data RoomList `json:"data"`
+			Ok   bool     `json:"ok"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -1405,27 +1352,30 @@ func ParseGetRoomsResponse(rsp *http.Response) (*GetRoomsResponse, error) {
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
-	// ログイン
+	// 認証
 	// (POST /authorize)
 	Authorize(ctx echo.Context) error
+	// 再認証
+	// (POST /authorize/refresh)
+	Reauthorize(ctx echo.Context) error
 	// 予約の作成
 	// (POST /reservations/create)
 	CreateReservation(ctx echo.Context) error
 	// 自分の予約を取得
 	// (GET /reservations/mine)
-	GetMyReservations(ctx echo.Context, params GetMyReservationsParams) error
+	GetMyReservations(ctx echo.Context) error
 	// 予約の取得
 	// (GET /reservations/{reservation_id})
-	GetReservation(ctx echo.Context, reservationId string) error
+	GetReservation(ctx echo.Context, reservationId int) error
 	// 予約の削除
 	// (DELETE /reservations/{reservation_id}/delete)
-	DeleteReservation(ctx echo.Context, reservationId string) error
+	DeleteReservation(ctx echo.Context, reservationId int) error
 	// 予約の更新
 	// (PUT /reservations/{reservation_id}/update)
-	UpdateReservation(ctx echo.Context, reservationId string) error
+	UpdateReservation(ctx echo.Context, reservationId int) error
 	// 練習室の取得
 	// (GET /rooms)
-	GetRooms(ctx echo.Context, params GetRoomsParams) error
+	GetRooms(ctx echo.Context) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -1439,6 +1389,15 @@ func (w *ServerInterfaceWrapper) Authorize(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.Authorize(ctx)
+	return err
+}
+
+// Reauthorize converts echo context to params.
+func (w *ServerInterfaceWrapper) Reauthorize(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.Reauthorize(ctx)
 	return err
 }
 
@@ -1459,31 +1418,8 @@ func (w *ServerInterfaceWrapper) GetMyReservations(ctx echo.Context) error {
 
 	ctx.Set(BearerScopes, []string{})
 
-	// Parameter object where we will unmarshal all parameters from the context
-	var params GetMyReservationsParams
-	// ------------- Optional query parameter "campus_code" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "campus_code", ctx.QueryParams(), &params.CampusCode)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter campus_code: %s", err))
-	}
-
-	// ------------- Optional query parameter "piano_type" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "piano_type", ctx.QueryParams(), &params.PianoType)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter piano_type: %s", err))
-	}
-
-	// ------------- Optional query parameter "date" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "date", ctx.QueryParams(), &params.Date)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter date: %s", err))
-	}
-
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetMyReservations(ctx, params)
+	err = w.Handler.GetMyReservations(ctx)
 	return err
 }
 
@@ -1491,7 +1427,7 @@ func (w *ServerInterfaceWrapper) GetMyReservations(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) GetReservation(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "reservation_id" -------------
-	var reservationId string
+	var reservationId int
 
 	err = runtime.BindStyledParameterWithOptions("simple", "reservation_id", ctx.Param("reservation_id"), &reservationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
 	if err != nil {
@@ -1509,7 +1445,7 @@ func (w *ServerInterfaceWrapper) GetReservation(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) DeleteReservation(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "reservation_id" -------------
-	var reservationId string
+	var reservationId int
 
 	err = runtime.BindStyledParameterWithOptions("simple", "reservation_id", ctx.Param("reservation_id"), &reservationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
 	if err != nil {
@@ -1527,7 +1463,7 @@ func (w *ServerInterfaceWrapper) DeleteReservation(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) UpdateReservation(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "reservation_id" -------------
-	var reservationId string
+	var reservationId int
 
 	err = runtime.BindStyledParameterWithOptions("simple", "reservation_id", ctx.Param("reservation_id"), &reservationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
 	if err != nil {
@@ -1547,59 +1483,8 @@ func (w *ServerInterfaceWrapper) GetRooms(ctx echo.Context) error {
 
 	ctx.Set(BearerScopes, []string{})
 
-	// Parameter object where we will unmarshal all parameters from the context
-	var params GetRoomsParams
-	// ------------- Optional query parameter "id" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "id", ctx.QueryParams(), &params.Id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// ------------- Optional query parameter "name" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "name", ctx.QueryParams(), &params.Name)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter name: %s", err))
-	}
-
-	// ------------- Optional query parameter "piano_number" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "piano_number", ctx.QueryParams(), &params.PianoNumber)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter piano_number: %s", err))
-	}
-
-	// ------------- Optional query parameter "piano_type" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "piano_type", ctx.QueryParams(), &params.PianoType)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter piano_type: %s", err))
-	}
-
-	// ------------- Optional query parameter "floor" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "floor", ctx.QueryParams(), &params.Floor)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter floor: %s", err))
-	}
-
-	// ------------- Optional query parameter "is_basement" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "is_basement", ctx.QueryParams(), &params.IsBasement)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter is_basement: %s", err))
-	}
-
-	// ------------- Optional query parameter "campus_code" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "campus_code", ctx.QueryParams(), &params.CampusCode)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter campus_code: %s", err))
-	}
-
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetRooms(ctx, params)
+	err = w.Handler.GetRooms(ctx)
 	return err
 }
 
@@ -1632,6 +1517,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.POST(baseURL+"/authorize", wrapper.Authorize)
+	router.POST(baseURL+"/authorize/refresh", wrapper.Reauthorize)
 	router.POST(baseURL+"/reservations/create", wrapper.CreateReservation)
 	router.GET(baseURL+"/reservations/mine", wrapper.GetMyReservations)
 	router.GET(baseURL+"/reservations/:reservation_id", wrapper.GetReservation)
@@ -1644,25 +1530,24 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+xYTW8kNRP+L37fY5PJLre58SEhJLgs4hRFLae7ZsabsatjuwNDNAeyCAIX0B4WITjm",
-	"hMRqJSIhIQE/ZjYJ/Atkuydtd7vnA0bDRNpbj+36cNVTT9X4jGTICxQgtCL9M6KyEXBqP98o9Qgl+4Rq",
-	"hsIsFBILkJqB3aZZBkqlGo/B7upJAaRPlJZMDMk0IRIGEtSo84Q9clIyCTnpH4T6mtKHyVwajx5Dpo3+",
-	"R6BAnnZ4d4R4DDIVlEPUuYzyolRphrndB1Fy48QDkpCHnjVPQALVkKdUm/MDlNx8kZxqeE0zDiQiYzZX",
-	"Pw0fa5CCjlOWR10eSOTpCEvp7TKhYQjybpszUWqIHwjUeusSkXfZ1LjAosYF9hrZZTkJg15FpzbvXzC8",
-	"Te2GbzNIyRJ8vMeUbmNE1gfsb6aB24//SxiQPvlfr66NXlUYPR910zurVEo6aV06MNDhYoFCQdu3OTDb",
-	"Uc+ppt5OrQyPveUjxDFQ0XIJj0mlInE2om4h8ohLYcm08TlG9JEiSn4UQV4twFR6RBVwEDrmuT2QjalS",
-	"svKnfaKzvgtGBaaVC9E4uhNufRk3WTOJA3GgOVDTcDi8YBP9Llrt6E8ToiArJdOTDwzkKjoDKt1FLA5t",
-	"FNzSnYKR1gWZGnkmBmjvxPTY7OiMS3VKEnIKUlm2JA/29vf2LWgKELRgpE9e39vfM/RXUD2yNnu0agAO",
-	"nuhKyCDCIvrdnPTveoQtZDgpQek3MZ84BAtdZZYWxZhlVqr3WDm6dvXURllBlfoIZRwxpQIZp6pGwuYH",
-	"k1pfJNROypWgNf5wf/9fuL68ZhcRS9hu16rnmlBp9JoJyUFlkhWuV5IAZaR/cJgQVXJO5YT0yezJT7Pz",
-	"F7Pzy9mTn+3Bnk9jPUe63Yh4y+77LLkpZGy8pa/Xnm3Bhn0i0hKDdrCBnq1SWmpMFYxNLrtYcjGN+oy1",
-	"7gVqegsl59EdSipMmZWFZMORoTmBAqLhbqreytwRHTnWHTQaWdh1JmmMKNvjkbpPHRxOA1J5+evF7dVn",
-	"s0+fv/zth5uLbyK8wpmwVx5ChFTeAf3+5JE/TRlil5SDtpA+OCPMOHRSgpyQ+VjQSH4d7GXUME3i+oJe",
-	"31a3ci106a/gWWtehZlMoHcRenbm3hH4/fnFj9cXnxv4ORyeP73++tn1799GcHjm/UpZPl2EybDLxQBp",
-	"hqk6v6Fq4odAyxL8zN+TJO8cv6yc114OY3AtpP4KM/y2Xb9HSV6SNPdXc0Nx/vKrv767XCXOZTGfs4oy",
-	"UkYf2u1tB/nVPLrGPBr8Y381jrb3OiN2T4fRLfLIzfdXN89eVDyC6LLZ2W/tgZVGP0sK3STQMYBV7zxr",
-	"yzXehFry3r+T/2aydK9N/8Sz8A2rJe/1+w3P4NueeBpvw3MsrvYojMiXvwZblbH31l2YoG5/ubr94+n1",
-	"80t/iJpO/w4AAP//paYpNyAaAAA=",
+	"H4sIAAAAAAAC/+xYS28jRRD+LwXHIfYuN994SAgJLkGcomjUninbvXE/trsnYCIfQGgJSCvQHhYhOO4B",
+	"7WHFIRIS4vFjWCfhX6DpHme6PT12RmtFXsm38VR1VfVXr89zBplgUnDkRsPgDHQ2QUbs4zuFmQhFvyCG",
+	"Cl6+kEpIVIaiFZMsQ61TI07QSs1MIgxAG0X5GOYJKBwp1JNWDavysKAKcxgchfZWTx8ny9Ni+AAzU9o/",
+	"RI3qtCW6oRAnqFJOGEaDywiThU4zkVs58oKVQdyDBO573rwDConBPCWm1B8JxconyInBtwxlCJEzpfD2",
+	"2vi5QcXJNKV5NOSREiydiEJ5UsoNjlHdiBnlhcG4QmDWe6+EYG0+jVjj0Yg1/layS3MIQa/Qqd37Fwxv",
+	"U4fh+wxSsqE+PqLaNGtE1Qr2NzXI7MObCkcwgDd6dW/0qsbo+VU3v/FKlCKzxqUDBy0hSsE1NmNbFmYT",
+	"9ZwY4klqY+LEez0UYoqEN0ISJ1CZSJyPaFhCsEhIXVtmNBXCLx1esGGkFOsDVKdDopEhN7GrWIVsSrRW",
+	"VYBNjdaGl5RwkVYhRIF1Gu59fb2xIrwszkIqOp4YSIALjpH7rgBtA0lc3Qe+A0crVwohWG0Yh2dbwlpq",
+	"XAjWobjLIDZWtTXZDGOegMasUNTMPintVYMYiXKIWyc2Xe7VjYGJMRLm5XnKR8Imh5ppKTEZU/oUEjhF",
+	"pe2ch3sH/YO+LXeJnEgKA3j7oH9QVqEkZmJ99ki1ulxjCQdMCYvtxQ9zGNxsNzuC8GGB2rwr8pnrPW6q",
+	"EiRSTmlmT/UeaLdoHFhNqCXR+jOh4qVdaFTxIbuC7lIxqe1FoHan3PCwzu/3+68Q+uZps65qQqLQaRLV",
+	"q4BEr5lAjjpTVLotD0GVweDoOAFdMEbUDAZw/fzx9a9/WpW6AnoVkWivhEMkW6+FjtxnE9nZ5zuW78Wj",
+	"x37K/W3bc9ygPenvWbm/zLeV+q0zz24s0i6JcOJHmFsw37dALXVKCiNSjdMykW27e/1y97dk1wvUKzU8",
+	"2XmLN03fCT2OMuOufHglC7s+RlaY9N0NkZqUHB3Pg4ny8o/zq4uv//3yxcu/frk8/yEyVxjl9spjjAyV",
+	"D9B8PDv0Sf9uwm2p4o5Afv3N88X5oxJyh/1XTxbfP138/WME+zPvV0rz+bo8hJNdEkUYGjtXjs6AliGW",
+	"bBGWfxggNA0+BEYVmHhJabTy8b6pbtVUt05sL8cpurlZP4Upft++f52yvCFr7jvAloD+9rv/fnp2G6AL",
+	"uWQXsog00qdWfOco72lYBxoWfD7Zs7CmrBWx15SD3eEgufz54vLpb9UgWX5Jal25VmGXduHyq9iOLMKr",
+	"3y+u/nmyePHM34Xz+f8BAAD//3nHNvODGQAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

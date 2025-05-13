@@ -9,10 +9,11 @@ import {
   useNavigate,
 } from "react-router";
 
-import { HeroUIProvider } from "@heroui/react";
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import { useLocale } from "react-aria-components";
 import type { Route } from "./+types/root";
 import "./app.css";
+import { ScrollProvider } from "./providers/scroll-provider";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -41,7 +42,10 @@ export default function App() {
       </head>
       <body className="light font-primary">
         <HeroUIProvider navigate={navigate} useHref={useHref}>
-          <Outlet />
+          <ToastProvider placement="top-center" toastOffset={20} />
+          <ScrollProvider>
+            <Outlet />
+          </ScrollProvider>
           <ScrollRestoration />
           <Scripts />
         </HeroUIProvider>

@@ -1,5 +1,7 @@
-import { Button, Checkbox, Form, Input, Link } from "@heroui/react";
-import { useState } from "react";
+import { addToast, Button, Checkbox, Form, Input, Link } from "@heroui/react";
+import { useEffect, useState } from "react";
+import client from "~/api";
+import { Cookie } from "~/store/cookies";
 import type { Route } from "./+types/login";
 
 export function meta({}: Route.MetaArgs) {
@@ -14,12 +16,59 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Login() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    if (Cookie.accessToken()) {
+      window.location.href = "/";
+      return;
+    }
+  }, []);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("handleSubmit");
+    setIsLoading(true);
+
+    const formData = new FormData(event.currentTarget);
+    const loginId = formData.get("login-id")?.toString();
+    const password = formData.get("password")?.toString();
+    const remember = formData.get("remember")?.toString();
+
+    if (!loginId || !password) {
+      return;
+    }
+
+    const response = await client.POST("/authorize", {
+      body: {
+        user_id: loginId,
+        password: password,
+      },
+    });
+
+    if (response.data?.ok) {
+      if (remember !== undefined) {
+        // クッキーに保存
+      } else {
+        // セッションストレージに保存
+      }
+
+      const { access_token, refresh_token } = response.data.data;
+
+      Cookie.setAccessToken(access_token);
+      Cookie.setRefreshToken(refresh_token);
+
+      window.location.href = "/";
+    } else {
+      addToast({
+        title: "認証失敗",
+        description: "IDまたはパスワードが違います。",
+        color: "danger",
+      });
+    }
+
+    setIsLoading(false);
   };
 
   return (
@@ -109,7 +158,12 @@ export default function Login() {
               </span>
             </Checkbox>
           </div>
-          <Button className="w-full" color="primary" type="submit">
+          <Button
+            className="w-full"
+            color="primary"
+            type="submit"
+            isLoading={isLoading}
+          >
             ログイン
           </Button>
         </Form>

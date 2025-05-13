@@ -7,15 +7,17 @@ import (
 
 	"github.com/ekkx/tcmrsv"
 	"github.com/ekkx/tcmrsv-web/server/infra/db"
+	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
-	"github.com/ekkx/tcmrsv-web/server/pkg/ctxhelper"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/jackc/pgx/v5"
 )
 
 type AuthorizeInput struct {
-	UserID   string
-	Password string
+	UserID         string
+	Password       string
+	PasswordAESKey string
+	JWTSecret      string
 }
 
 type AuthorizeOutput struct {
@@ -33,17 +35,17 @@ func (uc *AuthorizeUsecaseImpl) Authorize(ctx context.Context, input *AuthorizeI
 		UserID:   input.UserID,
 		Password: input.Password,
 	}); err != nil {
-		return nil, err
+		return nil, apperrors.ErrUnauthorized
 	}
 
+    // ユーザーが存在しない場合は新規作成
 	_, err := uc.querier.GetUserByID(ctx, input.UserID)
 	if err != nil {
 		if !errors.Is(err, pgx.ErrNoRows) {
 			return nil, err
 		}
 
-		// ユーザーが存在しない場合は新規作成
-		encryptedPassword, err := cryptohelper.EncryptAES(input.Password, []byte(ctxhelper.GetConfig(ctx).PasswordAESKey))
+		encryptedPassword, err := cryptohelper.EncryptAES(input.Password, []byte(input.PasswordAESKey))
 		if err != nil {
 			return nil, err
 		}
@@ -57,10 +59,8 @@ func (uc *AuthorizeUsecaseImpl) Authorize(ctx context.Context, input *AuthorizeI
 		}
 	}
 
-	cfg := ctxhelper.GetConfig(ctx)
-
 	accessToken, err := generateToken(
-		[]byte(cfg.JWTSecret),
+		[]byte(input.JWTSecret),
 		jwt.MapClaims{
 			"sub":   input.UserID,
 			"exp":   jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
@@ -72,7 +72,7 @@ func (uc *AuthorizeUsecaseImpl) Authorize(ctx context.Context, input *AuthorizeI
 	}
 
 	refreshToken, err := generateToken(
-		[]byte(cfg.JWTSecret),
+		[]byte(input.JWTSecret),
 		jwt.MapClaims{
 			"sub":   input.UserID,
 			"exp":   jwt.NewNumericDate(time.Now().Add(30 * 24 * time.Hour)),

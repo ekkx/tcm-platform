@@ -5,9 +5,11 @@ import {
   DrawerContent,
   useDisclosure,
 } from "@heroui/react";
+import type { components } from "~/api/client";
 import { ReservationForm } from "./reservation-form";
 
 type Props = {
+  rooms: components["schemas"]["Room"][];
   isConfirmed?: boolean;
 };
 
@@ -32,9 +34,9 @@ export function CreateReservationButton(props: Props) {
             <path
               fill="none"
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
               d="M5 12h14m-7-7v14"
             />
           </svg>
@@ -58,7 +60,7 @@ export function CreateReservationButton(props: Props) {
                     希望の日時と部屋を選択して予約してください。
                   </p>
                 </div>
-                <ReservationForm type="create" />
+                <ReservationForm type="create" rooms={props.rooms} />
               </DrawerBody>
             </>
           )}

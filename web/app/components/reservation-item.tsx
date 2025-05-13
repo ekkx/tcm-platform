@@ -10,6 +10,8 @@ type Props = {
   userName?: string;
   roomName: string;
   pianoType: string;
+  reservationId: number;
+  onDelete?: () => void;
 };
 
 export function ReservationItem(props: Props) {
@@ -72,11 +74,11 @@ export function ReservationItem(props: Props) {
                   height="24"
                   viewBox="0 0 24 24"
                 >
-                  <g fill="none" stroke="currentColor" stroke-width="1.5">
+                  <g fill="none" stroke="currentColor" strokeWidth="1.5">
                     <circle cx="12" cy="12" r="10" />
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       d="M12 8v4l2.5 2.5"
                     />
                   </g>
@@ -148,7 +150,10 @@ export function ReservationItem(props: Props) {
         </div>
         <div className="flex w-full gap-2 mt-2">
           <EditReservationButton isConfirmed={props.isConfirmed} />
-          <CancelReservationButton />
+          <CancelReservationButton
+            reservationId={props.reservationId}
+            onDelete={props.onDelete}
+          />
         </div>
       </CardBody>
     </Card>

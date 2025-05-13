@@ -12,11 +12,14 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
 	"github.com/ekkx/tcmrsv-web/server/usecase/authorize"
 	"github.com/ekkx/tcmrsv-web/server/usecase/reservation"
+	"github.com/ekkx/tcmrsv-web/server/usecase/room"
 
 	"github.com/labstack/echo/v4"
 	echomiddleware "github.com/labstack/echo/v4/middleware"
 
 	"github.com/ekkx/tcmrsv"
+
+	_ "time/tzdata"
 )
 
 func Run(cfg *config.Config) {
@@ -49,7 +52,7 @@ func Run(cfg *config.Config) {
 	e.Use(echomiddleware.Logger())
 	e.Use(echomiddleware.CORSWithConfig(middlewarecfg))
 	e.Use(middleware.Config(cfg))
-	e.Use(middleware.JWT(pool, []string{"/authorize"}))
+	e.Use(middleware.JWT(pool, []string{"/authorize", "/authorize/refresh"}))
 	e.Use(middleware.RequestValidator(swagger))
 
 	querier := db.New(pool)
@@ -58,6 +61,7 @@ func Run(cfg *config.Config) {
 	h := handler.New(
 		authorize.New(tcmClient, querier),
 		reservation.New(tcmClient, querier),
+		room.New(tcmClient),
 	)
 
 	api.RegisterHandlers(e, h)

@@ -9,7 +9,7 @@
   "paths": {
     "/authorize": {
       "post": {
-        "summary": "ログイン",
+        "summary": "認証",
         "deprecated": false,
         "description": "",
         "operationId": "authorize",
@@ -68,87 +68,31 @@
         "security": []
       }
     },
-    "/rooms": {
-      "get": {
-        "summary": "練習室の取得",
+    "/authorize/refresh": {
+      "post": {
+        "summary": "再認証",
         "deprecated": false,
         "description": "",
-        "operationId": "getRooms",
+        "operationId": "reauthorize",
         "tags": [],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "description": "",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "piano_number",
-            "in": "query",
-            "description": "",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "piano_type",
-            "in": "query",
-            "description": "",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "grand",
-                "upright",
-                "none"
-              ]
-            }
-          },
-          {
-            "name": "floor",
-            "in": "query",
-            "description": "",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "is_basement",
-            "in": "query",
-            "description": "",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "campus_code",
-            "in": "query",
-            "description": "",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "1",
-                "2"
-              ]
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refresh_token": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "refresh_token"
+                ]
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "",
@@ -164,18 +108,47 @@
                       "type": "integer"
                     },
                     "data": {
-                      "type": "object",
-                      "properties": {
-                        "rooms": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/Room"
-                          }
-                        }
-                      },
-                      "required": [
-                        "rooms"
-                      ]
+                      "$ref": "#/components/schemas/Authorization"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/rooms": {
+      "get": {
+        "summary": "練習室の取得",
+        "deprecated": false,
+        "description": "",
+        "operationId": "getRooms",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/RoomList"
                     }
                   },
                   "required": [
@@ -332,7 +305,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],
@@ -373,7 +346,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],
@@ -492,7 +465,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],
@@ -539,45 +512,7 @@
         "description": "",
         "operationId": "getMyReservations",
         "tags": [],
-        "parameters": [
-          {
-            "name": "campus_code",
-            "in": "query",
-            "description": "",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "1",
-                "2"
-              ]
-            }
-          },
-          {
-            "name": "piano_type",
-            "in": "query",
-            "description": "",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "grand",
-                "upright",
-                "none"
-              ]
-            }
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "description": "",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "",
@@ -627,7 +562,12 @@
             "type": "string"
           },
           "piano_type": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "grand",
+              "upright",
+              "none"
+            ]
           },
           "piano_number": {
             "type": "integer"
@@ -639,7 +579,11 @@
             "type": "boolean"
           },
           "campus_code": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "1",
+              "2"
+            ]
           },
           "floor": {
             "type": "number"

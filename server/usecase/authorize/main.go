@@ -9,6 +9,7 @@ import (
 
 type AuthorizeUsecase interface {
 	Authorize(ctx context.Context, input *AuthorizeInput) (*AuthorizeOutput, error)
+	Reauthorize(ctx context.Context, input *ReauthorizeInput) (*AuthorizeOutput, error)
 }
 
 type AuthorizeUsecaseImpl struct {
