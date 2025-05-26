@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package room.v1;
+
+option go_package = "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/room";
+
+service RoomService {
+    rpc GetRooms(GetRoomsRequest) returns (GetRoomsReply);
+}
+
+enum PianoType {
+    PIANO_TYPE_UNSPECIFIED = 0;
+    GRAND = 1;
+    UPRIGHT = 2;
+    NONE = 3;
+}
+
+enum Campus {
+    CAMPUS_UNSPECIFIED = 0;
+    NAKAMEGURO = 1;
+    IKEBUKURO = 2;
+}
+
+message Room {
+    string id = 1;
+    string name = 2;
+    PianoType piano_type = 3;
+    int32 piano_number = 4;
+    bool is_classroom = 5;
+    bool is_basement = 6;
+    Campus campus = 7;
+    int32 floor = 8;
+}
+
+message GetRoomsRequest {}
+
+message GetRoomsReply {
+    repeated Room rooms = 1;
+}

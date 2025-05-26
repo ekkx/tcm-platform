@@ -3,7 +3,7 @@ package ctxhelper
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/server/config"
+	"github.com/ekkx/tcmrsv-web/server/pkg/config"
 )
 
 type configKey struct{}

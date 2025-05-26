@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package reservation.v1;
+
+option go_package = "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/reservation";
+
+import "v1/room/room.proto";
+import "google/protobuf/timestamp.proto";
+
+service ReservationService {
+    rpc GetReservation(GetReservationRequest) returns (GetReservationReply);
+    rpc GetMyReservations(GetMyReservationsRequest) returns (GetMyReservationsReply);
+    rpc CreateReservation(CreateReservationRequest) returns (CreateReservationReply);
+    rpc UpdateReservation(UpdateReservationRequest) returns (UpdateReservationReply);
+    rpc DeleteReservation(DeleteReservationRequest) returns (DeleteReservationReply);
+}
+
+message Reservation {
+    int64 id = 1;
+    optional string external_id = 2;
+    room.v1.Campus campus = 3;
+    google.protobuf.Timestamp date = 4;
+    string room_id = 5;
+    int32 from_hour = 6;
+    int32 from_minute = 7;
+    int32 to_hour = 8;
+    int32 to_minute = 9;
+    optional string booker_name = 10;
+    google.protobuf.Timestamp created_at = 11;
+}
+
+message GetReservationRequest {
+    string reservation_id = 1;
+}
+
+message GetReservationReply {
+    Reservation reservation = 1;
+}
+
+message GetMyReservationsRequest {}
+
+message GetMyReservationsReply {
+    repeated Reservation reservations = 1;
+}
+
+message ReservationInput {
+    room.v1.Campus campus = 1;
+    google.protobuf.Timestamp date = 2;
+    int32 from_hour = 3;
+    int32 from_minute = 4;
+    int32 to_hour = 5;
+    int32 to_minute = 6;
+    bool is_auto_select = 7;
+    optional string room_id = 8;
+    optional string booker_name = 9;
+    repeated int32 piano_numbers = 10;
+    repeated room.v1.PianoType piano_types = 11;
+    repeated int32 floors = 12;
+    optional bool is_basement = 13;
+}
+
+message CreateReservationRequest {
+    ReservationInput reservation = 1;
+}
+
+message CreateReservationReply {
+    Reservation reservation = 1;
+}
+
+message UpdateReservationRequest {
+    ReservationInput reservation = 1;
+}
+
+message UpdateReservationReply {
+    Reservation reservation = 1;
+}
+
+message DeleteReservationRequest {
+    int64 reservation_id = 1;
+}
+
+message DeleteReservationReply {}

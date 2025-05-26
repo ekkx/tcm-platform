@@ -11,5 +11,10 @@
     "source.organizeImports": "explicit",
     "quickfix.biome": "explicit",
     "source.organizeImports.biome": "explicit"
+  },
+  "protoc": {
+    "path": "protoc",
+    "compile_on_save": false,
+    "options": ["--proto_path=proto", "--proto_path=${workspaceFolder}/proto"]
   }
 }

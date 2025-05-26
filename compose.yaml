@@ -5,6 +5,7 @@ services:
       context: ./docker/api/development
       dockerfile: Dockerfile
     ports:
+      - 50051:50051
       - 1323:1323
     volumes:
       - .:/api
