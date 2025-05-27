@@ -1,0 +1,90 @@
+package usecase
+
+import (
+	"context"
+	"errors"
+	"time"
+
+	"github.com/ekkx/tcmrsv"
+	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
+	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
+	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/output"
+	userRepo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
+	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
+	"github.com/golang-jwt/jwt/v5"
+)
+
+func generateToken(jwtSecret []byte, claims jwt.Claims) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(jwtSecret)
+	if err != nil {
+		return "", apperrors.ErrInternal.WithCause(err)
+	}
+	return tokenString, nil
+}
+
+func (uc *Usecase) Authorize(ctx context.Context, params *input.Authorize) (*output.Authorize, error) {
+	if err := params.Validate(); err != nil {
+		return nil, apperrors.InvalidArgument.WithCause(err)
+	}
+
+	if err := uc.tcmClient.Login(&tcmrsv.LoginParams{
+		UserID:   params.UserID,
+		Password: params.Password,
+	}); err != nil {
+		return nil, apperrors.ErrInvalidEmailOrPassword
+	}
+
+	// ユーザーが存在しない場合は新規作成
+	_, err := uc.userRepo.GetUserByID(ctx, params.UserID)
+	if err != nil {
+		if !errors.Is(err, apperrors.ErrUserNotFound) {
+			return nil, apperrors.ErrInternal.WithCause(err)
+		}
+
+		encryptedPassword, err := cryptohelper.EncryptAES(params.Password, []byte(params.PasswordAESKey))
+		if err != nil {
+			return nil, apperrors.ErrInternal.WithCause(err)
+		}
+
+		_, err2 := uc.userRepo.CreateUser(ctx, &userRepo.CreateUserArgs{
+			ID:                params.UserID,
+			EncryptedPassword: encryptedPassword,
+		})
+		if err2 != nil {
+			return nil, apperrors.ErrInternal.WithCause(err2)
+		}
+	}
+
+	accessToken, err := generateToken(
+		[]byte(params.JWTSecret),
+		jwt.MapClaims{
+			"sub":   params.UserID,
+			"exp":   jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
+			"scope": "access",
+		},
+	)
+	if err != nil {
+		return nil, apperrors.ErrInternal.WithCause(err)
+	}
+
+	refreshToken, err := generateToken(
+		[]byte(params.JWTSecret),
+		jwt.MapClaims{
+			"sub":   params.UserID,
+			"exp":   jwt.NewNumericDate(time.Now().Add(30 * 24 * time.Hour)),
+			"scope": "refresh",
+		},
+	)
+	if err != nil {
+		return nil, apperrors.ErrInternal.WithCause(err)
+	}
+
+	return output.NewAuthorize(
+		entity.Authorization{
+			AccessToken:  accessToken,
+			RefreshToken: refreshToken,
+		},
+	), nil
+}

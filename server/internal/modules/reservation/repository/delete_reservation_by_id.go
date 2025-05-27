@@ -2,9 +2,11 @@ package repository
 
 import (
 	"context"
+
+	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
 )
 
-func (r *Repository) DeleteReservationByID(ctx context.Context, reservationID int) (int, error) {
+func (r *Repository) DeleteReservationByID(ctx context.Context, reservationID int) error {
 	row := r.db.QueryRow(ctx, `
         DELETE FROM
             reservations
@@ -15,5 +17,9 @@ func (r *Repository) DeleteReservationByID(ctx context.Context, reservationID in
 
 	var n int
 	err := row.Scan(&n)
-	return n, err
+	if err != nil {
+		return apperrors.ErrInternal.WithCause(err)
+	}
+
+	return nil
 }

@@ -2,31 +2,20 @@ package usecase
 
 import (
 	"context"
-	"time"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
+	"github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/dto/input"
+	"github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/dto/output"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/repository"
 )
 
-type GetMyReservationsInput struct {
-	UserID string
-	Date   time.Time
-}
-
-type GetMyReservationsOutput struct {
-	Reservations []entity.Reservation
-}
-
-func (u *Usecase) GetMyReservations(ctx context.Context, input *GetMyReservationsInput) (*GetMyReservationsOutput, error) {
+func (u *Usecase) GetMyReservations(ctx context.Context, params *input.GetMyReservations) (*output.GetMyReservations, error) {
 	rsvs, err := u.rsvrepo.GetMyReservations(ctx, &repository.GetMyReservationsArgs{
-		UserID: input.UserID,
-		Date:   input.Date,
+		UserID: params.UserID,
+		Date:   params.Date,
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	return &GetMyReservationsOutput{
-		Reservations: rsvs,
-	}, nil
+	return output.NewGetMyReservations(rsvs), nil
 }

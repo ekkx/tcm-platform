@@ -2,14 +2,12 @@ package usecase
 
 import (
 	"context"
+
+	"github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/dto/input"
 )
 
-type DeleteReservationByIDInput struct {
-	ReservationID int
-}
-
-func (u *Usecase) DeleteReservationByID(ctx context.Context, input *DeleteReservationByIDInput) error {
-	_, err := u.rsvrepo.DeleteReservationByID(ctx, input.ReservationID)
+func (u *Usecase) DeleteReservationByID(ctx context.Context, params *input.DeleteReservationByID) error {
+	err := u.rsvrepo.DeleteReservationByID(ctx, params.ReservationID)
 	if err != nil {
 		return err
 	}

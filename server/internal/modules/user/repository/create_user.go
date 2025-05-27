@@ -1,6 +1,10 @@
 package repository
 
-import "context"
+import (
+	"context"
+
+	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
+)
 
 type CreateUserArgs struct {
 	ID                string `json:"id"`
@@ -25,5 +29,9 @@ func (r *Repository) CreateUser(ctx context.Context, args *CreateUserArgs) (stri
 
 	var userID string
 	err := row.Scan(&userID)
-	return userID, err
+	if err != nil {
+		return "", apperrors.ErrInternal.WithCause(err)
+	}
+
+	return userID, nil
 }

@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+
+	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
 )
 
 type UpdateUserPasswordArgs struct {
@@ -9,7 +11,7 @@ type UpdateUserPasswordArgs struct {
 	ID                string
 }
 
-func (r *Repository) UpdateUserPassword(ctx context.Context, args *UpdateUserPasswordArgs) (int, error) {
+func (r *Repository) UpdateUserPassword(ctx context.Context, args *UpdateUserPasswordArgs) error {
 	row := r.db.QueryRow(ctx, `
         UPDATE
             users
@@ -23,5 +25,9 @@ func (r *Repository) UpdateUserPassword(ctx context.Context, args *UpdateUserPas
 
 	var n int
 	err := row.Scan(&n)
-	return n, err
+	if err != nil {
+		return apperrors.ErrInternal.WithCause(err)
+	}
+
+	return nil
 }

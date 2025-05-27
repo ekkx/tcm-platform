@@ -5,19 +5,20 @@ import (
 	"time"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
-	"github.com/ekkx/tcmrsv-web/server/internal/core/vo"
+	"github.com/ekkx/tcmrsv-web/server/internal/core/types"
+	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
 )
 
 type CreateReservationArgs struct {
-	UserID     string    `json:"user_id"`
-	Campus     vo.Campus `json:"campus"`
-	RoomID     string    `json:"room_id"`
-	Date       time.Time `json:"date"`
-	FromHour   int32     `json:"from_hour"`
-	FromMinute int32     `json:"from_minute"`
-	ToHour     int32     `json:"to_hour"`
-	ToMinute   int32     `json:"to_minute"`
-	BookerName *string   `json:"booker_name"`
+	UserID     string           `json:"user_id"`
+	CampusType types.CampusType `json:"campus_type"`
+	RoomID     string           `json:"room_id"`
+	Date       time.Time        `json:"date"`
+	FromHour   int32            `json:"from_hour"`
+	FromMinute int32            `json:"from_minute"`
+	ToHour     int32            `json:"to_hour"`
+	ToMinute   int32            `json:"to_minute"`
+	BookerName *string          `json:"booker_name"`
 }
 
 func (r *Repository) CreateReservation(ctx context.Context, args *CreateReservationArgs) (entity.Reservation, error) {
@@ -34,13 +35,18 @@ func (r *Repository) CreateReservation(ctx context.Context, args *CreateReservat
             )
         RETURNING
             reservations.*`,
-		args.UserID, args.Campus, args.RoomID, args.Date,
+		args.UserID, args.CampusType, args.RoomID, args.Date,
 		args.FromHour, args.FromMinute, args.ToHour, args.ToMinute, args.BookerName,
 	)
+
 	var rsv entity.Reservation
 	err := row.Scan(
 		&rsv.ID, &rsv.ExternalID, &rsv.UserID, &rsv.Campus, &rsv.RoomID, &rsv.Date,
 		&rsv.FromHour, &rsv.FromMinute, &rsv.ToHour, &rsv.ToMinute, &rsv.BookerName, &rsv.CreatedAt,
 	)
-	return rsv, err
+	if err != nil {
+		return entity.Reservation{}, apperrors.ErrInternal.WithCause(err)
+	}
+
+	return rsv, nil
 }

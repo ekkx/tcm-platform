@@ -66,3 +66,27 @@ migrate-down:
 sql-gen:
 	docker compose run --rm api bash -c "cd server && sqlc generate"
 .PHONY: sql-gen
+
+#? test: テストを実行
+test:
+	docker compose -f compose.test.yaml -p tcmrsv-test up -d api-test db-test
+
+	@echo "⏳ テスト用 PostgreSQL コンテナを待機中..."
+	@until docker compose -p tcmrsv-test exec -T db-test pg_isready -U user -p 5433; do \
+		sleep 1; \
+	done
+
+	@echo "🧹 マイグレーションを初期化中..."
+	docker compose -p tcmrsv-test exec -T api-test bash -c "cd server && migrate -source file://migrations -database postgres://user:password@db-test:5433/db?sslmode=disable down -all"
+
+	@echo "🚀 マイグレーションを開始"
+	docker compose -p tcmrsv-test exec -T api-test bash -c "cd server && migrate -source file://migrations -database postgres://user:password@db-test:5433/db?sslmode=disable up"
+
+	@echo "🧪 テスト実行中..."
+	docker compose -p tcmrsv-test exec -T api-test bash -c "cd server && go test -v ./internal/..."
+.PHONY: test
+
+#? test-down: テスト用コンテナを停止
+test-down:
+	docker compose -f compose.test.yaml -p tcmrsv-test down
+.PHONY: test-down

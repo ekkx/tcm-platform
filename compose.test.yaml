@@ -1,24 +1,26 @@
 services:
-  api:
-    container_name: api
+  api-test:
+    container_name: api-test
     build:
-      context: ./docker/api/development
+      context: ./docker/api/test
       dockerfile: Dockerfile
     ports:
-      - 50051:50051
+      - 50052:50052
     volumes:
       - .:/api
     env_file:
-      - ./server/.env
+      - ./server/.env.test
     depends_on:
-      - db
-  db:
-    container_name: db
+      - db-test
+  db-test:
+    container_name: db-test
     image: postgres:15
     environment:
       - POSTGRES_DB=db
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
       - TZ="Asia/Tokyo"
+    command: ["postgres", "-p", "5433"]
     ports:
-      - 5432:5432
+      - 5433:5433
+

@@ -1,0 +1,82 @@
+package usecase
+
+import (
+	"context"
+	"errors"
+	"time"
+
+	"github.com/ekkx/tcmrsv"
+	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
+	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
+	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/output"
+	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
+	"github.com/ekkx/tcmrsv-web/server/pkg/jwter"
+	"github.com/golang-jwt/jwt/v5"
+)
+
+func (uc *Usecase) Reauthorize(ctx context.Context, params *input.Reauthorize) (*output.Reauthorize, error) {
+	if err := params.Validate(); err != nil {
+		return nil, apperrors.InvalidArgument.WithCause(err)
+	}
+
+	// リフレッシュトークンの検証
+	uID, err := jwter.Verify(params.RefreshToken, "refresh", []byte(params.JWTSecret))
+	if err != nil {
+		return nil, err
+	}
+
+	// ユーザーが存在するか確認
+	u, err := uc.userRepo.GetUserByID(ctx, *uID)
+	if err != nil {
+		if errors.Is(err, apperrors.ErrUserNotFound) {
+			return nil, apperrors.ErrRequestUserNotFound
+		}
+		return nil, apperrors.ErrInternal.WithCause(err)
+	}
+
+	// 念の為TCMにログイン
+	rawPassword, err := cryptohelper.DecryptAES(u.EncryptedPassword, []byte(params.PasswordAESKey))
+	if err != nil {
+		return nil, apperrors.ErrInternal.WithCause(err)
+	}
+
+	if err := uc.tcmClient.Login(&tcmrsv.LoginParams{
+		UserID:   u.ID,
+		Password: rawPassword,
+	}); err != nil {
+		return nil, apperrors.ErrInvalidEmailOrPassword
+	}
+
+	// アクセストークンとリフレッシュトークンを生成
+	accessToken, err := generateToken(
+		[]byte(params.JWTSecret),
+		jwt.MapClaims{
+			"sub":   *uID,
+			"scope": "access",
+			"exp":   jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	refreshToken, err := generateToken(
+		[]byte(params.JWTSecret),
+		jwt.MapClaims{
+			"sub":   *uID,
+			"exp":   jwt.NewNumericDate(time.Now().Add(30 * 24 * time.Hour)),
+			"scope": "refresh",
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return output.NewReauthorize(
+		entity.Authorization{
+			AccessToken:  accessToken,
+			RefreshToken: refreshToken,
+		},
+	), nil
+}

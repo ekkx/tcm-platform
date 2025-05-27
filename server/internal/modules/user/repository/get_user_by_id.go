@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func (r *Repository) GetUserByID(ctx context.Context, id string) (entity.User, *apperrors.Error) {
+func (r *Repository) GetUserByID(ctx context.Context, id string) (entity.User, error) {
 	row := r.db.QueryRow(ctx, `
         SELECT
             users.id,

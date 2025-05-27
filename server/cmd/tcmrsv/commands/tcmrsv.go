@@ -8,7 +8,7 @@ import (
 
 	"github.com/ekkx/tcmrsv-web/server/pkg/config"
 
-	authorize_v1 "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/authorize"
+	auth_v1 "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/authorization"
 	reservation_v1 "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/reservation"
 	room_v1 "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/room"
 
@@ -35,7 +35,7 @@ func Run(cfg *config.Config) error {
 	// grpc.UnaryInterceptor(interceptor.Intercepter1),
 	)
 
-	authorize_v1.RegisterAuthorizeServiceServer(s, deps.AuthorizeServiceServer)
+	auth_v1.RegisterAuthorizationServiceServer(s, deps.AuthorizationServiceServer)
 	reservation_v1.RegisterReservationServiceServer(s, deps.ReservationServiceServer)
 	room_v1.RegisterRoomServiceServer(s, deps.RoomServiceServer)
 
