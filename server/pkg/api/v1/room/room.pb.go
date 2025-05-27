@@ -73,52 +73,52 @@ func (PianoType) EnumDescriptor() ([]byte, []int) {
 	return file_v1_room_room_proto_rawDescGZIP(), []int{0}
 }
 
-type Campus int32
+type CampusType int32
 
 const (
-	Campus_CAMPUS_UNSPECIFIED Campus = 0
-	Campus_NAKAMEGURO         Campus = 1
-	Campus_IKEBUKURO          Campus = 2
+	CampusType_CAMPUS_UNSPECIFIED CampusType = 0
+	CampusType_NAKAMEGURO         CampusType = 1
+	CampusType_IKEBUKURO          CampusType = 2
 )
 
-// Enum value maps for Campus.
+// Enum value maps for CampusType.
 var (
-	Campus_name = map[int32]string{
+	CampusType_name = map[int32]string{
 		0: "CAMPUS_UNSPECIFIED",
 		1: "NAKAMEGURO",
 		2: "IKEBUKURO",
 	}
-	Campus_value = map[string]int32{
+	CampusType_value = map[string]int32{
 		"CAMPUS_UNSPECIFIED": 0,
 		"NAKAMEGURO":         1,
 		"IKEBUKURO":          2,
 	}
 )
 
-func (x Campus) Enum() *Campus {
-	p := new(Campus)
+func (x CampusType) Enum() *CampusType {
+	p := new(CampusType)
 	*p = x
 	return p
 }
 
-func (x Campus) String() string {
+func (x CampusType) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (Campus) Descriptor() protoreflect.EnumDescriptor {
+func (CampusType) Descriptor() protoreflect.EnumDescriptor {
 	return file_v1_room_room_proto_enumTypes[1].Descriptor()
 }
 
-func (Campus) Type() protoreflect.EnumType {
+func (CampusType) Type() protoreflect.EnumType {
 	return &file_v1_room_room_proto_enumTypes[1]
 }
 
-func (x Campus) Number() protoreflect.EnumNumber {
+func (x CampusType) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Campus.Descriptor instead.
-func (Campus) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use CampusType.Descriptor instead.
+func (CampusType) EnumDescriptor() ([]byte, []int) {
 	return file_v1_room_room_proto_rawDescGZIP(), []int{1}
 }
 
@@ -130,7 +130,7 @@ type Room struct {
 	PianoNumber   int32                  `protobuf:"varint,4,opt,name=piano_number,json=pianoNumber,proto3" json:"piano_number,omitempty"`
 	IsClassroom   bool                   `protobuf:"varint,5,opt,name=is_classroom,json=isClassroom,proto3" json:"is_classroom,omitempty"`
 	IsBasement    bool                   `protobuf:"varint,6,opt,name=is_basement,json=isBasement,proto3" json:"is_basement,omitempty"`
-	Campus        Campus                 `protobuf:"varint,7,opt,name=campus,proto3,enum=room.v1.Campus" json:"campus,omitempty"`
+	CampusType    CampusType             `protobuf:"varint,7,opt,name=campus_type,json=campusType,proto3,enum=room.v1.CampusType" json:"campus_type,omitempty"`
 	Floor         int32                  `protobuf:"varint,8,opt,name=floor,proto3" json:"floor,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -208,11 +208,11 @@ func (x *Room) GetIsBasement() bool {
 	return false
 }
 
-func (x *Room) GetCampus() Campus {
+func (x *Room) GetCampusType() CampusType {
 	if x != nil {
-		return x.Campus
+		return x.CampusType
 	}
-	return Campus_CAMPUS_UNSPECIFIED
+	return CampusType_CAMPUS_UNSPECIFIED
 }
 
 func (x *Room) GetFloor() int32 {
@@ -306,7 +306,7 @@ var File_v1_room_room_proto protoreflect.FileDescriptor
 
 const file_v1_room_room_proto_rawDesc = "" +
 	"\n" +
-	"\x12v1/room/room.proto\x12\aroom.v1\"\x83\x02\n" +
+	"\x12v1/room/room.proto\x12\aroom.v1\"\x90\x02\n" +
 	"\x04Room\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x121\n" +
@@ -315,8 +315,9 @@ const file_v1_room_room_proto_rawDesc = "" +
 	"\fpiano_number\x18\x04 \x01(\x05R\vpianoNumber\x12!\n" +
 	"\fis_classroom\x18\x05 \x01(\bR\visClassroom\x12\x1f\n" +
 	"\vis_basement\x18\x06 \x01(\bR\n" +
-	"isBasement\x12'\n" +
-	"\x06campus\x18\a \x01(\x0e2\x0f.room.v1.CampusR\x06campus\x12\x14\n" +
+	"isBasement\x124\n" +
+	"\vcampus_type\x18\a \x01(\x0e2\x13.room.v1.CampusTypeR\n" +
+	"campusType\x12\x14\n" +
 	"\x05floor\x18\b \x01(\x05R\x05floor\"\x11\n" +
 	"\x0fGetRoomsRequest\"4\n" +
 	"\rGetRoomsReply\x12#\n" +
@@ -325,8 +326,9 @@ const file_v1_room_room_proto_rawDesc = "" +
 	"\x16PIANO_TYPE_UNSPECIFIED\x10\x00\x12\t\n" +
 	"\x05GRAND\x10\x01\x12\v\n" +
 	"\aUPRIGHT\x10\x02\x12\b\n" +
-	"\x04NONE\x10\x03*?\n" +
-	"\x06Campus\x12\x16\n" +
+	"\x04NONE\x10\x03*C\n" +
+	"\n" +
+	"CampusType\x12\x16\n" +
 	"\x12CAMPUS_UNSPECIFIED\x10\x00\x12\x0e\n" +
 	"\n" +
 	"NAKAMEGURO\x10\x01\x12\r\n" +
@@ -350,14 +352,14 @@ var file_v1_room_room_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_v1_room_room_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_v1_room_room_proto_goTypes = []any{
 	(PianoType)(0),          // 0: room.v1.PianoType
-	(Campus)(0),             // 1: room.v1.Campus
+	(CampusType)(0),         // 1: room.v1.CampusType
 	(*Room)(nil),            // 2: room.v1.Room
 	(*GetRoomsRequest)(nil), // 3: room.v1.GetRoomsRequest
 	(*GetRoomsReply)(nil),   // 4: room.v1.GetRoomsReply
 }
 var file_v1_room_room_proto_depIdxs = []int32{
 	0, // 0: room.v1.Room.piano_type:type_name -> room.v1.PianoType
-	1, // 1: room.v1.Room.campus:type_name -> room.v1.Campus
+	1, // 1: room.v1.Room.campus_type:type_name -> room.v1.CampusType
 	2, // 2: room.v1.GetRoomsReply.rooms:type_name -> room.v1.Room
 	3, // 3: room.v1.RoomService.GetRooms:input_type -> room.v1.GetRoomsRequest
 	4, // 4: room.v1.RoomService.GetRooms:output_type -> room.v1.GetRoomsReply

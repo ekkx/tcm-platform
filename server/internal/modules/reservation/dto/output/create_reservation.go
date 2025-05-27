@@ -19,21 +19,21 @@ func NewCreateReservation(reservation entity.Reservation) *CreateReservation {
 }
 
 func (output *CreateReservation) ToProto() *reservation_v1.CreateReservationReply {
-	var campus room_v1.Campus
-	switch output.Reservation.Campus {
+	var campusType room_v1.CampusType
+	switch output.Reservation.CampusType {
 	case types.CampusTypeNakameguro:
-		campus = room_v1.Campus_NAKAMEGURO
+		campusType = room_v1.CampusType_NAKAMEGURO
 	case types.CampusTypeIkebukuro:
-		campus = room_v1.Campus_IKEBUKURO
+		campusType = room_v1.CampusType_IKEBUKURO
 	default:
-		campus = room_v1.Campus_CAMPUS_UNSPECIFIED
+		campusType = room_v1.CampusType_CAMPUS_UNSPECIFIED
 	}
 
 	return &reservation_v1.CreateReservationReply{
 		Reservation: &reservation_v1.Reservation{
 			Id:         output.Reservation.ID,
 			ExternalId: output.Reservation.ExternalID,
-			Campus:     campus,
+			CampusType: campusType,
 			Date:       timestamppb.New(output.Reservation.Date),
 			RoomId:     output.Reservation.RoomID,
 			FromHour:   output.Reservation.FromHour,

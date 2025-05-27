@@ -49,7 +49,7 @@ func (input *CreateReservation) FromProto(ctx context.Context, req *reservation_
 	}
 
 	// input.UserID = ctxhelper.GetGRPCRequestUser(ctx)
-	input.CampusType = types.CampusType(req.Reservation.Campus.String())
+	input.CampusType = types.CampusType(req.Reservation.CampusType.String())
 	input.Date = &date
 	input.FromHour = req.Reservation.FromHour
 	input.FromMinute = req.Reservation.FromMinute

@@ -25,7 +25,7 @@ func (r *Repository) CreateReservation(ctx context.Context, args *CreateReservat
 	row := r.db.QueryRow(ctx, `
         INSERT INTO
             reservations (
-                user_id, campus, room_id, date,
+                user_id, campus_type, room_id, date,
                 from_hour, from_minute, to_hour, to_minute, booker_name
             )
         VALUES
@@ -41,7 +41,7 @@ func (r *Repository) CreateReservation(ctx context.Context, args *CreateReservat
 
 	var rsv entity.Reservation
 	err := row.Scan(
-		&rsv.ID, &rsv.ExternalID, &rsv.UserID, &rsv.Campus, &rsv.RoomID, &rsv.Date,
+		&rsv.ID, &rsv.ExternalID, &rsv.UserID, &rsv.CampusType, &rsv.RoomID, &rsv.Date,
 		&rsv.FromHour, &rsv.FromMinute, &rsv.ToHour, &rsv.ToMinute, &rsv.BookerName, &rsv.CreatedAt,
 	)
 	if err != nil {

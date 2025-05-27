@@ -27,7 +27,7 @@ type Reservation struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	ExternalId    *string                `protobuf:"bytes,2,opt,name=external_id,json=externalId,proto3,oneof" json:"external_id,omitempty"`
-	Campus        room.Campus            `protobuf:"varint,3,opt,name=campus,proto3,enum=room.v1.Campus" json:"campus,omitempty"`
+	CampusType    room.CampusType        `protobuf:"varint,3,opt,name=campus_type,json=campusType,proto3,enum=room.v1.CampusType" json:"campus_type,omitempty"`
 	Date          *timestamp.Timestamp   `protobuf:"bytes,4,opt,name=date,proto3" json:"date,omitempty"`
 	RoomId        string                 `protobuf:"bytes,5,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	FromHour      int32                  `protobuf:"varint,6,opt,name=from_hour,json=fromHour,proto3" json:"from_hour,omitempty"`
@@ -84,11 +84,11 @@ func (x *Reservation) GetExternalId() string {
 	return ""
 }
 
-func (x *Reservation) GetCampus() room.Campus {
+func (x *Reservation) GetCampusType() room.CampusType {
 	if x != nil {
-		return x.Campus
+		return x.CampusType
 	}
-	return room.Campus(0)
+	return room.CampusType(0)
 }
 
 func (x *Reservation) GetDate() *timestamp.Timestamp {
@@ -317,7 +317,7 @@ func (x *GetMyReservationsReply) GetReservations() []*Reservation {
 
 type ReservationInput struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Campus        room.Campus            `protobuf:"varint,1,opt,name=campus,proto3,enum=room.v1.Campus" json:"campus,omitempty"`
+	CampusType    room.CampusType        `protobuf:"varint,1,opt,name=campus_type,json=campusType,proto3,enum=room.v1.CampusType" json:"campus_type,omitempty"`
 	Date          *timestamp.Timestamp   `protobuf:"bytes,2,opt,name=date,proto3" json:"date,omitempty"`
 	FromHour      int32                  `protobuf:"varint,3,opt,name=from_hour,json=fromHour,proto3" json:"from_hour,omitempty"`
 	FromMinute    int32                  `protobuf:"varint,4,opt,name=from_minute,json=fromMinute,proto3" json:"from_minute,omitempty"`
@@ -364,11 +364,11 @@ func (*ReservationInput) Descriptor() ([]byte, []int) {
 	return file_v1_reservation_reservation_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ReservationInput) GetCampus() room.Campus {
+func (x *ReservationInput) GetCampusType() room.CampusType {
 	if x != nil {
-		return x.Campus
+		return x.CampusType
 	}
-	return room.Campus(0)
+	return room.CampusType(0)
 }
 
 func (x *ReservationInput) GetDate() *timestamp.Timestamp {
@@ -715,12 +715,13 @@ var File_v1_reservation_reservation_proto protoreflect.FileDescriptor
 
 const file_v1_reservation_reservation_proto_rawDesc = "" +
 	"\n" +
-	" v1/reservation/reservation.proto\x12\x0ereservation.v1\x1a\x12v1/room/room.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xaa\x03\n" +
+	" v1/reservation/reservation.proto\x12\x0ereservation.v1\x1a\x12v1/room/room.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb7\x03\n" +
 	"\vReservation\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12$\n" +
 	"\vexternal_id\x18\x02 \x01(\tH\x00R\n" +
-	"externalId\x88\x01\x01\x12'\n" +
-	"\x06campus\x18\x03 \x01(\x0e2\x0f.room.v1.CampusR\x06campus\x12.\n" +
+	"externalId\x88\x01\x01\x124\n" +
+	"\vcampus_type\x18\x03 \x01(\x0e2\x13.room.v1.CampusTypeR\n" +
+	"campusType\x12.\n" +
 	"\x04date\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x04date\x12\x17\n" +
 	"\aroom_id\x18\x05 \x01(\tR\x06roomId\x12\x1b\n" +
 	"\tfrom_hour\x18\x06 \x01(\x05R\bfromHour\x12\x1f\n" +
@@ -741,9 +742,10 @@ const file_v1_reservation_reservation_proto_rawDesc = "" +
 	"\vreservation\x18\x01 \x01(\v2\x1b.reservation.v1.ReservationR\vreservation\"\x1a\n" +
 	"\x18GetMyReservationsRequest\"Y\n" +
 	"\x16GetMyReservationsReply\x12?\n" +
-	"\freservations\x18\x01 \x03(\v2\x1b.reservation.v1.ReservationR\freservations\"\x8d\x04\n" +
-	"\x10ReservationInput\x12'\n" +
-	"\x06campus\x18\x01 \x01(\x0e2\x0f.room.v1.CampusR\x06campus\x12.\n" +
+	"\freservations\x18\x01 \x03(\v2\x1b.reservation.v1.ReservationR\freservations\"\x9a\x04\n" +
+	"\x10ReservationInput\x124\n" +
+	"\vcampus_type\x18\x01 \x01(\x0e2\x13.room.v1.CampusTypeR\n" +
+	"campusType\x12.\n" +
 	"\x04date\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x04date\x12\x1b\n" +
 	"\tfrom_hour\x18\x03 \x01(\x05R\bfromHour\x12\x1f\n" +
 	"\vfrom_minute\x18\x04 \x01(\x05R\n" +
@@ -809,17 +811,17 @@ var file_v1_reservation_reservation_proto_goTypes = []any{
 	(*UpdateReservationReply)(nil),   // 9: reservation.v1.UpdateReservationReply
 	(*DeleteReservationRequest)(nil), // 10: reservation.v1.DeleteReservationRequest
 	(*DeleteReservationReply)(nil),   // 11: reservation.v1.DeleteReservationReply
-	(room.Campus)(0),                 // 12: room.v1.Campus
+	(room.CampusType)(0),             // 12: room.v1.CampusType
 	(*timestamp.Timestamp)(nil),      // 13: google.protobuf.Timestamp
 	(room.PianoType)(0),              // 14: room.v1.PianoType
 }
 var file_v1_reservation_reservation_proto_depIdxs = []int32{
-	12, // 0: reservation.v1.Reservation.campus:type_name -> room.v1.Campus
+	12, // 0: reservation.v1.Reservation.campus_type:type_name -> room.v1.CampusType
 	13, // 1: reservation.v1.Reservation.date:type_name -> google.protobuf.Timestamp
 	13, // 2: reservation.v1.Reservation.created_at:type_name -> google.protobuf.Timestamp
 	0,  // 3: reservation.v1.GetReservationReply.reservation:type_name -> reservation.v1.Reservation
 	0,  // 4: reservation.v1.GetMyReservationsReply.reservations:type_name -> reservation.v1.Reservation
-	12, // 5: reservation.v1.ReservationInput.campus:type_name -> room.v1.Campus
+	12, // 5: reservation.v1.ReservationInput.campus_type:type_name -> room.v1.CampusType
 	13, // 6: reservation.v1.ReservationInput.date:type_name -> google.protobuf.Timestamp
 	14, // 7: reservation.v1.ReservationInput.piano_types:type_name -> room.v1.PianoType
 	5,  // 8: reservation.v1.CreateReservationRequest.reservation:type_name -> reservation.v1.ReservationInput

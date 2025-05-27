@@ -4,16 +4,16 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
-CREATE TYPE campus AS ENUM (
-    '1',
-    '2'
+CREATE TYPE campus_type AS ENUM (
+    '1', -- 中目黒
+    '2' -- 池袋
 );
 
 CREATE TABLE IF NOT EXISTS reservations (
     id SERIAL PRIMARY KEY,
     external_id TEXT DEFAULT NULL UNIQUE,  -- ← ここが NULL = 確定してない
     user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    campus campus NOT NULL,
+    campus_type campus_type NOT NULL,
     room_id TEXT NOT NULL,
     date TIMESTAMP WITH TIME ZONE NOT NULL,
     from_hour INT NOT NULL,

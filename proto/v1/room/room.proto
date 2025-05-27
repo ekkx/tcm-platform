@@ -15,7 +15,7 @@ enum PianoType {
     NONE = 3;
 }
 
-enum Campus {
+enum CampusType {
     CAMPUS_UNSPECIFIED = 0;
     NAKAMEGURO = 1;
     IKEBUKURO = 2;
@@ -28,7 +28,7 @@ message Room {
     int32 piano_number = 4;
     bool is_classroom = 5;
     bool is_basement = 6;
-    Campus campus = 7;
+    CampusType campus_type = 7;
     int32 floor = 8;
 }
 

@@ -1,7 +1,6 @@
 package usecase_test
 
 import (
-	"context"
 	"testing"
 
 	"github.com/ekkx/tcmrsv"
@@ -9,7 +8,6 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/usecase"
 	userrepo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
 	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
-	"github.com/ekkx/tcmrsv-web/server/pkg/config"
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/ctxhelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/database"
@@ -30,10 +28,7 @@ func TestAuthorize_正常系(t *testing.T) {
 
 	t.Run("新規ユーザー認証", func(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
-			cfg, err := config.New()
-			require.NoError(t, err)
-
-			ctx := ctxhelper.SetConfig(context.Background(), cfg)
+			ctx := testhelper.GetContextWithConfig(t)
 
 			userRepo := userrepo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
@@ -62,16 +57,13 @@ func TestAuthorize_正常系(t *testing.T) {
 
 	t.Run("既存ユーザー認証", func(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
-			cfg, err := config.New()
-			require.NoError(t, err)
-
-			ctx := ctxhelper.SetConfig(context.Background(), cfg)
+			ctx := testhelper.GetContextWithConfig(t)
 
 			userRepo := userrepo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
 
 			// 既存のユーザーを作成
-			_, err = userRepo.CreateUser(ctx, &userrepo.CreateUserArgs{
+			_, err := userRepo.CreateUser(ctx, &userrepo.CreateUserArgs{
 				ID:                "testuser",
 				EncryptedPassword: "encryptedpassword",
 			})
@@ -102,16 +94,13 @@ func TestAuthorize_異常系(t *testing.T) {
 
 	t.Run("パラメータの検証エラー", func(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
-			cfg, err := config.New()
-			require.NoError(t, err)
-
-			ctx := ctxhelper.SetConfig(context.Background(), cfg)
+			ctx := testhelper.GetContextWithConfig(t)
 
 			userRepo := userrepo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
 
 			// ユーザーIDが空の場合
-			_, err = uc.Authorize(ctx, &input.Authorize{
+			_, err := uc.Authorize(ctx, &input.Authorize{
 				UserID:         "",
 				Password:       "testpass",
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
@@ -136,15 +125,12 @@ func TestAuthorize_異常系(t *testing.T) {
 
 	t.Run("ユーザーIDが違う", func(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
-			cfg, err := config.New()
-			require.NoError(t, err)
-
-			ctx := ctxhelper.SetConfig(context.Background(), cfg)
+			ctx := testhelper.GetContextWithConfig(t)
 
 			userRepo := userrepo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
 
-			_, err = uc.Authorize(ctx, &input.Authorize{
+			_, err := uc.Authorize(ctx, &input.Authorize{
 				UserID:         "wronguser",
 				Password:       "testpass",
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
@@ -160,15 +146,12 @@ func TestAuthorize_異常系(t *testing.T) {
 
 	t.Run("パスワードが違う", func(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
-			cfg, err := config.New()
-			require.NoError(t, err)
-
-			ctx := ctxhelper.SetConfig(context.Background(), cfg)
+			ctx := testhelper.GetContextWithConfig(t)
 
 			userRepo := userrepo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
 
-			_, err = uc.Authorize(ctx, &input.Authorize{
+			_, err := uc.Authorize(ctx, &input.Authorize{
 				UserID:         "testuser",
 				Password:       "wrongpass",
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,

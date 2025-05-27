@@ -1,7 +1,13 @@
 package usecase
 
-type Usecase struct{}
+import "github.com/ekkx/tcmrsv-web/server/internal/core/port"
 
-func NewUsecase() *Usecase {
-	return &Usecase{}
+type Usecase struct {
+	tcmClient port.TCMClient
+}
+
+func NewUsecase(tcmClient port.TCMClient) *Usecase {
+	return &Usecase{
+		tcmClient: tcmClient,
+	}
 }

@@ -32,7 +32,7 @@ func (r *Repository) GetMyReservations(ctx context.Context, args *GetMyReservati
 	for rows.Next() {
 		var rsv entity.Reservation
 		if err := rows.Scan( // TODO: 共通化できるかも
-			&rsv.ID, &rsv.ExternalID, &rsv.UserID, &rsv.Campus, &rsv.RoomID, &rsv.Date,
+			&rsv.ID, &rsv.ExternalID, &rsv.UserID, &rsv.CampusType, &rsv.RoomID, &rsv.Date,
 			&rsv.FromHour, &rsv.FromMinute, &rsv.ToHour, &rsv.ToMinute, &rsv.BookerName, &rsv.CreatedAt,
 		); err != nil {
 			return nil, apperrors.ErrInternal.WithCause(err)

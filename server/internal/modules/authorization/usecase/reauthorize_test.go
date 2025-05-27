@@ -1,7 +1,6 @@
 package usecase_test
 
 import (
-	"context"
 	"testing"
 	"time"
 
@@ -10,7 +9,6 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/usecase"
 	userrepo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
 	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
-	"github.com/ekkx/tcmrsv-web/server/pkg/config"
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/ctxhelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/database"
@@ -32,10 +30,7 @@ func TestReauthorize_正常系(t *testing.T) {
 
 	t.Run("再認証", func(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
-			cfg, err := config.New()
-			require.NoError(t, err)
-
-			ctx := ctxhelper.SetConfig(context.Background(), cfg)
+			ctx := testhelper.GetContextWithConfig(t)
 
 			userRepo := userrepo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
@@ -74,10 +69,7 @@ func TestReauthorize_異常系(t *testing.T) {
 
 	t.Run("リフレッシュトークンのスコープが不正", func(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
-			cfg, err := config.New()
-			require.NoError(t, err)
-
-			ctx := ctxhelper.SetConfig(context.Background(), cfg)
+			ctx := testhelper.GetContextWithConfig(t)
 
 			userRepo := userrepo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
@@ -103,16 +95,13 @@ func TestReauthorize_異常系(t *testing.T) {
 
 	t.Run("リフレッシュトークンが期限切れ", func(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
-			cfg, err := config.New()
-			require.NoError(t, err)
-
-			ctx := ctxhelper.SetConfig(context.Background(), cfg)
+			ctx := testhelper.GetContextWithConfig(t)
 
 			userRepo := userrepo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
 
 			// 初回認証でユーザーを作成
-			_, err = uc.Authorize(ctx, &input.Authorize{
+			_, err := uc.Authorize(ctx, &input.Authorize{
 				UserID:         "testuser",
 				Password:       "testpass",
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
@@ -141,10 +130,7 @@ func TestReauthorize_異常系(t *testing.T) {
 
 	t.Run("ユーザーが存在しない", func(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
-			cfg, err := config.New()
-			require.NoError(t, err)
-
-			ctx := ctxhelper.SetConfig(context.Background(), cfg)
+			ctx := testhelper.GetContextWithConfig(t)
 
 			userRepo := userrepo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
@@ -170,10 +156,7 @@ func TestReauthorize_異常系(t *testing.T) {
 
 	t.Run("TCMのパスワードが変更された", func(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
-			cfg, err := config.New()
-			require.NoError(t, err)
-
-			ctx := ctxhelper.SetConfig(context.Background(), cfg)
+			ctx := testhelper.GetContextWithConfig(t)
 
 			userRepo := userrepo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)

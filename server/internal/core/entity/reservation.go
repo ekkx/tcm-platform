@@ -10,7 +10,7 @@ type Reservation struct {
 	ID         int64            `json:"id"`
 	ExternalID *string          `json:"external_id"`
 	UserID     string           `json:"user_id"`
-	Campus     types.CampusType `json:"campus"`
+	CampusType types.CampusType `json:"campus_type"`
 	RoomID     string           `json:"room_id"`
 	Date       time.Time        `json:"date"`
 	FromHour   int32            `json:"from_hour"`
