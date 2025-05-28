@@ -4,10 +4,10 @@ import (
 	"testing"
 
 	"github.com/ekkx/tcmrsv"
+	"github.com/ekkx/tcmrsv-web/server/internal/core/apperrors"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/usecase"
-	userrepo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	user_repo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/database"
@@ -18,9 +18,11 @@ import (
 )
 
 func TestAuthorize_正常系(t *testing.T) {
+	testUserID := "testuser"
+	testPassword := "testpass"
 	mockTCMClient := &mock_tcmrsv.MockTCMClient{
 		LoginFunc: func(params *tcmrsv.LoginParams) error {
-			if params.UserID == "testuser" && params.Password == "testpass" {
+			if params.UserID == testUserID && params.Password == testPassword {
 				return nil
 			}
 			return tcmrsv.ErrAuthenticationFailed
@@ -31,33 +33,35 @@ func TestAuthorize_正常系(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
 			ctx := testhelper.GetContextWithConfig(t)
 
-			userRepo := userrepo.NewRepository(db)
+			userRepo := user_repo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
 
 			output, err := uc.Authorize(ctx, &input.Authorize{
-				UserID:         "testuser",
-				Password:       "testpass",
+				UserID:         testUserID,
+				Password:       testPassword,
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
 			require.NoError(t, err)
 
 			// トークンの検証
-			_, err = jwter.Verify(output.Authorization.AccessToken, "access", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
+			uID, err := jwter.Verify(output.Authorization.AccessToken, "access", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
 			require.NoError(t, err)
+			require.Equal(t, testUserID, uID)
 
-			_, err = jwter.Verify(output.Authorization.RefreshToken, "refresh", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
+			uID, err = jwter.Verify(output.Authorization.RefreshToken, "refresh", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
 			require.NoError(t, err)
+			require.Equal(t, testUserID, uID)
 
 			// ユーザーが存在することを確認
-			u, err := userRepo.GetUserByID(ctx, "testuser")
+			u, err := userRepo.GetUserByID(ctx, testUserID)
 			require.NoError(t, err)
-			require.Equal(t, "testuser", u.ID)
+			require.Equal(t, testUserID, u.ID)
 
 			// パスワードが正しく暗号化されていることを確認
 			rawPassword, err := cryptohelper.DecryptAES(u.EncryptedPassword, []byte(ctxhelper.GetConfig(ctx).PasswordAESKey))
 			require.NoError(t, err)
-			require.Equal(t, "testpass", rawPassword)
+			require.Equal(t, testPassword, rawPassword)
 		})
 	})
 
@@ -65,38 +69,42 @@ func TestAuthorize_正常系(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
 			ctx := testhelper.GetContextWithConfig(t)
 
-			userRepo := userrepo.NewRepository(db)
+			userRepo := user_repo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
 
 			// 既存のユーザーを作成
-			_, err := userRepo.CreateUser(ctx, &userrepo.CreateUserArgs{
-				ID:                "testuser",
+			_, err := userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
+				ID:                testUserID,
 				EncryptedPassword: "encryptedpassword",
 			})
 			require.NoError(t, err)
 
 			output, err := uc.Authorize(ctx, &input.Authorize{
-				UserID:         "testuser",
-				Password:       "testpass",
+				UserID:         testUserID,
+				Password:       testPassword,
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
 			require.NoError(t, err)
 
 			// トークンの検証
-			_, err = jwter.Verify(output.Authorization.AccessToken, "access", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
+			uID, err := jwter.Verify(output.Authorization.AccessToken, "access", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
 			require.NoError(t, err)
+			require.Equal(t, testUserID, uID)
 
-			_, err = jwter.Verify(output.Authorization.RefreshToken, "refresh", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
+			uID, err = jwter.Verify(output.Authorization.RefreshToken, "refresh", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
 			require.NoError(t, err)
+			require.Equal(t, testUserID, uID)
 		})
 	})
 }
 
 func TestAuthorize_異常系(t *testing.T) {
+	testUserID := "testuser"
+	testPassword := "testpass"
 	mockTCMClient := &mock_tcmrsv.MockTCMClient{
 		LoginFunc: func(params *tcmrsv.LoginParams) error {
-			if params.UserID == "testuser" && params.Password == "testpass" {
+			if params.UserID == testUserID && params.Password == testPassword {
 				return nil
 			}
 			return tcmrsv.ErrAuthenticationFailed
@@ -107,13 +115,13 @@ func TestAuthorize_異常系(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
 			ctx := testhelper.GetContextWithConfig(t)
 
-			userRepo := userrepo.NewRepository(db)
+			userRepo := user_repo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
 
 			// ユーザーIDが空の場合
 			_, err := uc.Authorize(ctx, &input.Authorize{
 				UserID:         "",
-				Password:       "testpass",
+				Password:       testPassword,
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
@@ -121,7 +129,7 @@ func TestAuthorize_異常系(t *testing.T) {
 
 			// パスワードが空の場合
 			_, err = uc.Authorize(ctx, &input.Authorize{
-				UserID:         "testuser",
+				UserID:         testUserID,
 				Password:       "",
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
@@ -138,12 +146,12 @@ func TestAuthorize_異常系(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
 			ctx := testhelper.GetContextWithConfig(t)
 
-			userRepo := userrepo.NewRepository(db)
+			userRepo := user_repo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
 
 			_, err := uc.Authorize(ctx, &input.Authorize{
 				UserID:         "wronguser",
-				Password:       "testpass",
+				Password:       testPassword,
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
@@ -159,11 +167,11 @@ func TestAuthorize_異常系(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
 			ctx := testhelper.GetContextWithConfig(t)
 
-			userRepo := userrepo.NewRepository(db)
+			userRepo := user_repo.NewRepository(db)
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
 
 			_, err := uc.Authorize(ctx, &input.Authorize{
-				UserID:         "testuser",
+				UserID:         testUserID,
 				Password:       "wrongpass",
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
@@ -171,7 +179,7 @@ func TestAuthorize_異常系(t *testing.T) {
 			require.ErrorIs(t, err, apperrors.ErrInvalidEmailOrPassword)
 
 			// ユーザーが新規作成されていないことを確認
-			_, err = userRepo.GetUserByID(ctx, "testuser")
+			_, err = userRepo.GetUserByID(ctx, testUserID)
 			require.ErrorIs(t, err, apperrors.ErrUserNotFound)
 		})
 	})

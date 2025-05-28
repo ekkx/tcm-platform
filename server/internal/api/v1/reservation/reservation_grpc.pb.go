@@ -31,7 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ReservationServiceClient interface {
 	GetReservation(ctx context.Context, in *GetReservationRequest, opts ...grpc.CallOption) (*GetReservationReply, error)
-	GetMyReservations(ctx context.Context, in *GetMyReservationsRequest, opts ...grpc.CallOption) (*GetMyReservationsReply, error)
+	GetMyReservations(ctx context.Context, in *GetUserReservationsRequest, opts ...grpc.CallOption) (*GetUserReservationsReply, error)
 	CreateReservation(ctx context.Context, in *CreateReservationRequest, opts ...grpc.CallOption) (*CreateReservationReply, error)
 	UpdateReservation(ctx context.Context, in *UpdateReservationRequest, opts ...grpc.CallOption) (*UpdateReservationReply, error)
 	DeleteReservation(ctx context.Context, in *DeleteReservationRequest, opts ...grpc.CallOption) (*DeleteReservationReply, error)
@@ -55,9 +55,9 @@ func (c *reservationServiceClient) GetReservation(ctx context.Context, in *GetRe
 	return out, nil
 }
 
-func (c *reservationServiceClient) GetMyReservations(ctx context.Context, in *GetMyReservationsRequest, opts ...grpc.CallOption) (*GetMyReservationsReply, error) {
+func (c *reservationServiceClient) GetMyReservations(ctx context.Context, in *GetUserReservationsRequest, opts ...grpc.CallOption) (*GetUserReservationsReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMyReservationsReply)
+	out := new(GetUserReservationsReply)
 	err := c.cc.Invoke(ctx, ReservationService_GetMyReservations_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -100,7 +100,7 @@ func (c *reservationServiceClient) DeleteReservation(ctx context.Context, in *De
 // for forward compatibility.
 type ReservationServiceServer interface {
 	GetReservation(context.Context, *GetReservationRequest) (*GetReservationReply, error)
-	GetMyReservations(context.Context, *GetMyReservationsRequest) (*GetMyReservationsReply, error)
+	GetMyReservations(context.Context, *GetUserReservationsRequest) (*GetUserReservationsReply, error)
 	CreateReservation(context.Context, *CreateReservationRequest) (*CreateReservationReply, error)
 	UpdateReservation(context.Context, *UpdateReservationRequest) (*UpdateReservationReply, error)
 	DeleteReservation(context.Context, *DeleteReservationRequest) (*DeleteReservationReply, error)
@@ -117,7 +117,7 @@ type UnimplementedReservationServiceServer struct{}
 func (UnimplementedReservationServiceServer) GetReservation(context.Context, *GetReservationRequest) (*GetReservationReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetReservation not implemented")
 }
-func (UnimplementedReservationServiceServer) GetMyReservations(context.Context, *GetMyReservationsRequest) (*GetMyReservationsReply, error) {
+func (UnimplementedReservationServiceServer) GetMyReservations(context.Context, *GetUserReservationsRequest) (*GetUserReservationsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMyReservations not implemented")
 }
 func (UnimplementedReservationServiceServer) CreateReservation(context.Context, *CreateReservationRequest) (*CreateReservationReply, error) {
@@ -169,7 +169,7 @@ func _ReservationService_GetReservation_Handler(srv interface{}, ctx context.Con
 }
 
 func _ReservationService_GetMyReservations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMyReservationsRequest)
+	in := new(GetUserReservationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -181,7 +181,7 @@ func _ReservationService_GetMyReservations_Handler(srv interface{}, ctx context.
 		FullMethod: ReservationService_GetMyReservations_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ReservationServiceServer).GetMyReservations(ctx, req.(*GetMyReservationsRequest))
+		return srv.(ReservationServiceServer).GetMyReservations(ctx, req.(*GetUserReservationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -1,0 +1,58 @@
+package output
+
+import (
+	rsv_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/reservation"
+	room_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/room"
+	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
+	"github.com/ekkx/tcmrsv-web/server/internal/core/enum"
+	"google.golang.org/protobuf/types/known/timestamppb"
+)
+
+type GetMyReservations struct {
+	Reservations []entity.Reservation
+}
+
+func NewGetMyReservations(reservations []entity.Reservation) *GetMyReservations {
+	return &GetMyReservations{
+		Reservations: reservations,
+	}
+}
+
+func (output *GetMyReservations) ToProto() *rsv_v1.GetUserReservationsReply {
+	protoRsvs := make([]*rsv_v1.Reservation, len(output.Reservations))
+	if len(output.Reservations) == 0 {
+		return &rsv_v1.GetUserReservationsReply{
+			Reservations: protoRsvs,
+		}
+	}
+
+	for _, rsv := range output.Reservations {
+		var campusType room_v1.CampusType
+		switch rsv.CampusType {
+		case enum.CampusTypeNakameguro:
+			campusType = room_v1.CampusType_NAKAMEGURO
+		case enum.CampusTypeIkebukuro:
+			campusType = room_v1.CampusType_IKEBUKURO
+		default:
+			campusType = room_v1.CampusType_CAMPUS_UNSPECIFIED
+		}
+
+		protoRsvs = append(protoRsvs, &rsv_v1.Reservation{
+			Id:         rsv.ID,
+			ExternalId: rsv.ExternalID,
+			CampusType: campusType,
+			Date:       timestamppb.New(rsv.Date),
+			RoomId:     rsv.RoomID,
+			FromHour:   rsv.FromHour,
+			FromMinute: rsv.FromMinute,
+			ToHour:     rsv.ToHour,
+			ToMinute:   rsv.ToMinute,
+			BookerName: rsv.BookerName,
+			CreatedAt:  timestamppb.New(rsv.CreatedAt),
+		})
+	}
+
+	return &rsv_v1.GetUserReservationsReply{
+		Reservations: protoRsvs,
+	}
+}

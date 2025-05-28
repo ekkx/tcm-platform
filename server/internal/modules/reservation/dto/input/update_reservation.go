@@ -4,15 +4,18 @@ import (
 	"context"
 	"time"
 
-	reservation_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/reservation"
+	rsv_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/reservation"
 	"github.com/ekkx/tcmrsv-web/server/internal/core/enum"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/actor"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
 )
 
-type CreateReservation struct {
-	UserID       string
+type UpdateReservation struct {
+	Actor        actor.Actor
+	ID           int64
+	ExternalID   *string
 	CampusType   enum.CampusType
-	Date         *time.Time
+	Date         time.Time
 	FromHour     int32
 	FromMinute   int32
 	ToHour       int32
@@ -26,16 +29,11 @@ type CreateReservation struct {
 	IsBasement   *bool
 }
 
-func NewCreateReservation() *CreateReservation {
-	return &CreateReservation{}
+func NewUpdateReservation() *UpdateReservation {
+	return &UpdateReservation{}
 }
 
-func (input *CreateReservation) Validate() error {
-	// Implement validation logic here if needed
-	return nil
-}
-
-func (input *CreateReservation) FromProto(ctx context.Context, req *reservation_v1.CreateReservationRequest) *CreateReservation {
+func (input *UpdateReservation) FromProto(ctx context.Context, req *rsv_v1.UpdateReservationRequest) *UpdateReservation {
 	var date time.Time
 	if req.Reservation.Date != nil {
 		date = req.Reservation.Date.AsTime()
@@ -49,9 +47,10 @@ func (input *CreateReservation) FromProto(ctx context.Context, req *reservation_
 		}
 	}
 
-	input.UserID = ctxhelper.GetActor(ctx).ID
+	input.Actor = ctxhelper.GetActor(ctx)
+	input.ID = req.ReservationId
 	input.CampusType = enum.CampusType(req.Reservation.CampusType)
-	input.Date = &date
+	input.Date = date
 	input.FromHour = req.Reservation.FromHour
 	input.FromMinute = req.Reservation.FromMinute
 	input.ToHour = req.Reservation.ToHour

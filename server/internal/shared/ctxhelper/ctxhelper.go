@@ -4,11 +4,12 @@ import (
 	"context"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/config"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/actor"
 )
 
 type configKey struct{}
 type accessTokenKey struct{}
-type requestUserKey struct{}
+type actorKey struct{}
 
 func SetConfig(ctx context.Context, cfg *config.Config) context.Context {
 	return context.WithValue(ctx, configKey{}, cfg)
@@ -28,16 +29,11 @@ func GetAccessToken(ctx context.Context) string {
 	return token
 }
 
-type RequestUser struct {
-	ID       string
-	Password string
+func SetActor(ctx context.Context, actor actor.Actor) context.Context {
+	return context.WithValue(ctx, actorKey{}, actor)
 }
 
-func SetRequestUser(ctx context.Context, user RequestUser) context.Context {
-	return context.WithValue(ctx, requestUserKey{}, user)
-}
-
-func GetRequestUser(ctx context.Context) RequestUser {
-	token, _ := ctx.Value(requestUserKey{}).(RequestUser)
+func GetActor(ctx context.Context) actor.Actor {
+	token, _ := ctx.Value(actorKey{}).(actor.Actor)
 	return token
 }

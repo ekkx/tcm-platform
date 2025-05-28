@@ -57,16 +57,3 @@ func (e *Error) WithMessage(message string) *Error {
 		Cause:    e.Cause,
 	}
 }
-
-var (
-	InvalidArgument = &Error{
-		Code:     "invalid_argument",
-		Message:  "invalid argument",
-		GRPCCode: codes.InvalidArgument,
-	}
-	ErrInternal = &Error{
-		Code:     "internal_error",
-		Message:  "internal server error",
-		GRPCCode: codes.Internal,
-	}
-)

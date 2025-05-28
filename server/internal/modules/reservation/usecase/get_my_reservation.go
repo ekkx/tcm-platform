@@ -8,8 +8,8 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/repository"
 )
 
-func (u *Usecase) GetMyReservations(ctx context.Context, params *input.GetMyReservations) (*output.GetMyReservations, error) {
-	rsvs, err := u.rsvrepo.GetMyReservations(ctx, &repository.GetMyReservationsArgs{
+func (u *Usecase) GetUserReservations(ctx context.Context, params *input.GetUserReservations) (*output.GetMyReservations, error) {
+	rsvs, err := u.rsvRepo.GetMyReservations(ctx, &repository.GetMyReservationsArgs{
 		UserID: params.UserID,
 		Date:   params.Date,
 	})

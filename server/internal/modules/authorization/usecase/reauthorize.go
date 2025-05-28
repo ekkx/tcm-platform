@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/ekkx/tcmrsv"
+	"github.com/ekkx/tcmrsv-web/server/internal/core/apperrors"
 	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/output"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/jwter"
 	"github.com/golang-jwt/jwt/v5"

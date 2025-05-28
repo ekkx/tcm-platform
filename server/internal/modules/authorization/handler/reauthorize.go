@@ -3,8 +3,8 @@ package handler
 import (
 	"context"
 
+	auth_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/authorization"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
-	auth_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/authorization"
 )
 
 func (h *Handler) Reauthorize(

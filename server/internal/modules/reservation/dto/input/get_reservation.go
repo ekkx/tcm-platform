@@ -3,21 +3,21 @@ package input
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/api/v1/reservation"
+	rsv_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/reservation"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/actor"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
 )
 
-type DeleteReservation struct {
+type GetReservation struct {
 	Actor         actor.Actor
 	ReservationID int64
 }
 
-func NewDeleteReservation() *DeleteReservation {
-	return &DeleteReservation{}
+func NewGetReservation() *GetReservation {
+	return &GetReservation{}
 }
 
-func (input *DeleteReservation) FromProto(ctx context.Context, req *reservation.DeleteReservationRequest) *DeleteReservation {
+func (input *GetReservation) FromProto(ctx context.Context, req *rsv_v1.GetReservationRequest) *GetReservation {
 	input.Actor = ctxhelper.GetActor(ctx)
 	input.ReservationID = req.ReservationId
 	return input

@@ -1,24 +1,24 @@
 package output
 
 import (
-	reservation_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/reservation"
+	rsv_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/reservation"
 	room_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/room"
 	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
 	"github.com/ekkx/tcmrsv-web/server/internal/core/enum"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type CreateReservation struct {
+type GetReservation struct {
 	Reservation entity.Reservation
 }
 
-func NewCreateReservation(reservation entity.Reservation) *CreateReservation {
-	return &CreateReservation{
+func NewGetReservation(reservation entity.Reservation) *GetReservation {
+	return &GetReservation{
 		Reservation: reservation,
 	}
 }
 
-func (output *CreateReservation) ToProto() *reservation_v1.CreateReservationReply {
+func (output *GetReservation) ToProto() *rsv_v1.GetReservationReply {
 	var campusType room_v1.CampusType
 	switch output.Reservation.CampusType {
 	case enum.CampusTypeNakameguro:
@@ -29,8 +29,8 @@ func (output *CreateReservation) ToProto() *reservation_v1.CreateReservationRepl
 		campusType = room_v1.CampusType_CAMPUS_UNSPECIFIED
 	}
 
-	return &reservation_v1.CreateReservationReply{
-		Reservation: &reservation_v1.Reservation{
+	return &rsv_v1.GetReservationReply{
+		Reservation: &rsv_v1.Reservation{
 			Id:         output.Reservation.ID,
 			ExternalId: output.Reservation.ExternalID,
 			CampusType: campusType,

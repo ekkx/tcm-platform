@@ -2,14 +2,14 @@ syntax = "proto3";
 
 package reservation.v1;
 
-option go_package = "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation";
+option go_package = "github.com/ekkx/tcmrsv-web/server/internal/api/v1/reservation";
 
 import "v1/room/room.proto";
 import "google/protobuf/timestamp.proto";
 
 service ReservationService {
     rpc GetReservation(GetReservationRequest) returns (GetReservationReply);
-    rpc GetMyReservations(GetMyReservationsRequest) returns (GetMyReservationsReply);
+    rpc GetMyReservations(GetUserReservationsRequest) returns (GetUserReservationsReply);
     rpc CreateReservation(CreateReservationRequest) returns (CreateReservationReply);
     rpc UpdateReservation(UpdateReservationRequest) returns (UpdateReservationReply);
     rpc DeleteReservation(DeleteReservationRequest) returns (DeleteReservationReply);
@@ -30,16 +30,16 @@ message Reservation {
 }
 
 message GetReservationRequest {
-    string reservation_id = 1;
+    int64 reservation_id = 1;
 }
 
 message GetReservationReply {
     Reservation reservation = 1;
 }
 
-message GetMyReservationsRequest {}
+message GetUserReservationsRequest {}
 
-message GetMyReservationsReply {
+message GetUserReservationsReply {
     repeated Reservation reservations = 1;
 }
 
@@ -68,7 +68,8 @@ message CreateReservationReply {
 }
 
 message UpdateReservationRequest {
-    ReservationInput reservation = 1;
+    int64 reservation_id = 1;
+    ReservationInput reservation = 2;
 }
 
 message UpdateReservationReply {

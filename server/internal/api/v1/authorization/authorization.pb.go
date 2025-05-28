@@ -276,7 +276,7 @@ const file_v1_authorization_authorization_proto_rawDesc = "" +
 	"\rauthorization\x18\x01 \x01(\v2\x1f.authorization.v1.AuthorizationR\rauthorization2\xc2\x01\n" +
 	"\x14AuthorizationService\x12Q\n" +
 	"\tAuthorize\x12\".authorization.v1.AuthorizeRequest\x1a .authorization.v1.AuthorizeReply\x12W\n" +
-	"\vReauthorize\x12$.authorization.v1.ReauthorizeRequest\x1a\".authorization.v1.ReauthorizeReplyBHZFgithub.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/authorizationb\x06proto3"
+	"\vReauthorize\x12$.authorization.v1.ReauthorizeRequest\x1a\".authorization.v1.ReauthorizeReplyBAZ?github.com/ekkx/tcmrsv-web/server/internal/api/v1/authorizationb\x06proto3"
 
 var (
 	file_v1_authorization_authorization_proto_rawDescOnce sync.Once

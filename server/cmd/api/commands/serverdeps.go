@@ -2,6 +2,9 @@ package commands
 
 import (
 	"github.com/ekkx/tcmrsv"
+	auth_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/authorization"
+	rsv_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/reservation"
+	room_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/room"
 	auth_hdl "github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/handler"
 	auth_uc "github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/usecase"
 	rsv_hdl "github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/handler"
@@ -11,9 +14,6 @@ import (
 	room_repo "github.com/ekkx/tcmrsv-web/server/internal/modules/room/repository"
 	room_uc "github.com/ekkx/tcmrsv-web/server/internal/modules/room/usecase"
 	user_repo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
-	auth_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/authorization"
-	rsv_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation"
-	room_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/room"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )

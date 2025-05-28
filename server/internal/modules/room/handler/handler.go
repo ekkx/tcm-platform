@@ -1,8 +1,8 @@
 package handler
 
 import (
+	room_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/room"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/room/usecase"
-	room_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/room"
 )
 
 type Handler struct {

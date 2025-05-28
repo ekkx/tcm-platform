@@ -3,10 +3,10 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/core/apperrors"
 )
 
-func (r *Repository) DeleteReservationByID(ctx context.Context, reservationID int) error {
+func (r *Repository) DeleteReservationByID(ctx context.Context, reservationID int64) error {
 	row := r.db.QueryRow(ctx, `
         DELETE FROM
             reservations

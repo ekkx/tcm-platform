@@ -334,7 +334,7 @@ const file_v1_room_room_proto_rawDesc = "" +
 	"NAKAMEGURO\x10\x01\x12\r\n" +
 	"\tIKEBUKURO\x10\x022K\n" +
 	"\vRoomService\x12<\n" +
-	"\bGetRooms\x12\x18.room.v1.GetRoomsRequest\x1a\x16.room.v1.GetRoomsReplyB?Z=github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/roomb\x06proto3"
+	"\bGetRooms\x12\x18.room.v1.GetRoomsRequest\x1a\x16.room.v1.GetRoomsReplyB8Z6github.com/ekkx/tcmrsv-web/server/internal/api/v1/roomb\x06proto3"
 
 var (
 	file_v1_room_room_proto_rawDescOnce sync.Once

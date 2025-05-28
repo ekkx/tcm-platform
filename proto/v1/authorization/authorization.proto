@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package authorization.v1;
 
-option go_package = "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/authorization";
+option go_package = "github.com/ekkx/tcmrsv-web/server/internal/api/v1/authorization";
 
 service AuthorizationService {
     rpc Authorize(AuthorizeRequest) returns (AuthorizeReply);

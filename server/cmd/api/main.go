@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/ekkx/tcmrsv-web/server/cmd/tcmrsv/commands"
+	"github.com/ekkx/tcmrsv-web/server/cmd/api/commands"
 	"github.com/ekkx/tcmrsv-web/server/internal/config"
 )
 

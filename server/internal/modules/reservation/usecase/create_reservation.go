@@ -11,7 +11,7 @@ import (
 func (u *Usecase) CreateReservation(ctx context.Context, params *input.CreateReservation) (*output.CreateReservation, error) {
 	// TODO: if params.IsAutoSelect
 
-	rsv, err := u.rsvrepo.CreateReservation(ctx, &repository.CreateReservationArgs{
+	rsv, err := u.rsvRepo.CreateReservation(ctx, &repository.CreateReservationArgs{
 		UserID:     params.UserID,
 		CampusType: params.CampusType,
 		RoomID:     *params.RoomID,

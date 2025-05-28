@@ -7,7 +7,7 @@
 package reservation
 
 import (
-	room "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/room"
+	room "github.com/ekkx/tcmrsv-web/server/internal/api/v1/room"
 	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -149,7 +149,7 @@ func (x *Reservation) GetCreatedAt() *timestamp.Timestamp {
 
 type GetReservationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ReservationId string                 `protobuf:"bytes,1,opt,name=reservation_id,json=reservationId,proto3" json:"reservation_id,omitempty"`
+	ReservationId int64                  `protobuf:"varint,1,opt,name=reservation_id,json=reservationId,proto3" json:"reservation_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -184,11 +184,11 @@ func (*GetReservationRequest) Descriptor() ([]byte, []int) {
 	return file_v1_reservation_reservation_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetReservationRequest) GetReservationId() string {
+func (x *GetReservationRequest) GetReservationId() int64 {
 	if x != nil {
 		return x.ReservationId
 	}
-	return ""
+	return 0
 }
 
 type GetReservationReply struct {
@@ -235,26 +235,26 @@ func (x *GetReservationReply) GetReservation() *Reservation {
 	return nil
 }
 
-type GetMyReservationsRequest struct {
+type GetUserReservationsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetMyReservationsRequest) Reset() {
-	*x = GetMyReservationsRequest{}
+func (x *GetUserReservationsRequest) Reset() {
+	*x = GetUserReservationsRequest{}
 	mi := &file_v1_reservation_reservation_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetMyReservationsRequest) String() string {
+func (x *GetUserReservationsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetMyReservationsRequest) ProtoMessage() {}
+func (*GetUserReservationsRequest) ProtoMessage() {}
 
-func (x *GetMyReservationsRequest) ProtoReflect() protoreflect.Message {
+func (x *GetUserReservationsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_v1_reservation_reservation_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -266,32 +266,32 @@ func (x *GetMyReservationsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetMyReservationsRequest.ProtoReflect.Descriptor instead.
-func (*GetMyReservationsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserReservationsRequest.ProtoReflect.Descriptor instead.
+func (*GetUserReservationsRequest) Descriptor() ([]byte, []int) {
 	return file_v1_reservation_reservation_proto_rawDescGZIP(), []int{3}
 }
 
-type GetMyReservationsReply struct {
+type GetUserReservationsReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Reservations  []*Reservation         `protobuf:"bytes,1,rep,name=reservations,proto3" json:"reservations,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetMyReservationsReply) Reset() {
-	*x = GetMyReservationsReply{}
+func (x *GetUserReservationsReply) Reset() {
+	*x = GetUserReservationsReply{}
 	mi := &file_v1_reservation_reservation_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetMyReservationsReply) String() string {
+func (x *GetUserReservationsReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetMyReservationsReply) ProtoMessage() {}
+func (*GetUserReservationsReply) ProtoMessage() {}
 
-func (x *GetMyReservationsReply) ProtoReflect() protoreflect.Message {
+func (x *GetUserReservationsReply) ProtoReflect() protoreflect.Message {
 	mi := &file_v1_reservation_reservation_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -303,12 +303,12 @@ func (x *GetMyReservationsReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetMyReservationsReply.ProtoReflect.Descriptor instead.
-func (*GetMyReservationsReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserReservationsReply.ProtoReflect.Descriptor instead.
+func (*GetUserReservationsReply) Descriptor() ([]byte, []int) {
 	return file_v1_reservation_reservation_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetMyReservationsReply) GetReservations() []*Reservation {
+func (x *GetUserReservationsReply) GetReservations() []*Reservation {
 	if x != nil {
 		return x.Reservations
 	}
@@ -545,7 +545,8 @@ func (x *CreateReservationReply) GetReservation() *Reservation {
 
 type UpdateReservationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Reservation   *ReservationInput      `protobuf:"bytes,1,opt,name=reservation,proto3" json:"reservation,omitempty"`
+	ReservationId int64                  `protobuf:"varint,1,opt,name=reservation_id,json=reservationId,proto3" json:"reservation_id,omitempty"`
+	Reservation   *ReservationInput      `protobuf:"bytes,2,opt,name=reservation,proto3" json:"reservation,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -578,6 +579,13 @@ func (x *UpdateReservationRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use UpdateReservationRequest.ProtoReflect.Descriptor instead.
 func (*UpdateReservationRequest) Descriptor() ([]byte, []int) {
 	return file_v1_reservation_reservation_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *UpdateReservationRequest) GetReservationId() int64 {
+	if x != nil {
+		return x.ReservationId
+	}
+	return 0
 }
 
 func (x *UpdateReservationRequest) GetReservation() *ReservationInput {
@@ -737,11 +745,11 @@ const file_v1_reservation_reservation_proto_rawDesc = "" +
 	"\f_external_idB\x0e\n" +
 	"\f_booker_name\">\n" +
 	"\x15GetReservationRequest\x12%\n" +
-	"\x0ereservation_id\x18\x01 \x01(\tR\rreservationId\"T\n" +
+	"\x0ereservation_id\x18\x01 \x01(\x03R\rreservationId\"T\n" +
 	"\x13GetReservationReply\x12=\n" +
-	"\vreservation\x18\x01 \x01(\v2\x1b.reservation.v1.ReservationR\vreservation\"\x1a\n" +
-	"\x18GetMyReservationsRequest\"Y\n" +
-	"\x16GetMyReservationsReply\x12?\n" +
+	"\vreservation\x18\x01 \x01(\v2\x1b.reservation.v1.ReservationR\vreservation\"\x1c\n" +
+	"\x1aGetUserReservationsRequest\"[\n" +
+	"\x18GetUserReservationsReply\x12?\n" +
 	"\freservations\x18\x01 \x03(\v2\x1b.reservation.v1.ReservationR\freservations\"\x9a\x04\n" +
 	"\x10ReservationInput\x124\n" +
 	"\vcampus_type\x18\x01 \x01(\x0e2\x13.room.v1.CampusTypeR\n" +
@@ -770,20 +778,21 @@ const file_v1_reservation_reservation_proto_rawDesc = "" +
 	"\x18CreateReservationRequest\x12B\n" +
 	"\vreservation\x18\x01 \x01(\v2 .reservation.v1.ReservationInputR\vreservation\"W\n" +
 	"\x16CreateReservationReply\x12=\n" +
-	"\vreservation\x18\x01 \x01(\v2\x1b.reservation.v1.ReservationR\vreservation\"^\n" +
-	"\x18UpdateReservationRequest\x12B\n" +
-	"\vreservation\x18\x01 \x01(\v2 .reservation.v1.ReservationInputR\vreservation\"W\n" +
+	"\vreservation\x18\x01 \x01(\v2\x1b.reservation.v1.ReservationR\vreservation\"\x85\x01\n" +
+	"\x18UpdateReservationRequest\x12%\n" +
+	"\x0ereservation_id\x18\x01 \x01(\x03R\rreservationId\x12B\n" +
+	"\vreservation\x18\x02 \x01(\v2 .reservation.v1.ReservationInputR\vreservation\"W\n" +
 	"\x16UpdateReservationReply\x12=\n" +
 	"\vreservation\x18\x01 \x01(\v2\x1b.reservation.v1.ReservationR\vreservation\"A\n" +
 	"\x18DeleteReservationRequest\x12%\n" +
 	"\x0ereservation_id\x18\x01 \x01(\x03R\rreservationId\"\x18\n" +
-	"\x16DeleteReservationReply2\x8e\x04\n" +
+	"\x16DeleteReservationReply2\x92\x04\n" +
 	"\x12ReservationService\x12\\\n" +
-	"\x0eGetReservation\x12%.reservation.v1.GetReservationRequest\x1a#.reservation.v1.GetReservationReply\x12e\n" +
-	"\x11GetMyReservations\x12(.reservation.v1.GetMyReservationsRequest\x1a&.reservation.v1.GetMyReservationsReply\x12e\n" +
+	"\x0eGetReservation\x12%.reservation.v1.GetReservationRequest\x1a#.reservation.v1.GetReservationReply\x12i\n" +
+	"\x11GetMyReservations\x12*.reservation.v1.GetUserReservationsRequest\x1a(.reservation.v1.GetUserReservationsReply\x12e\n" +
 	"\x11CreateReservation\x12(.reservation.v1.CreateReservationRequest\x1a&.reservation.v1.CreateReservationReply\x12e\n" +
 	"\x11UpdateReservation\x12(.reservation.v1.UpdateReservationRequest\x1a&.reservation.v1.UpdateReservationReply\x12e\n" +
-	"\x11DeleteReservation\x12(.reservation.v1.DeleteReservationRequest\x1a&.reservation.v1.DeleteReservationReplyBFZDgithub.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservationb\x06proto3"
+	"\x11DeleteReservation\x12(.reservation.v1.DeleteReservationRequest\x1a&.reservation.v1.DeleteReservationReplyB?Z=github.com/ekkx/tcmrsv-web/server/internal/api/v1/reservationb\x06proto3"
 
 var (
 	file_v1_reservation_reservation_proto_rawDescOnce sync.Once
@@ -799,28 +808,28 @@ func file_v1_reservation_reservation_proto_rawDescGZIP() []byte {
 
 var file_v1_reservation_reservation_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_v1_reservation_reservation_proto_goTypes = []any{
-	(*Reservation)(nil),              // 0: reservation.v1.Reservation
-	(*GetReservationRequest)(nil),    // 1: reservation.v1.GetReservationRequest
-	(*GetReservationReply)(nil),      // 2: reservation.v1.GetReservationReply
-	(*GetMyReservationsRequest)(nil), // 3: reservation.v1.GetMyReservationsRequest
-	(*GetMyReservationsReply)(nil),   // 4: reservation.v1.GetMyReservationsReply
-	(*ReservationInput)(nil),         // 5: reservation.v1.ReservationInput
-	(*CreateReservationRequest)(nil), // 6: reservation.v1.CreateReservationRequest
-	(*CreateReservationReply)(nil),   // 7: reservation.v1.CreateReservationReply
-	(*UpdateReservationRequest)(nil), // 8: reservation.v1.UpdateReservationRequest
-	(*UpdateReservationReply)(nil),   // 9: reservation.v1.UpdateReservationReply
-	(*DeleteReservationRequest)(nil), // 10: reservation.v1.DeleteReservationRequest
-	(*DeleteReservationReply)(nil),   // 11: reservation.v1.DeleteReservationReply
-	(room.CampusType)(0),             // 12: room.v1.CampusType
-	(*timestamp.Timestamp)(nil),      // 13: google.protobuf.Timestamp
-	(room.PianoType)(0),              // 14: room.v1.PianoType
+	(*Reservation)(nil),                // 0: reservation.v1.Reservation
+	(*GetReservationRequest)(nil),      // 1: reservation.v1.GetReservationRequest
+	(*GetReservationReply)(nil),        // 2: reservation.v1.GetReservationReply
+	(*GetUserReservationsRequest)(nil), // 3: reservation.v1.GetUserReservationsRequest
+	(*GetUserReservationsReply)(nil),   // 4: reservation.v1.GetUserReservationsReply
+	(*ReservationInput)(nil),           // 5: reservation.v1.ReservationInput
+	(*CreateReservationRequest)(nil),   // 6: reservation.v1.CreateReservationRequest
+	(*CreateReservationReply)(nil),     // 7: reservation.v1.CreateReservationReply
+	(*UpdateReservationRequest)(nil),   // 8: reservation.v1.UpdateReservationRequest
+	(*UpdateReservationReply)(nil),     // 9: reservation.v1.UpdateReservationReply
+	(*DeleteReservationRequest)(nil),   // 10: reservation.v1.DeleteReservationRequest
+	(*DeleteReservationReply)(nil),     // 11: reservation.v1.DeleteReservationReply
+	(room.CampusType)(0),               // 12: room.v1.CampusType
+	(*timestamp.Timestamp)(nil),        // 13: google.protobuf.Timestamp
+	(room.PianoType)(0),                // 14: room.v1.PianoType
 }
 var file_v1_reservation_reservation_proto_depIdxs = []int32{
 	12, // 0: reservation.v1.Reservation.campus_type:type_name -> room.v1.CampusType
 	13, // 1: reservation.v1.Reservation.date:type_name -> google.protobuf.Timestamp
 	13, // 2: reservation.v1.Reservation.created_at:type_name -> google.protobuf.Timestamp
 	0,  // 3: reservation.v1.GetReservationReply.reservation:type_name -> reservation.v1.Reservation
-	0,  // 4: reservation.v1.GetMyReservationsReply.reservations:type_name -> reservation.v1.Reservation
+	0,  // 4: reservation.v1.GetUserReservationsReply.reservations:type_name -> reservation.v1.Reservation
 	12, // 5: reservation.v1.ReservationInput.campus_type:type_name -> room.v1.CampusType
 	13, // 6: reservation.v1.ReservationInput.date:type_name -> google.protobuf.Timestamp
 	14, // 7: reservation.v1.ReservationInput.piano_types:type_name -> room.v1.PianoType
@@ -829,12 +838,12 @@ var file_v1_reservation_reservation_proto_depIdxs = []int32{
 	5,  // 10: reservation.v1.UpdateReservationRequest.reservation:type_name -> reservation.v1.ReservationInput
 	0,  // 11: reservation.v1.UpdateReservationReply.reservation:type_name -> reservation.v1.Reservation
 	1,  // 12: reservation.v1.ReservationService.GetReservation:input_type -> reservation.v1.GetReservationRequest
-	3,  // 13: reservation.v1.ReservationService.GetMyReservations:input_type -> reservation.v1.GetMyReservationsRequest
+	3,  // 13: reservation.v1.ReservationService.GetMyReservations:input_type -> reservation.v1.GetUserReservationsRequest
 	6,  // 14: reservation.v1.ReservationService.CreateReservation:input_type -> reservation.v1.CreateReservationRequest
 	8,  // 15: reservation.v1.ReservationService.UpdateReservation:input_type -> reservation.v1.UpdateReservationRequest
 	10, // 16: reservation.v1.ReservationService.DeleteReservation:input_type -> reservation.v1.DeleteReservationRequest
 	2,  // 17: reservation.v1.ReservationService.GetReservation:output_type -> reservation.v1.GetReservationReply
-	4,  // 18: reservation.v1.ReservationService.GetMyReservations:output_type -> reservation.v1.GetMyReservationsReply
+	4,  // 18: reservation.v1.ReservationService.GetMyReservations:output_type -> reservation.v1.GetUserReservationsReply
 	7,  // 19: reservation.v1.ReservationService.CreateReservation:output_type -> reservation.v1.CreateReservationReply
 	9,  // 20: reservation.v1.ReservationService.UpdateReservation:output_type -> reservation.v1.UpdateReservationReply
 	11, // 21: reservation.v1.ReservationService.DeleteReservation:output_type -> reservation.v1.DeleteReservationReply

@@ -13,4 +13,9 @@ var (
 		Message:  "reservation conflict",
 		GRPCCode: codes.AlreadyExists,
 	}
+	ErrNotYourReservation = &Error{
+		Code:     "not_your_reservation",
+		Message:  "not your reservation",
+		GRPCCode: codes.PermissionDenied,
+	}
 )
