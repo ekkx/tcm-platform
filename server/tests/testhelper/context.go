@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/ekkx/tcmrsv-web/server/pkg/config"
-	"github.com/ekkx/tcmrsv-web/server/pkg/ctxhelper"
+	"github.com/ekkx/tcmrsv-web/server/internal/config"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
 	"github.com/stretchr/testify/require"
 )
 

@@ -5,20 +5,20 @@ import (
 	"time"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
-	"github.com/ekkx/tcmrsv-web/server/internal/core/types"
-	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/core/enum"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
 )
 
 type CreateReservationArgs struct {
-	UserID     string           `json:"user_id"`
-	CampusType types.CampusType `json:"campus_type"`
-	RoomID     string           `json:"room_id"`
-	Date       time.Time        `json:"date"`
-	FromHour   int32            `json:"from_hour"`
-	FromMinute int32            `json:"from_minute"`
-	ToHour     int32            `json:"to_hour"`
-	ToMinute   int32            `json:"to_minute"`
-	BookerName *string          `json:"booker_name"`
+	UserID     string          `json:"user_id"`
+	CampusType enum.CampusType `json:"campus_type"`
+	RoomID     string          `json:"room_id"`
+	Date       time.Time       `json:"date"`
+	FromHour   int32           `json:"from_hour"`
+	FromMinute int32           `json:"from_minute"`
+	ToHour     int32           `json:"to_hour"`
+	ToMinute   int32           `json:"to_minute"`
+	BookerName *string         `json:"booker_name"`
 }
 
 func (r *Repository) CreateReservation(ctx context.Context, args *CreateReservationArgs) (entity.Reservation, error) {

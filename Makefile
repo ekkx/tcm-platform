@@ -35,8 +35,8 @@ protoc:
 	  find proto -name '*.proto' | xargs protoc \
 	  	--experimental_allow_proto3_optional \
 	    --proto_path=proto \
-	    --go_out=server/pkg/api \
-	    --go-grpc_out=server/pkg/api \
+	    --go_out=server/internal/shared/api \
+	    --go-grpc_out=server/internal/shared/api \
 	    --go_opt=paths=source_relative \
 	    --go-grpc_opt=paths=source_relative"
 .PHONY: protoc

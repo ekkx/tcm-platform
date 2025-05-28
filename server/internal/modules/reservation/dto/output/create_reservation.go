@@ -2,9 +2,9 @@ package output
 
 import (
 	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
-	"github.com/ekkx/tcmrsv-web/server/internal/core/types"
-	reservation_v1 "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/reservation"
-	room_v1 "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/room"
+	"github.com/ekkx/tcmrsv-web/server/internal/core/enum"
+	reservation_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation"
+	room_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/room"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -21,9 +21,9 @@ func NewCreateReservation(reservation entity.Reservation) *CreateReservation {
 func (output *CreateReservation) ToProto() *reservation_v1.CreateReservationReply {
 	var campusType room_v1.CampusType
 	switch output.Reservation.CampusType {
-	case types.CampusTypeNakameguro:
+	case enum.CampusTypeNakameguro:
 		campusType = room_v1.CampusType_NAKAMEGURO
-	case types.CampusTypeIkebukuro:
+	case enum.CampusTypeIkebukuro:
 		campusType = room_v1.CampusType_IKEBUKURO
 	default:
 		campusType = room_v1.CampusType_CAMPUS_UNSPECIFIED

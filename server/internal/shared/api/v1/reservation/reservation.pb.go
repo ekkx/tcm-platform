@@ -7,7 +7,7 @@
 package reservation
 
 import (
-	room "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/room"
+	room "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/room"
 	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -783,7 +783,7 @@ const file_v1_reservation_reservation_proto_rawDesc = "" +
 	"\x11GetMyReservations\x12(.reservation.v1.GetMyReservationsRequest\x1a&.reservation.v1.GetMyReservationsReply\x12e\n" +
 	"\x11CreateReservation\x12(.reservation.v1.CreateReservationRequest\x1a&.reservation.v1.CreateReservationReply\x12e\n" +
 	"\x11UpdateReservation\x12(.reservation.v1.UpdateReservationRequest\x1a&.reservation.v1.UpdateReservationReply\x12e\n" +
-	"\x11DeleteReservation\x12(.reservation.v1.DeleteReservationRequest\x1a&.reservation.v1.DeleteReservationReplyB:Z8github.com/ekkx/tcmrsv-web/server/pkg/api/v1/reservationb\x06proto3"
+	"\x11DeleteReservation\x12(.reservation.v1.DeleteReservationRequest\x1a&.reservation.v1.DeleteReservationReplyBFZDgithub.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservationb\x06proto3"
 
 var (
 	file_v1_reservation_reservation_proto_rawDescOnce sync.Once

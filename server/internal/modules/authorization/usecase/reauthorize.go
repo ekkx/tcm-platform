@@ -9,7 +9,7 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/output"
-	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/jwter"
 	"github.com/golang-jwt/jwt/v5"
@@ -23,11 +23,20 @@ func (uc *Usecase) Reauthorize(ctx context.Context, params *input.Reauthorize) (
 	// リフレッシュトークンの検証
 	uID, err := jwter.Verify(params.RefreshToken, "refresh", []byte(params.JWTSecret))
 	if err != nil {
-		return nil, err
+		switch {
+		case errors.Is(err, jwter.ErrInvalidToken):
+			return nil, apperrors.ErrInvalidRefreshToken
+		case errors.Is(err, jwter.ErrTokenExpired):
+			return nil, apperrors.ErrRefreshTokenExpired
+		case errors.Is(err, jwter.ErrInvalidTokenScope):
+			return nil, apperrors.ErrInvalidJWTScope
+		default:
+			return nil, apperrors.ErrInternal.WithCause(err)
+		}
 	}
 
 	// ユーザーが存在するか確認
-	u, err := uc.userRepo.GetUserByID(ctx, *uID)
+	u, err := uc.userRepo.GetUserByID(ctx, uID)
 	if err != nil {
 		if errors.Is(err, apperrors.ErrUserNotFound) {
 			return nil, apperrors.ErrRequestUserNotFound
@@ -49,28 +58,28 @@ func (uc *Usecase) Reauthorize(ctx context.Context, params *input.Reauthorize) (
 	}
 
 	// アクセストークンとリフレッシュトークンを生成
-	accessToken, err := generateToken(
-		[]byte(params.JWTSecret),
+	accessToken, err := jwter.Generate(
 		jwt.MapClaims{
-			"sub":   *uID,
+			"sub":   uID,
 			"scope": "access",
 			"exp":   jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		},
+		[]byte(params.JWTSecret),
 	)
 	if err != nil {
-		return nil, err
+		return nil, apperrors.ErrInternal.WithCause(err)
 	}
 
-	refreshToken, err := generateToken(
-		[]byte(params.JWTSecret),
+	refreshToken, err := jwter.Generate(
 		jwt.MapClaims{
-			"sub":   *uID,
+			"sub":   uID,
 			"exp":   jwt.NewNumericDate(time.Now().Add(30 * 24 * time.Hour)),
 			"scope": "refresh",
 		},
+		[]byte(params.JWTSecret),
 	)
 	if err != nil {
-		return nil, err
+		return nil, apperrors.ErrInternal.WithCause(err)
 	}
 
 	return output.NewReauthorize(

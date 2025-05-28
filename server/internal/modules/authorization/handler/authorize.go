@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
-	auth_v1 "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/authorization"
+	auth_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/authorization"
 )
 
 func (h *Handler) Authorize(

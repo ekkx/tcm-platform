@@ -1,13 +1,15 @@
 package usecase
 
-import "github.com/ekkx/tcmrsv-web/server/internal/core/port"
+import (
+	"github.com/ekkx/tcmrsv-web/server/internal/modules/room/repository"
+)
 
 type Usecase struct {
-	tcmClient port.TCMClient
+	roomRepo *repository.Repository
 }
 
-func NewUsecase(tcmClient port.TCMClient) *Usecase {
+func NewUsecase(roomRepo *repository.Repository) *Usecase {
 	return &Usecase{
-		tcmClient: tcmClient,
+		roomRepo: roomRepo,
 	}
 }

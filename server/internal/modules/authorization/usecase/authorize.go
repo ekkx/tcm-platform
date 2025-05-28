@@ -10,19 +10,11 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/output"
 	userRepo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
+	"github.com/ekkx/tcmrsv-web/server/pkg/jwter"
 	"github.com/golang-jwt/jwt/v5"
 )
-
-func generateToken(jwtSecret []byte, claims jwt.Claims) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtSecret)
-	if err != nil {
-		return "", apperrors.ErrInternal.WithCause(err)
-	}
-	return tokenString, nil
-}
 
 func (uc *Usecase) Authorize(ctx context.Context, params *input.Authorize) (*output.Authorize, error) {
 	if err := params.Validate(); err != nil {
@@ -57,25 +49,25 @@ func (uc *Usecase) Authorize(ctx context.Context, params *input.Authorize) (*out
 		}
 	}
 
-	accessToken, err := generateToken(
-		[]byte(params.JWTSecret),
+	accessToken, err := jwter.Generate(
 		jwt.MapClaims{
 			"sub":   params.UserID,
 			"exp":   jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 			"scope": "access",
 		},
+		[]byte(params.JWTSecret),
 	)
 	if err != nil {
 		return nil, apperrors.ErrInternal.WithCause(err)
 	}
 
-	refreshToken, err := generateToken(
-		[]byte(params.JWTSecret),
+	refreshToken, err := jwter.Generate(
 		jwt.MapClaims{
 			"sub":   params.UserID,
 			"exp":   jwt.NewNumericDate(time.Now().Add(30 * 24 * time.Hour)),
 			"scope": "refresh",
 		},
+		[]byte(params.JWTSecret),
 	)
 	if err != nil {
 		return nil, apperrors.ErrInternal.WithCause(err)

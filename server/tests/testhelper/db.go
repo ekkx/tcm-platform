@@ -5,7 +5,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/ekkx/tcmrsv-web/server/pkg/config"
+	"github.com/ekkx/tcmrsv-web/server/internal/config"
 	"github.com/ekkx/tcmrsv-web/server/pkg/database"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/stretchr/testify/require"

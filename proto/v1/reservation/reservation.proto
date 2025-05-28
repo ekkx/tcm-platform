@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package reservation.v1;
 
-option go_package = "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/reservation";
+option go_package = "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation";
 
 import "v1/room/room.proto";
 import "google/protobuf/timestamp.proto";

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/dto/input"
-	reservation_v1 "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/reservation"
+	reservation_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation"
 )
 
 func (h *Handler) CreateReservation(

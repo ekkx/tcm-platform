@@ -3,8 +3,8 @@ package input
 import (
 	"context"
 
-	auth_v1 "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/authorization"
-	"github.com/ekkx/tcmrsv-web/server/pkg/ctxhelper"
+	auth_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/authorization"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
 	"github.com/go-playground/validator/v10"
 )
 

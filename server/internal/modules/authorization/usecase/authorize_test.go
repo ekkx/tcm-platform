@@ -7,10 +7,11 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/usecase"
 	userrepo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
-	"github.com/ekkx/tcmrsv-web/server/pkg/ctxhelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/database"
+	"github.com/ekkx/tcmrsv-web/server/pkg/jwter"
 	mock_tcmrsv "github.com/ekkx/tcmrsv-web/server/tests/mocks/tcmrsv"
 	"github.com/ekkx/tcmrsv-web/server/tests/testhelper"
 	"github.com/stretchr/testify/require"
@@ -40,8 +41,13 @@ func TestAuthorize_正常系(t *testing.T) {
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
 			require.NoError(t, err)
-			require.NotEmpty(t, output.Authorization.AccessToken)
-			require.NotEmpty(t, output.Authorization.RefreshToken)
+
+			// トークンの検証
+			_, err = jwter.Verify(output.Authorization.AccessToken, "access", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
+			require.NoError(t, err)
+
+			_, err = jwter.Verify(output.Authorization.RefreshToken, "refresh", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
+			require.NoError(t, err)
 
 			// ユーザーが存在することを確認
 			u, err := userRepo.GetUserByID(ctx, "testuser")
@@ -76,8 +82,13 @@ func TestAuthorize_正常系(t *testing.T) {
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
 			require.NoError(t, err)
-			require.NotEmpty(t, output.Authorization.AccessToken)
-			require.NotEmpty(t, output.Authorization.RefreshToken)
+
+			// トークンの検証
+			_, err = jwter.Verify(output.Authorization.AccessToken, "access", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
+			require.NoError(t, err)
+
+			_, err = jwter.Verify(output.Authorization.RefreshToken, "refresh", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
+			require.NoError(t, err)
 		})
 	})
 }

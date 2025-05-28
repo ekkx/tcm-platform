@@ -4,13 +4,13 @@ import (
 	"context"
 	"time"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/core/types"
-	reservation_v1 "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/reservation"
+	"github.com/ekkx/tcmrsv-web/server/internal/core/enum"
+	reservation_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation"
 )
 
 type CreateReservation struct {
 	UserID       string
-	CampusType   types.CampusType
+	CampusType   enum.CampusType
 	Date         *time.Time
 	FromHour     int32
 	FromMinute   int32
@@ -20,7 +20,7 @@ type CreateReservation struct {
 	RoomID       *string
 	BookerName   *string
 	PianoNumbers []int32
-	PianoTypes   []types.PianoType
+	PianoTypes   []enum.PianoType
 	Floors       []int32
 	IsBasement   *bool
 }
@@ -40,16 +40,16 @@ func (input *CreateReservation) FromProto(ctx context.Context, req *reservation_
 		date = req.Reservation.Date.AsTime()
 	}
 
-	var pianoTypes []types.PianoType
+	var pianoTypes []enum.PianoType
 	if req.Reservation.PianoTypes != nil {
-		pianoTypes = make([]types.PianoType, len(req.Reservation.PianoTypes))
+		pianoTypes = make([]enum.PianoType, len(req.Reservation.PianoTypes))
 		for i, pianoType := range req.Reservation.PianoTypes {
-			pianoTypes[i] = types.PianoType(pianoType.Number())
+			pianoTypes[i] = enum.PianoType(pianoType)
 		}
 	}
 
 	// input.UserID = ctxhelper.GetGRPCRequestUser(ctx)
-	input.CampusType = types.CampusType(req.Reservation.CampusType.String())
+	input.CampusType = enum.CampusType(req.Reservation.CampusType)
 	input.Date = &date
 	input.FromHour = req.Reservation.FromHour
 	input.FromMinute = req.Reservation.FromMinute

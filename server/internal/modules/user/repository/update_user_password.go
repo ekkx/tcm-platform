@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
 )
 
 type UpdateUserPasswordArgs struct {

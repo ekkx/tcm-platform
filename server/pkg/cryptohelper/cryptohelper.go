@@ -9,6 +9,10 @@ import (
 	"io"
 )
 
+var (
+	ErrChiphertextTooShort = errors.New("ciphertext too short")
+)
+
 func EncryptAES(raw string, key []byte) (string, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -41,7 +45,7 @@ func DecryptAES(encryptedBase64 string, key []byte) (string, error) {
 	}
 	nonceSize := aesGCM.NonceSize()
 	if len(encrypted) < nonceSize {
-		return "", errors.New("ciphertext too short")
+		return "", ErrChiphertextTooShort
 	}
 	nonce, encrypted := encrypted[:nonceSize], encrypted[nonceSize:]
 	raw, err := aesGCM.Open(nil, nonce, encrypted, nil)

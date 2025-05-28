@@ -8,10 +8,11 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/usecase"
 	userrepo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
-	"github.com/ekkx/tcmrsv-web/server/pkg/ctxhelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/database"
+	"github.com/ekkx/tcmrsv-web/server/pkg/jwter"
 	mock_tcmrsv "github.com/ekkx/tcmrsv-web/server/tests/mocks/tcmrsv"
 	"github.com/ekkx/tcmrsv-web/server/tests/testhelper"
 	"github.com/golang-jwt/jwt/v5"
@@ -51,8 +52,13 @@ func TestReauthorize_正常系(t *testing.T) {
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
 			require.NoError(t, err)
-			require.NotEmpty(t, output2.Authorization.AccessToken)
-			require.NotEmpty(t, output2.Authorization.RefreshToken)
+
+			// トークンの検証
+			_, err = jwter.Verify(output2.Authorization.AccessToken, "access", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
+			require.NoError(t, err)
+
+			_, err = jwter.Verify(output2.Authorization.RefreshToken, "refresh", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
+			require.NoError(t, err)
 		})
 	})
 }
@@ -89,7 +95,7 @@ func TestReauthorize_異常系(t *testing.T) {
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
-			require.ErrorIs(t, err, apperrors.ErrInvalidTokenScope)
+			require.ErrorIs(t, err, apperrors.ErrInvalidJWTScope)
 		})
 	})
 
@@ -110,12 +116,14 @@ func TestReauthorize_異常系(t *testing.T) {
 			require.NoError(t, err)
 
 			// 期限切れのリフレッシュトークンを生成
-			token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-				"sub":   "testuser",
-				"exp":   jwt.NewNumericDate(time.Now().Add(-24 * time.Hour)),
-				"scope": "refresh",
-			})
-			refreshToken, err := token.SignedString([]byte(ctxhelper.GetConfig(ctx).JWTSecret))
+			refreshToken, err := jwter.Generate(
+				jwt.MapClaims{
+					"sub":   "testuser",
+					"exp":   jwt.NewNumericDate(time.Now().Add(-24 * time.Hour)),
+					"scope": "refresh",
+				},
+				[]byte(ctxhelper.GetConfig(ctx).JWTSecret),
+			)
 			require.NoError(t, err)
 
 			// 期限切れのリフレッシュトークンで再認証を試みる
@@ -124,7 +132,7 @@ func TestReauthorize_異常系(t *testing.T) {
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
-			require.ErrorIs(t, err, apperrors.ErrTokenExpired)
+			require.ErrorIs(t, err, apperrors.ErrRefreshTokenExpired)
 		})
 	})
 
@@ -136,12 +144,14 @@ func TestReauthorize_異常系(t *testing.T) {
 			uc := usecase.NewUsecase(mockTCMClient, userRepo)
 
 			// 存在しないユーザーのリフレッシュトークンを生成
-			token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-				"sub":   "nonexistentuser",
-				"exp":   jwt.NewNumericDate(time.Now().Add(30 * 24 * time.Hour)),
-				"scope": "refresh",
-			})
-			refreshToken, err := token.SignedString([]byte(ctxhelper.GetConfig(ctx).JWTSecret))
+			refreshToken, err := jwter.Generate(
+				jwt.MapClaims{
+					"sub":   "nonexistentuser",
+					"exp":   jwt.NewNumericDate(time.Now().Add(30 * 24 * time.Hour)),
+					"scope": "refresh",
+				},
+				[]byte(ctxhelper.GetConfig(ctx).JWTSecret),
+			)
 			require.NoError(t, err)
 
 			// 存在しないユーザーで再認証を試みる

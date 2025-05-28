@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
-	"github.com/ekkx/tcmrsv-web/server/pkg/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
 	"github.com/jackc/pgx/v5"
 )
 

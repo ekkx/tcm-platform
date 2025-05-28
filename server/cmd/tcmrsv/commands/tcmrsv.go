@@ -6,11 +6,11 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/ekkx/tcmrsv-web/server/pkg/config"
+	"github.com/ekkx/tcmrsv-web/server/internal/config"
 
-	auth_v1 "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/authorization"
-	reservation_v1 "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/reservation"
-	room_v1 "github.com/ekkx/tcmrsv-web/server/pkg/api/v1/room"
+	auth_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/authorization"
+	reservation_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation"
+	room_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/room"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
