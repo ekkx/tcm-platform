@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package room.v1;
 
-option go_package = "github.com/ekkx/tcmrsv-web/server/internal/api/v1/room";
+option go_package = "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/room";
 
 service RoomService {
     rpc GetRooms(GetRoomsRequest) returns (GetRoomsReply);

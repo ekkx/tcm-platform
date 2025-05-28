@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/ekkx/tcmrsv-web/server/internal/core/port"
+	"github.com/ekkx/tcmrsv-web/server/internal/domain/port"
 )
 
 type Repository struct {

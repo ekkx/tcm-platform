@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/ekkx/tcmrsv"
-	"github.com/ekkx/tcmrsv-web/server/internal/core/apperrors"
-	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
+	"github.com/ekkx/tcmrsv-web/server/internal/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/output"
 	user_repo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"

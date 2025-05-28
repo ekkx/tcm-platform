@@ -3,7 +3,7 @@ package entity
 import (
 	"time"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/core/enum"
+	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
 )
 
 type Reservation struct {

@@ -2,7 +2,7 @@ package tcmutil
 
 import (
 	"github.com/ekkx/tcmrsv"
-	"github.com/ekkx/tcmrsv-web/server/internal/core/enum"
+	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
 )
 
 func ConvertRoomPianoType(pianoType tcmrsv.RoomPianoType) enum.PianoType {

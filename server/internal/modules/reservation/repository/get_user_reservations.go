@@ -4,16 +4,16 @@ import (
 	"context"
 	"time"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/core/apperrors"
-	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
+	"github.com/ekkx/tcmrsv-web/server/internal/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
 )
 
-type GetMyReservationsArgs struct {
+type GetUserReservationsArgs struct {
 	UserID string    `json:"user_id"`
 	Date   time.Time `json:"date"`
 }
 
-func (r *Repository) GetMyReservations(ctx context.Context, args *GetMyReservationsArgs) ([]entity.Reservation, error) {
+func (r *Repository) GetUserReservations(ctx context.Context, args *GetUserReservationsArgs) ([]entity.Reservation, error) {
 	rows, err := r.db.Query(ctx, `
         SELECT
             reservations.*

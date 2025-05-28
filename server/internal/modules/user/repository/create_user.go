@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/core/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/apperrors"
 )
 
 type CreateUserArgs struct {

@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"github.com/ekkx/tcmrsv-web/server/internal/core/port"
+	"github.com/ekkx/tcmrsv-web/server/internal/domain/port"
 	userRepo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
 )
 

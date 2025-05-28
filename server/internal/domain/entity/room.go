@@ -1,6 +1,6 @@
 package entity
 
-import "github.com/ekkx/tcmrsv-web/server/internal/core/enum"
+import "github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
 
 type Room struct {
 	ID          string          `json:"id"`

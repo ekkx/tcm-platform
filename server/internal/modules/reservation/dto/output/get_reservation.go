@@ -1,10 +1,10 @@
 package output
 
 import (
-	rsv_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/reservation"
-	room_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/room"
-	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
-	"github.com/ekkx/tcmrsv-web/server/internal/core/enum"
+	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
+	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
+	rsv_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation"
+	room_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/room"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

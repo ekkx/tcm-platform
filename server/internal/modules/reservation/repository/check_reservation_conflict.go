@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/core/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/apperrors"
 )
 
 type CheckReservationConflictArgs struct {

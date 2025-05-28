@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/core/apperrors"
-	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
-	"github.com/ekkx/tcmrsv-web/server/internal/core/enum"
+	"github.com/ekkx/tcmrsv-web/server/internal/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
+	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
 )
 
 type CreateReservationArgs struct {

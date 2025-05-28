@@ -9,7 +9,7 @@ import (
 )
 
 func (u *Usecase) GetUserReservations(ctx context.Context, params *input.GetUserReservations) (*output.GetMyReservations, error) {
-	rsvs, err := u.rsvRepo.GetMyReservations(ctx, &repository.GetMyReservationsArgs{
+	rsvs, err := u.rsvRepo.GetUserReservations(ctx, &repository.GetUserReservationsArgs{
 		UserID: params.UserID,
 		Date:   params.Date,
 	})

@@ -3,8 +3,8 @@ package input
 import (
 	"context"
 
-	rsv_v1 "github.com/ekkx/tcmrsv-web/server/internal/api/v1/reservation"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/actor"
+	rsv_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
 )
 

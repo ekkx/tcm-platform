@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/ekkx/tcmrsv"
-	"github.com/ekkx/tcmrsv-web/server/internal/core/entity"
-	"github.com/ekkx/tcmrsv-web/server/internal/core/enum"
+	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
+	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/tcmutil"
 )
 
