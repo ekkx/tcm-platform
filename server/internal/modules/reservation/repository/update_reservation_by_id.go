@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/apperrors"
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
 )
 
 type UpdateReservationByIDArgs struct {

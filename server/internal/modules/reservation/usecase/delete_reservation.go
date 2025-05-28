@@ -3,9 +3,9 @@ package usecase
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/apperrors"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/actor"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
 )
 
 func (uc *Usecase) DeleteReservation(ctx context.Context, params *input.DeleteReservation) error {

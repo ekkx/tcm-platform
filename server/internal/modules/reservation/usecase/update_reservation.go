@@ -3,11 +3,11 @@ package usecase
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/apperrors"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/dto/output"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/repository"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/actor"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
 )
 
 func (uc *Usecase) UpdateReservation(ctx context.Context, params *input.UpdateReservation) (*output.UpdateReservation, error) {

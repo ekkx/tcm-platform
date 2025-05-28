@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/apperrors"
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
 	"github.com/jackc/pgx/v5"
 )
 
