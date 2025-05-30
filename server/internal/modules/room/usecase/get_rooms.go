@@ -9,6 +9,6 @@ import (
 
 func (uc *Usecase) GetRooms(ctx context.Context) *output.GetRooms {
 	// 全て取ってきたいので検索クエリは空のまま
-	rooms := uc.roomRepo.SearchRooms(ctx, repository.SearchRoomsArgs{})
+	rooms := uc.roomRepo.SearchRooms(ctx, &repository.SearchRoomsArgs{})
 	return output.NewGetRooms(rooms)
 }

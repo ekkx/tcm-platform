@@ -1,15 +1,21 @@
 package usecase
 
-import "github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/repository"
+import (
+	rsv_repo "github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/repository"
+	room_repo "github.com/ekkx/tcmrsv-web/server/internal/modules/room/repository"
+)
 
 type Usecase struct {
-	rsvRepo *repository.Repository
+	rsvRepo  *rsv_repo.Repository
+	roomRepo *room_repo.Repository
 }
 
 func NewUsecase(
-	rsvRepo *repository.Repository,
+	rsvRepo *rsv_repo.Repository,
+	roomRepo *room_repo.Repository,
 ) *Usecase {
 	return &Usecase{
-		rsvRepo: rsvRepo,
+		rsvRepo:  rsvRepo,
+		roomRepo: roomRepo,
 	}
 }

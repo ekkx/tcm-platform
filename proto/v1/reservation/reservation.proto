@@ -64,7 +64,7 @@ message CreateReservationRequest {
 }
 
 message CreateReservationReply {
-    Reservation reservation = 1;
+    repeated Reservation reservations = 1;
 }
 
 message UpdateReservationRequest {

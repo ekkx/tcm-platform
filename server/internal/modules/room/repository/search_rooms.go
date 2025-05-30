@@ -16,10 +16,10 @@ type SearchRoomsArgs struct {
 	PianoTypes   []enum.PianoType
 	Floors       []int32
 	IsBasement   *bool
-	Campuses     []enum.CampusType
+	CampusTypes  []enum.CampusType
 }
 
-func (repo *Repository) SearchRooms(ctx context.Context, args SearchRoomsArgs) []entity.Room {
+func (repo *Repository) SearchRooms(ctx context.Context, args *SearchRoomsArgs) []entity.Room {
 	var pianoNumbers []int
 	for _, n := range args.PianoNumbers {
 		pianoNumbers = append(pianoNumbers, int(n))
@@ -36,8 +36,15 @@ func (repo *Repository) SearchRooms(ctx context.Context, args SearchRoomsArgs) [
 	}
 
 	var campuses []tcmrsv.Campus
-	for _, c := range args.Campuses {
-		campuses = append(campuses, tcmrsv.Campus(c))
+	for _, c := range args.CampusTypes {
+		switch c {
+		case enum.CampusTypeIkebukuro:
+			campuses = append(campuses, tcmrsv.CampusIkebukuro)
+		case enum.CampusTypeNakameguro:
+			campuses = append(campuses, tcmrsv.CampusNakameguro)
+		default:
+			campuses = append(campuses, tcmrsv.CampusUnknown)
+		}
 	}
 
 	tcmRooms := repo.tcmClient.GetRoomsFiltered(tcmrsv.GetRoomsFilteredParams{

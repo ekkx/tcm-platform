@@ -10,10 +10,10 @@ import (
 type CheckReservationConflictArgs struct {
 	RoomID     string    `json:"room_id"`
 	Date       time.Time `json:"date"`
-	FromHour   int       `json:"from_hour"`
-	FromMinute int       `json:"from_minute"`
-	ToHour     int       `json:"to_hour"`
-	ToMinute   int       `json:"to_minute"`
+	FromHour   int32     `json:"from_hour"`
+	FromMinute int32     `json:"from_minute"`
+	ToHour     int32     `json:"to_hour"`
+	ToMinute   int32     `json:"to_minute"`
 }
 
 func (r *Repository) CheckReservationConflict(ctx context.Context, args *CheckReservationConflictArgs) (bool, error) {

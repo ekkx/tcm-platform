@@ -501,7 +501,7 @@ func (x *CreateReservationRequest) GetReservation() *ReservationInput {
 
 type CreateReservationReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Reservation   *Reservation           `protobuf:"bytes,1,opt,name=reservation,proto3" json:"reservation,omitempty"`
+	Reservations  []*Reservation         `protobuf:"bytes,1,rep,name=reservations,proto3" json:"reservations,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -536,9 +536,9 @@ func (*CreateReservationReply) Descriptor() ([]byte, []int) {
 	return file_v1_reservation_reservation_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *CreateReservationReply) GetReservation() *Reservation {
+func (x *CreateReservationReply) GetReservations() []*Reservation {
 	if x != nil {
-		return x.Reservation
+		return x.Reservations
 	}
 	return nil
 }
@@ -776,9 +776,9 @@ const file_v1_reservation_reservation_proto_rawDesc = "" +
 	"\f_booker_nameB\x0e\n" +
 	"\f_is_basement\"^\n" +
 	"\x18CreateReservationRequest\x12B\n" +
-	"\vreservation\x18\x01 \x01(\v2 .reservation.v1.ReservationInputR\vreservation\"W\n" +
-	"\x16CreateReservationReply\x12=\n" +
-	"\vreservation\x18\x01 \x01(\v2\x1b.reservation.v1.ReservationR\vreservation\"\x85\x01\n" +
+	"\vreservation\x18\x01 \x01(\v2 .reservation.v1.ReservationInputR\vreservation\"Y\n" +
+	"\x16CreateReservationReply\x12?\n" +
+	"\freservations\x18\x01 \x03(\v2\x1b.reservation.v1.ReservationR\freservations\"\x85\x01\n" +
 	"\x18UpdateReservationRequest\x12%\n" +
 	"\x0ereservation_id\x18\x01 \x01(\x03R\rreservationId\x12B\n" +
 	"\vreservation\x18\x02 \x01(\v2 .reservation.v1.ReservationInputR\vreservation\"W\n" +
@@ -834,7 +834,7 @@ var file_v1_reservation_reservation_proto_depIdxs = []int32{
 	13, // 6: reservation.v1.ReservationInput.date:type_name -> google.protobuf.Timestamp
 	14, // 7: reservation.v1.ReservationInput.piano_types:type_name -> room.v1.PianoType
 	5,  // 8: reservation.v1.CreateReservationRequest.reservation:type_name -> reservation.v1.ReservationInput
-	0,  // 9: reservation.v1.CreateReservationReply.reservation:type_name -> reservation.v1.Reservation
+	0,  // 9: reservation.v1.CreateReservationReply.reservations:type_name -> reservation.v1.Reservation
 	5,  // 10: reservation.v1.UpdateReservationRequest.reservation:type_name -> reservation.v1.ReservationInput
 	0,  // 11: reservation.v1.UpdateReservationReply.reservation:type_name -> reservation.v1.Reservation
 	1,  // 12: reservation.v1.ReservationService.GetReservation:input_type -> reservation.v1.GetReservationRequest

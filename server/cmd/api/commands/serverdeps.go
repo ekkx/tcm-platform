@@ -27,7 +27,7 @@ type ServerDeps struct {
 func GenerateServerDeps(pool *pgxpool.Pool) *ServerDeps {
 	return &ServerDeps{
 		AuthorizationServiceServer: auth_hdl.NewHandler(auth_uc.NewUsecase(tcmrsv.New(), user_repo.NewRepository(pool))),
-		ReservationServiceServer:   rsv_hdl.NewHandler(rsv_uc.NewUsecase(rsv_repo.NewRepository(pool))),
+		ReservationServiceServer:   rsv_hdl.NewHandler(rsv_uc.NewUsecase(rsv_repo.NewRepository(pool), room_repo.NewRepository(tcmrsv.New()))),
 		RoomServiceServer:          room_hdl.NewHandler(room_uc.NewUsecase(room_repo.NewRepository(tcmrsv.New()))),
 	}
 }
