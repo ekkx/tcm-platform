@@ -11,7 +11,11 @@ import (
 func (uc *Usecase) DeleteReservation(ctx context.Context, params *input.DeleteReservation) error {
 	rsv, err := uc.rsvRepo.GetReservationByID(ctx, params.ReservationID)
 	if err != nil {
-		return err
+		return errs.ErrInternal.WithCause(err)
+	}
+
+	if rsv == nil {
+		return errs.ErrReservationNotFound
 	}
 
 	// 予約者からのリクエストであるかを確認
@@ -24,7 +28,7 @@ func (uc *Usecase) DeleteReservation(ctx context.Context, params *input.DeleteRe
 	// 予約を削除
 	err = uc.rsvRepo.DeleteReservationByID(ctx, params.ReservationID)
 	if err != nil {
-		return err
+		return errs.ErrInternal.WithCause(err)
 	}
 
 	return nil

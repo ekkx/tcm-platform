@@ -39,7 +39,7 @@ func (u *Usecase) CreateReservation(ctx context.Context, params *input.CreateRes
 		ToMinute:   params.ToMinute,
 	})
 	if err != nil {
-		return nil, err
+		return nil, errs.ErrInternal.WithCause(err)
 	}
 
 	if hasConflict {
@@ -58,8 +58,8 @@ func (u *Usecase) CreateReservation(ctx context.Context, params *input.CreateRes
 		BookerName: params.BookerName,
 	})
 	if err != nil {
-		return nil, err
+		return nil, errs.ErrInternal.WithCause(err)
 	}
 
-	return output.NewCreateReservation([]entity.Reservation{rsv}), nil
+	return output.NewCreateReservation([]entity.Reservation{*rsv}), nil
 }

@@ -5,11 +5,10 @@ import (
 	"errors"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 	"github.com/jackc/pgx/v5"
 )
 
-func (r *Repository) GetUserByID(ctx context.Context, id string) (entity.User, error) {
+func (r *Repository) GetUserByID(ctx context.Context, id string) (*entity.User, error) {
 	row := r.db.QueryRow(ctx, `
         SELECT
             users.id,
@@ -26,10 +25,10 @@ func (r *Repository) GetUserByID(ctx context.Context, id string) (entity.User, e
 	err := row.Scan(&u.ID, &u.EncryptedPassword, &u.CreatedAt)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return u, errs.ErrUserNotFound
+			return nil, nil
 		}
-		return u, errs.ErrInternal.WithCause(err)
+		return nil, err
 	}
 
-	return u, nil
+	return &u, nil
 }

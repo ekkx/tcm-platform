@@ -158,8 +158,9 @@ func TestAuthorize_異常系(t *testing.T) {
 			require.ErrorIs(t, err, errs.ErrInvalidEmailOrPassword)
 
 			// ユーザーが新規作成されていないことを確認
-			_, err = userRepo.GetUserByID(ctx, "wronguser")
-			require.ErrorIs(t, err, errs.ErrUserNotFound)
+			u, err := userRepo.GetUserByID(ctx, "wronguser")
+			require.NoError(t, err)
+			require.Nil(t, u)
 		})
 	})
 
@@ -179,8 +180,9 @@ func TestAuthorize_異常系(t *testing.T) {
 			require.ErrorIs(t, err, errs.ErrInvalidEmailOrPassword)
 
 			// ユーザーが新規作成されていないことを確認
-			_, err = userRepo.GetUserByID(ctx, testUserID)
-			require.ErrorIs(t, err, errs.ErrUserNotFound)
+			u, err := userRepo.GetUserByID(ctx, testUserID)
+			require.NoError(t, err)
+			require.Nil(t, u)
 		})
 	})
 }

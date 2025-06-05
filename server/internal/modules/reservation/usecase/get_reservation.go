@@ -13,7 +13,11 @@ func (uc *Usecase) GetReservation(ctx context.Context, params *input.GetReservat
 	// 予約情報を取得
 	rsv, err := uc.rsvRepo.GetReservationByID(ctx, params.ReservationID)
 	if err != nil {
-		return nil, err
+		return nil, errs.ErrInternal.WithCause(err)
+	}
+
+	if rsv == nil {
+		return nil, errs.ErrReservationNotFound
 	}
 
 	// ユーザーがリクエストを行う場合、予約の所有者と一致するか確認
@@ -21,5 +25,5 @@ func (uc *Usecase) GetReservation(ctx context.Context, params *input.GetReservat
 		return nil, errs.ErrNotYourReservation
 	}
 
-	return output.NewGetReservation(rsv), nil
+	return output.NewGetReservation(*rsv), nil
 }

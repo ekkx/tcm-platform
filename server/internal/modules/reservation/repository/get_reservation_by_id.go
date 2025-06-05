@@ -5,11 +5,10 @@ import (
 	"errors"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 	"github.com/jackc/pgx/v5"
 )
 
-func (r *Repository) GetReservationByID(ctx context.Context, id int) (entity.Reservation, error) {
+func (r *Repository) GetReservationByID(ctx context.Context, id int) (*entity.Reservation, error) {
 	row := r.db.QueryRow(ctx, `
         SELECT
             reservations.*
@@ -27,10 +26,10 @@ func (r *Repository) GetReservationByID(ctx context.Context, id int) (entity.Res
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return rsv, errs.ErrReservationNotFound
+			return nil, nil
 		}
-		return rsv, errs.ErrInternal.WithCause(err)
+		return nil, err
 	}
 
-	return rsv, nil
+	return &rsv, nil
 }

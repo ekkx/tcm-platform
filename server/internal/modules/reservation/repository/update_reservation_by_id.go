@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 )
 
 type UpdateReservationByIDArgs struct {
@@ -45,7 +44,7 @@ func (r *Repository) UpdateReservationByID(ctx context.Context, args *UpdateRese
 	var n int
 	err := row.Scan(&n)
 	if err != nil {
-		return errs.ErrInternal.WithCause(err)
+		return err
 	}
 
 	return nil

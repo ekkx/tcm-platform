@@ -38,10 +38,11 @@ func (uc *Usecase) Reauthorize(ctx context.Context, params *input.Reauthorize) (
 	// ユーザーが存在するか確認
 	u, err := uc.userRepo.GetUserByID(ctx, uID)
 	if err != nil {
-		if errors.Is(err, errs.ErrUserNotFound) {
-			return nil, errs.ErrRequestUserNotFound
-		}
 		return nil, errs.ErrInternal.WithCause(err)
+	}
+
+	if u == nil {
+		return nil, errs.ErrRequestUserNotFound
 	}
 
 	// 念の為TCMにログイン

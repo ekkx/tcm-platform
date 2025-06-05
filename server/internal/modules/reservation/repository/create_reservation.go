@@ -6,7 +6,6 @@ import (
 
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 	"github.com/ekkx/tcmrsv-web/server/pkg/utils"
 )
 
@@ -22,7 +21,7 @@ type CreateReservationArgs struct {
 	BookerName *string         `json:"booker_name"`
 }
 
-func (r *Repository) CreateReservation(ctx context.Context, args *CreateReservationArgs) (entity.Reservation, error) {
+func (r *Repository) CreateReservation(ctx context.Context, args *CreateReservationArgs) (*entity.Reservation, error) {
 	row := r.db.QueryRow(ctx, `
         INSERT INTO
             reservations (
@@ -46,10 +45,10 @@ func (r *Repository) CreateReservation(ctx context.Context, args *CreateReservat
 		&rsv.FromHour, &rsv.FromMinute, &rsv.ToHour, &rsv.ToMinute, &rsv.BookerName, &rsv.CreatedAt,
 	)
 	if err != nil {
-		return entity.Reservation{}, errs.ErrInternal.WithCause(err)
+		return nil, err
 	}
 
 	rsv.Date = rsv.Date.In(utils.JST())
 
-	return rsv, nil
+	return &rsv, nil
 }

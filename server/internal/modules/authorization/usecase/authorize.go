@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/ekkx/tcmrsv"
@@ -29,23 +28,24 @@ func (uc *Usecase) Authorize(ctx context.Context, params *input.Authorize) (*out
 	}
 
 	// ユーザーが存在しない場合は新規作成
-	_, err := uc.userRepo.GetUserByID(ctx, params.UserID)
+	u, err := uc.userRepo.GetUserByID(ctx, params.UserID)
 	if err != nil {
-		if !errors.Is(err, errs.ErrUserNotFound) {
-			return nil, errs.ErrInternal.WithCause(err)
-		}
+		return nil, errs.ErrInternal.WithCause(err)
+	}
 
+	// ユーザーが存在しない場合は新規作成
+	if u == nil {
 		encryptedPassword, err := cryptohelper.EncryptAES(params.Password, []byte(params.PasswordAESKey))
 		if err != nil {
 			return nil, errs.ErrInternal.WithCause(err)
 		}
 
-		_, err2 := uc.userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
+		_, err = uc.userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
 			ID:                params.UserID,
 			EncryptedPassword: encryptedPassword,
 		})
-		if err2 != nil {
-			return nil, errs.ErrInternal.WithCause(err2)
+		if err != nil {
+			return nil, errs.ErrInternal.WithCause(err)
 		}
 	}
 

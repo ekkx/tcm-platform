@@ -84,8 +84,9 @@ func TestDeleteReservation_正常系(t *testing.T) {
 			require.NoError(t, err)
 
 			// 予約が削除されたことを確認
-			_, err = rsvRepo.GetReservationByID(ctx, output.Reservations[0].ID)
-			require.ErrorIs(t, err, errs.ErrReservationNotFound)
+			rsv, err := rsvRepo.GetReservationByID(ctx, output.Reservations[0].ID)
+			require.NoError(t, err)
+			require.Nil(t, rsv)
 		})
 	})
 
@@ -145,8 +146,9 @@ func TestDeleteReservation_正常系(t *testing.T) {
 			require.NoError(t, err)
 
 			// 予約が削除されたことを確認
-			_, err = rsvRepo.GetReservationByID(ctx, output.Reservations[0].ID)
-			require.ErrorIs(t, err, errs.ErrReservationNotFound)
+			rsv, err := rsvRepo.GetReservationByID(ctx, output.Reservations[0].ID)
+			require.NoError(t, err)
+			require.Nil(t, rsv)
 		})
 	})
 }
@@ -174,8 +176,9 @@ func TestDeleteReservation_異常系(t *testing.T) {
 			nonExistentReservationID := 99999 // 存在しない予約ID
 
 			// 予約が存在しないことを確認
-			_, err = rsvRepo.GetReservationByID(ctx, nonExistentReservationID)
-			require.ErrorIs(t, err, errs.ErrReservationNotFound)
+			rsv, err := rsvRepo.GetReservationByID(ctx, nonExistentReservationID)
+			require.NoError(t, err)
+			require.Nil(t, rsv)
 
 			// 予約を削除 (user として)
 			err = rsvUC.DeleteReservation(ctx, &input.DeleteReservation{

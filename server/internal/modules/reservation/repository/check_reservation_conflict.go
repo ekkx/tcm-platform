@@ -3,8 +3,6 @@ package repository
 import (
 	"context"
 	"time"
-
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 )
 
 type CheckReservationConflictArgs struct {
@@ -36,7 +34,7 @@ func (r *Repository) CheckReservationConflict(ctx context.Context, args *CheckRe
 	var conflict bool
 	err := row.Scan(&conflict)
 	if err != nil {
-		return false, errs.ErrInternal.WithCause(err)
+		return false, err
 	}
 
 	return conflict, nil

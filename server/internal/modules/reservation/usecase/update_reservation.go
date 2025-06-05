@@ -41,13 +41,13 @@ func (uc *Usecase) UpdateReservation(ctx context.Context, params *input.UpdateRe
 		ReservationID: params.ID,
 	})
 	if err != nil {
-		return nil, err
+		return nil, errs.ErrInternal.WithCause(err)
 	}
 
 	rsv, err := uc.rsvRepo.GetReservationByID(ctx, params.ID)
 	if err != nil {
-		return nil, err
+		return nil, errs.ErrInternal.WithCause(err)
 	}
 
-	return output.NewUpdateReservation(rsv), nil
+	return output.NewUpdateReservation(*rsv), nil
 }
