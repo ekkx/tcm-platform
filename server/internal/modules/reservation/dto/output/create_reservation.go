@@ -38,15 +38,15 @@ func (output *CreateReservation) ToProto() *rsv_v1.CreateReservationReply {
 		}
 
 		protoRsvs = append(protoRsvs, &rsv_v1.Reservation{
-			Id:         rsv.ID,
+			Id:         int64(rsv.ID),
 			ExternalId: rsv.ExternalID,
 			CampusType: campusType,
 			Date:       timestamppb.New(rsv.Date),
 			RoomId:     rsv.RoomID,
-			FromHour:   rsv.FromHour,
-			FromMinute: rsv.FromMinute,
-			ToHour:     rsv.ToHour,
-			ToMinute:   rsv.ToMinute,
+			FromHour:   int32(rsv.FromHour),
+			FromMinute: int32(rsv.FromMinute),
+			ToHour:     int32(rsv.ToHour),
+			ToMinute:   int32(rsv.ToMinute),
 			BookerName: rsv.BookerName,
 			CreatedAt:  timestamppb.New(rsv.CreatedAt),
 		})

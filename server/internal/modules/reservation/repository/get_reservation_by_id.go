@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func (r *Repository) GetReservationByID(ctx context.Context, id int64) (entity.Reservation, error) {
+func (r *Repository) GetReservationByID(ctx context.Context, id int) (entity.Reservation, error) {
 	row := r.db.QueryRow(ctx, `
         SELECT
             reservations.*

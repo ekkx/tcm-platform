@@ -18,4 +18,9 @@ var (
 		Message:  "not your reservation",
 		GRPCCode: codes.PermissionDenied,
 	}
+	ErrInvalidTimeRange = &Error{
+		Code:     "invalid_time_range",
+		Message:  "invalid time range",
+		GRPCCode: codes.InvalidArgument,
+	}
 )

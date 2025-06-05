@@ -6,7 +6,7 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 )
 
-func (r *Repository) DeleteReservationByID(ctx context.Context, reservationID int64) error {
+func (r *Repository) DeleteReservationByID(ctx context.Context, reservationID int) error {
 	row := r.db.QueryRow(ctx, `
         DELETE FROM
             reservations

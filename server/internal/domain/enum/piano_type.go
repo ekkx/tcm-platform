@@ -1,6 +1,6 @@
 package enum
 
-type PianoType int32
+type PianoType int
 
 const (
 	PianoTypeUnknown PianoType = 0
@@ -8,3 +8,13 @@ const (
 	PianoTypeUpright PianoType = 2
 	PianoTypeNone    PianoType = 3
 )
+
+func (pt PianoType) IsValid() bool {
+	_, ok := map[PianoType]struct{}{
+		PianoTypeUnknown: {},
+		PianoTypeGrand:   {},
+		PianoTypeUpright: {},
+		PianoTypeNone:    {},
+	}[pt]
+	return ok
+}

@@ -11,7 +11,7 @@ import (
 
 func (uc *Usecase) GetReservation(ctx context.Context, params *input.GetReservation) (*output.GetReservation, error) {
 	// 予約情報を取得
-	rsv, err := uc.rsvRepo.GetReservationByID(ctx, int64(params.ReservationID))
+	rsv, err := uc.rsvRepo.GetReservationByID(ctx, params.ReservationID)
 	if err != nil {
 		return nil, err
 	}

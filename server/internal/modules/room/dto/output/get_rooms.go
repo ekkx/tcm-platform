@@ -25,11 +25,11 @@ func (output *GetRooms) ToProto() *room_v1.GetRoomsReply {
 			Id:          room.ID,
 			Name:        room.Name,
 			PianoType:   room_v1.PianoType(room.PianoType),
-			PianoNumber: room.PianoNumber,
+			PianoNumber: int32(room.PianoNumber),
 			IsClassroom: room.IsClassroom,
 			IsBasement:  room.IsBasement,
 			CampusType:  room_v1.CampusType(room.CampusType),
-			Floor:       room.Floor,
+			Floor:       int32(room.Floor),
 		}
 	}
 

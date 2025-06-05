@@ -1,6 +1,6 @@
 package enum
 
-type CampusType int32
+type CampusType int
 
 const (
 	CampusTypeUnknown    CampusType = 0
@@ -8,11 +8,11 @@ const (
 	CampusTypeIkebukuro  CampusType = 2
 )
 
-func (mu CampusType) IsValid() bool {
+func (ct CampusType) IsValid() bool {
 	_, ok := map[CampusType]struct{}{
 		CampusTypeUnknown:    {},
 		CampusTypeNakameguro: {},
 		CampusTypeIkebukuro:  {},
-	}[mu]
+	}[ct]
 	return ok
 }

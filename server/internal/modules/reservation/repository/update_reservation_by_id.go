@@ -13,12 +13,12 @@ type UpdateReservationByIDArgs struct {
 	CampusType    *enum.CampusType
 	RoomID        *string
 	Date          *time.Time
-	FromHour      *int32
-	FromMinute    *int32
-	ToHour        *int32
-	ToMinute      *int32
+	FromHour      *int
+	FromMinute    *int
+	ToHour        *int
+	ToMinute      *int
 	BookerName    *string
-	ReservationID int64
+	ReservationID int
 }
 
 func (r *Repository) UpdateReservationByID(ctx context.Context, args *UpdateReservationByIDArgs) error {

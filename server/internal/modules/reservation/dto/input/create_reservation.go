@@ -14,10 +14,10 @@ type CreateReservation struct {
 	UserID     string          `validate:"required"`
 	CampusType enum.CampusType `validate:"required"`
 	Date       time.Time       `validate:"required"`
-	FromHour   int32           `validate:"required,gte=0,lte=23"`
-	FromMinute int32           `validate:"required,oneof=0,oneof=30"`
-	ToHour     int32           `validate:"required,gte=0,lte=23"`
-	ToMinute   int32           `validate:"required,oneof=0,oneof=30"`
+	FromHour   int             `validate:"gte=0,lte=23"`
+	FromMinute int             `validate:"oneof=0 30"`
+	ToHour     int             `validate:"gte=0,lte=23"`
+	ToMinute   int             `validate:"oneof=0 30"`
 	RoomID     string          `validate:"required"`
 	BookerName *string         `validate:"omitempty"`
 }
@@ -29,6 +29,9 @@ func NewCreateReservation() *CreateReservation {
 func (input *CreateReservation) Validate() error {
 	if !input.CampusType.IsValid() {
 		return errs.ErrInvalidCampusType
+	}
+	if input.FromHour > input.ToHour || (input.FromHour == input.ToHour && input.FromMinute >= input.ToMinute) {
+		return errs.ErrInvalidTimeRange
 	}
 	return validate.Struct(input)
 }
@@ -42,10 +45,10 @@ func (input *CreateReservation) FromProto(ctx context.Context, req *reservation_
 	input.UserID = ctxhelper.GetActor(ctx).ID
 	input.CampusType = enum.CampusType(req.Reservation.CampusType)
 	input.Date = date
-	input.FromHour = req.Reservation.FromHour
-	input.FromMinute = req.Reservation.FromMinute
-	input.ToHour = req.Reservation.ToHour
-	input.ToMinute = req.Reservation.ToMinute
+	input.FromHour = int(req.Reservation.FromHour)
+	input.FromMinute = int(req.Reservation.FromMinute)
+	input.ToHour = int(req.Reservation.ToHour)
+	input.ToMinute = int(req.Reservation.ToMinute)
 	input.RoomID = req.Reservation.RoomId
 	input.BookerName = req.Reservation.BookerName
 

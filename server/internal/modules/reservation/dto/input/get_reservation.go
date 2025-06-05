@@ -10,7 +10,7 @@ import (
 
 type GetReservation struct {
 	Actor         actor.Actor
-	ReservationID int64
+	ReservationID int
 }
 
 func NewGetReservation() *GetReservation {
@@ -19,6 +19,6 @@ func NewGetReservation() *GetReservation {
 
 func (input *GetReservation) FromProto(ctx context.Context, req *rsv_v1.GetReservationRequest) *GetReservation {
 	input.Actor = ctxhelper.GetActor(ctx)
-	input.ReservationID = req.ReservationId
+	input.ReservationID = int(req.ReservationId)
 	return input
 }

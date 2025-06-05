@@ -10,7 +10,7 @@ import (
 
 type DeleteReservation struct {
 	Actor         actor.Actor
-	ReservationID int64
+	ReservationID int
 }
 
 func NewDeleteReservation() *DeleteReservation {
@@ -19,6 +19,6 @@ func NewDeleteReservation() *DeleteReservation {
 
 func (input *DeleteReservation) FromProto(ctx context.Context, req *reservation.DeleteReservationRequest) *DeleteReservation {
 	input.Actor = ctxhelper.GetActor(ctx)
-	input.ReservationID = req.ReservationId
+	input.ReservationID = int(req.ReservationId)
 	return input
 }

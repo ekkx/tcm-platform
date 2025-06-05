@@ -12,47 +12,30 @@ import (
 type SearchRoomsArgs struct {
 	Name         *string
 	ID           *string
-	PianoNumbers []int32
+	PianoNumbers []int
 	PianoTypes   []enum.PianoType
-	Floors       []int32
+	Floors       []int
 	IsBasement   *bool
 	CampusTypes  []enum.CampusType
 }
 
 func (repo *Repository) SearchRooms(ctx context.Context, args *SearchRoomsArgs) []entity.Room {
-	var pianoNumbers []int
-	for _, n := range args.PianoNumbers {
-		pianoNumbers = append(pianoNumbers, int(n))
-	}
-
 	var pianoTypes []tcmrsv.RoomPianoType
 	for _, pt := range args.PianoTypes {
-		pianoTypes = append(pianoTypes, tcmrsv.RoomPianoType(pt))
-	}
-
-	var floors []int
-	for _, f := range args.Floors {
-		floors = append(floors, int(f))
+		pianoTypes = append(pianoTypes, tcmutil.ToTCMRoomPianoType(pt))
 	}
 
 	var campuses []tcmrsv.Campus
 	for _, c := range args.CampusTypes {
-		switch c {
-		case enum.CampusTypeIkebukuro:
-			campuses = append(campuses, tcmrsv.CampusIkebukuro)
-		case enum.CampusTypeNakameguro:
-			campuses = append(campuses, tcmrsv.CampusNakameguro)
-		default:
-			campuses = append(campuses, tcmrsv.CampusUnknown)
-		}
+		campuses = append(campuses, tcmutil.ToTCMCampusType(c))
 	}
 
 	tcmRooms := repo.tcmClient.GetRoomsFiltered(tcmrsv.GetRoomsFilteredParams{
 		Name:         args.Name,
 		ID:           args.ID,
-		PianoNumbers: pianoNumbers,
+		PianoNumbers: args.PianoNumbers,
 		PianoTypes:   pianoTypes,
-		Floors:       floors,
+		Floors:       args.Floors,
 		IsBasement:   args.IsBasement,
 		Campuses:     campuses,
 	})
@@ -62,12 +45,12 @@ func (repo *Repository) SearchRooms(ctx context.Context, args *SearchRoomsArgs) 
 		rooms[i] = entity.Room{
 			ID:          tcmRoom.ID,
 			Name:        tcmRoom.Name,
-			PianoType:   tcmutil.ConvertRoomPianoType(tcmRoom.PianoType),
-			PianoNumber: int32(tcmRoom.PianoNumber),
+			PianoType:   tcmutil.ToDomainPianoType(tcmRoom.PianoType),
+			PianoNumber: tcmRoom.PianoNumber,
 			IsClassroom: tcmRoom.IsClassroom,
 			IsBasement:  tcmRoom.IsBasement,
-			CampusType:  tcmutil.ConvertCampusType(tcmRoom.Campus),
-			Floor:       int32(tcmRoom.Floor),
+			CampusType:  tcmutil.ToDomainCampusType(tcmRoom.Campus),
+			Floor:       tcmRoom.Floor,
 		}
 	}
 

@@ -31,15 +31,15 @@ func (output *GetReservation) ToProto() *rsv_v1.GetReservationReply {
 
 	return &rsv_v1.GetReservationReply{
 		Reservation: &rsv_v1.Reservation{
-			Id:         output.Reservation.ID,
+			Id:         int64(output.Reservation.ID),
 			ExternalId: output.Reservation.ExternalID,
 			CampusType: campusType,
 			Date:       timestamppb.New(output.Reservation.Date),
 			RoomId:     output.Reservation.RoomID,
-			FromHour:   output.Reservation.FromHour,
-			FromMinute: output.Reservation.FromMinute,
-			ToHour:     output.Reservation.ToHour,
-			ToMinute:   output.Reservation.ToMinute,
+			FromHour:   int32(output.Reservation.FromHour),
+			FromMinute: int32(output.Reservation.FromMinute),
+			ToHour:     int32(output.Reservation.ToHour),
+			ToMinute:   int32(output.Reservation.ToMinute),
 			BookerName: output.Reservation.BookerName,
 			CreatedAt:  timestamppb.New(output.Reservation.CreatedAt),
 		},

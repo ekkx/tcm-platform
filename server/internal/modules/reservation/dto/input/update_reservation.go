@@ -12,14 +12,14 @@ import (
 
 type UpdateReservation struct {
 	Actor      actor.Actor
-	ID         int64
+	ID         int
 	ExternalID *string
 	CampusType enum.CampusType
 	Date       time.Time
-	FromHour   int32
-	FromMinute int32
-	ToHour     int32
-	ToMinute   int32
+	FromHour   int
+	FromMinute int
+	ToHour     int
+	ToMinute   int
 	RoomID     string
 	BookerName *string
 }
@@ -35,13 +35,13 @@ func (input *UpdateReservation) FromProto(ctx context.Context, req *rsv_v1.Updat
 	}
 
 	input.Actor = ctxhelper.GetActor(ctx)
-	input.ID = req.ReservationId
+	input.ID = int(req.ReservationId)
 	input.CampusType = enum.CampusType(req.Reservation.CampusType)
 	input.Date = date
-	input.FromHour = req.Reservation.FromHour
-	input.FromMinute = req.Reservation.FromMinute
-	input.ToHour = req.Reservation.ToHour
-	input.ToMinute = req.Reservation.ToMinute
+	input.FromHour = int(req.Reservation.FromHour)
+	input.FromMinute = int(req.Reservation.FromMinute)
+	input.ToHour = int(req.Reservation.ToHour)
+	input.ToMinute = int(req.Reservation.ToMinute)
 	input.RoomID = req.Reservation.RoomId
 	input.BookerName = req.Reservation.BookerName
 
