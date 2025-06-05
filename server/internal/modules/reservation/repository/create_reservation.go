@@ -6,7 +6,7 @@ import (
 
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 	"github.com/ekkx/tcmrsv-web/server/pkg/utils"
 )
 
@@ -46,7 +46,7 @@ func (r *Repository) CreateReservation(ctx context.Context, args *CreateReservat
 		&rsv.FromHour, &rsv.FromMinute, &rsv.ToHour, &rsv.ToMinute, &rsv.BookerName, &rsv.CreatedAt,
 	)
 	if err != nil {
-		return entity.Reservation{}, apperrors.ErrInternal.WithCause(err)
+		return entity.Reservation{}, errs.ErrInternal.WithCause(err)
 	}
 
 	rsv.Date = rsv.Date.In(utils.JST())

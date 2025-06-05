@@ -8,8 +8,8 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/usecase"
 	user_repo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/database"
 	"github.com/ekkx/tcmrsv-web/server/pkg/jwter"
@@ -101,7 +101,7 @@ func TestReauthorize_異常系(t *testing.T) {
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
-			require.ErrorIs(t, err, apperrors.ErrInvalidJWTScope)
+			require.ErrorIs(t, err, errs.ErrInvalidJWTScope)
 		})
 	})
 
@@ -138,7 +138,7 @@ func TestReauthorize_異常系(t *testing.T) {
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
-			require.ErrorIs(t, err, apperrors.ErrRefreshTokenExpired)
+			require.ErrorIs(t, err, errs.ErrRefreshTokenExpired)
 		})
 	})
 
@@ -166,7 +166,7 @@ func TestReauthorize_異常系(t *testing.T) {
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
-			require.ErrorIs(t, err, apperrors.ErrRequestUserNotFound)
+			require.ErrorIs(t, err, errs.ErrRequestUserNotFound)
 		})
 	})
 
@@ -201,7 +201,7 @@ func TestReauthorize_異常系(t *testing.T) {
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
-			require.ErrorIs(t, err, apperrors.ErrInvalidEmailOrPassword)
+			require.ErrorIs(t, err, errs.ErrInvalidEmailOrPassword)
 		})
 	})
 }

@@ -5,7 +5,7 @@ import (
 
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/actor"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 )
 
 func (uc *Usecase) DeleteReservation(ctx context.Context, params *input.DeleteReservation) error {
@@ -17,7 +17,7 @@ func (uc *Usecase) DeleteReservation(ctx context.Context, params *input.DeleteRe
 		}
 
 		if params.Actor.ID != rsv.UserID {
-			return apperrors.ErrNotYourReservation
+			return errs.ErrNotYourReservation
 		}
 	}
 

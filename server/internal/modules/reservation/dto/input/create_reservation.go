@@ -7,23 +7,19 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
 	reservation_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 )
 
 type CreateReservation struct {
-	UserID       string
-	CampusType   enum.CampusType
-	Date         *time.Time
-	FromHour     int32
-	FromMinute   int32
-	ToHour       int32
-	ToMinute     int32
-	IsAutoSelect bool
-	RoomID       *string
-	BookerName   *string
-	PianoNumbers []int32
-	PianoTypes   []enum.PianoType
-	Floors       []int32
-	IsBasement   *bool
+	UserID     string          `validate:"required"`
+	CampusType enum.CampusType `validate:"required"`
+	Date       time.Time       `validate:"required"`
+	FromHour   int32           `validate:"required,gte=0,lte=23"`
+	FromMinute int32           `validate:"required,oneof=0,oneof=30"`
+	ToHour     int32           `validate:"required,gte=0,lte=23"`
+	ToMinute   int32           `validate:"required,oneof=0,oneof=30"`
+	RoomID     string          `validate:"required"`
+	BookerName *string         `validate:"omitempty"`
 }
 
 func NewCreateReservation() *CreateReservation {
@@ -31,8 +27,10 @@ func NewCreateReservation() *CreateReservation {
 }
 
 func (input *CreateReservation) Validate() error {
-	// Implement validation logic here if needed
-	return nil
+	if !input.CampusType.IsValid() {
+		return errs.ErrInvalidCampusType
+	}
+	return validate.Struct(input)
 }
 
 func (input *CreateReservation) FromProto(ctx context.Context, req *reservation_v1.CreateReservationRequest) *CreateReservation {
@@ -41,28 +39,15 @@ func (input *CreateReservation) FromProto(ctx context.Context, req *reservation_
 		date = req.Reservation.Date.AsTime()
 	}
 
-	var pianoTypes []enum.PianoType
-	if req.Reservation.PianoTypes != nil {
-		pianoTypes = make([]enum.PianoType, len(req.Reservation.PianoTypes))
-		for i, pianoType := range req.Reservation.PianoTypes {
-			pianoTypes[i] = enum.PianoType(pianoType)
-		}
-	}
-
 	input.UserID = ctxhelper.GetActor(ctx).ID
 	input.CampusType = enum.CampusType(req.Reservation.CampusType)
-	input.Date = &date
+	input.Date = date
 	input.FromHour = req.Reservation.FromHour
 	input.FromMinute = req.Reservation.FromMinute
 	input.ToHour = req.Reservation.ToHour
 	input.ToMinute = req.Reservation.ToMinute
-	input.IsAutoSelect = req.Reservation.IsAutoSelect
 	input.RoomID = req.Reservation.RoomId
 	input.BookerName = req.Reservation.BookerName
-	input.PianoNumbers = req.Reservation.PianoNumbers
-	input.PianoTypes = pianoTypes
-	input.Floors = req.Reservation.Floors
-	input.IsBasement = req.Reservation.IsBasement
 
 	return input
 }

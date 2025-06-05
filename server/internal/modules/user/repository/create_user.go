@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 )
 
 type CreateUserArgs struct {
@@ -30,7 +30,7 @@ func (r *Repository) CreateUser(ctx context.Context, args *CreateUserArgs) (stri
 	var userID string
 	err := row.Scan(&userID)
 	if err != nil {
-		return "", apperrors.ErrInternal.WithCause(err)
+		return "", errs.ErrInternal.WithCause(err)
 	}
 
 	return userID, nil

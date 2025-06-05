@@ -50,13 +50,8 @@ message ReservationInput {
     int32 from_minute = 4;
     int32 to_hour = 5;
     int32 to_minute = 6;
-    bool is_auto_select = 7;
-    optional string room_id = 8;
+    string room_id = 8;
     optional string booker_name = 9;
-    repeated int32 piano_numbers = 10;
-    repeated room.v1.PianoType piano_types = 11;
-    repeated int32 floors = 12;
-    optional bool is_basement = 13;
 }
 
 message CreateReservationRequest {

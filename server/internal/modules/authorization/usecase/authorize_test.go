@@ -7,8 +7,8 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/usecase"
 	user_repo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/database"
 	"github.com/ekkx/tcmrsv-web/server/pkg/jwter"
@@ -125,7 +125,7 @@ func TestAuthorize_異常系(t *testing.T) {
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
-			require.ErrorIs(t, err, apperrors.InvalidArgument)
+			require.ErrorIs(t, err, errs.InvalidArgument)
 
 			// パスワードが空の場合
 			_, err = uc.Authorize(ctx, &input.Authorize{
@@ -134,7 +134,7 @@ func TestAuthorize_異常系(t *testing.T) {
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
-			require.ErrorIs(t, err, apperrors.InvalidArgument)
+			require.ErrorIs(t, err, errs.InvalidArgument)
 
 			// Note:
 			// PasswordAESKeyやJWTSecretが空の場合もInvalidArgumentになるが、
@@ -155,11 +155,11 @@ func TestAuthorize_異常系(t *testing.T) {
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
-			require.ErrorIs(t, err, apperrors.ErrInvalidEmailOrPassword)
+			require.ErrorIs(t, err, errs.ErrInvalidEmailOrPassword)
 
 			// ユーザーが新規作成されていないことを確認
 			_, err = userRepo.GetUserByID(ctx, "wronguser")
-			require.ErrorIs(t, err, apperrors.ErrUserNotFound)
+			require.ErrorIs(t, err, errs.ErrUserNotFound)
 		})
 	})
 
@@ -176,11 +176,11 @@ func TestAuthorize_異常系(t *testing.T) {
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
-			require.ErrorIs(t, err, apperrors.ErrInvalidEmailOrPassword)
+			require.ErrorIs(t, err, errs.ErrInvalidEmailOrPassword)
 
 			// ユーザーが新規作成されていないことを確認
 			_, err = userRepo.GetUserByID(ctx, testUserID)
-			require.ErrorIs(t, err, apperrors.ErrUserNotFound)
+			require.ErrorIs(t, err, errs.ErrUserNotFound)
 		})
 	})
 }

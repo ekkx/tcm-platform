@@ -10,7 +10,7 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/output"
 	user_repo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/jwter"
 	"github.com/golang-jwt/jwt/v5"
@@ -18,26 +18,26 @@ import (
 
 func (uc *Usecase) Authorize(ctx context.Context, params *input.Authorize) (*output.Authorize, error) {
 	if err := params.Validate(); err != nil {
-		return nil, apperrors.InvalidArgument.WithCause(err)
+		return nil, errs.InvalidArgument.WithCause(err)
 	}
 
 	if err := uc.tcmClient.Login(&tcmrsv.LoginParams{
 		UserID:   params.UserID,
 		Password: params.Password,
 	}); err != nil {
-		return nil, apperrors.ErrInvalidEmailOrPassword
+		return nil, errs.ErrInvalidEmailOrPassword
 	}
 
 	// ユーザーが存在しない場合は新規作成
 	_, err := uc.userRepo.GetUserByID(ctx, params.UserID)
 	if err != nil {
-		if !errors.Is(err, apperrors.ErrUserNotFound) {
-			return nil, apperrors.ErrInternal.WithCause(err)
+		if !errors.Is(err, errs.ErrUserNotFound) {
+			return nil, errs.ErrInternal.WithCause(err)
 		}
 
 		encryptedPassword, err := cryptohelper.EncryptAES(params.Password, []byte(params.PasswordAESKey))
 		if err != nil {
-			return nil, apperrors.ErrInternal.WithCause(err)
+			return nil, errs.ErrInternal.WithCause(err)
 		}
 
 		_, err2 := uc.userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
@@ -45,7 +45,7 @@ func (uc *Usecase) Authorize(ctx context.Context, params *input.Authorize) (*out
 			EncryptedPassword: encryptedPassword,
 		})
 		if err2 != nil {
-			return nil, apperrors.ErrInternal.WithCause(err2)
+			return nil, errs.ErrInternal.WithCause(err2)
 		}
 	}
 
@@ -58,7 +58,7 @@ func (uc *Usecase) Authorize(ctx context.Context, params *input.Authorize) (*out
 		[]byte(params.JWTSecret),
 	)
 	if err != nil {
-		return nil, apperrors.ErrInternal.WithCause(err)
+		return nil, errs.ErrInternal.WithCause(err)
 	}
 
 	refreshToken, err := jwter.Generate(
@@ -70,7 +70,7 @@ func (uc *Usecase) Authorize(ctx context.Context, params *input.Authorize) (*out
 		[]byte(params.JWTSecret),
 	)
 	if err != nil {
-		return nil, apperrors.ErrInternal.WithCause(err)
+		return nil, errs.ErrInternal.WithCause(err)
 	}
 
 	return output.NewAuthorize(

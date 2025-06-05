@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 )
 
 type GetReservationsByDate struct {
@@ -33,12 +33,12 @@ func (r *Repository) GetReservationsByDate(ctx context.Context, args *GetReserva
 			&rsv.ID, &rsv.ExternalID, &rsv.UserID, &rsv.CampusType, &rsv.RoomID, &rsv.Date,
 			&rsv.FromHour, &rsv.FromMinute, &rsv.ToHour, &rsv.ToMinute, &rsv.BookerName, &rsv.CreatedAt,
 		); err != nil {
-			return nil, apperrors.ErrInternal.WithCause(err)
+			return nil, errs.ErrInternal.WithCause(err)
 		}
 		items = append(items, rsv)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, apperrors.ErrInternal.WithCause(err)
+		return nil, errs.ErrInternal.WithCause(err)
 	}
 
 	return items, nil

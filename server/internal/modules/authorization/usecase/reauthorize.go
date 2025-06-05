@@ -9,7 +9,7 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/output"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/jwter"
 	"github.com/golang-jwt/jwt/v5"
@@ -17,7 +17,7 @@ import (
 
 func (uc *Usecase) Reauthorize(ctx context.Context, params *input.Reauthorize) (*output.Reauthorize, error) {
 	if err := params.Validate(); err != nil {
-		return nil, apperrors.InvalidArgument.WithCause(err)
+		return nil, errs.InvalidArgument.WithCause(err)
 	}
 
 	// リフレッシュトークンの検証
@@ -25,36 +25,36 @@ func (uc *Usecase) Reauthorize(ctx context.Context, params *input.Reauthorize) (
 	if err != nil {
 		switch {
 		case errors.Is(err, jwter.ErrInvalidToken):
-			return nil, apperrors.ErrInvalidRefreshToken
+			return nil, errs.ErrInvalidRefreshToken
 		case errors.Is(err, jwter.ErrTokenExpired):
-			return nil, apperrors.ErrRefreshTokenExpired
+			return nil, errs.ErrRefreshTokenExpired
 		case errors.Is(err, jwter.ErrInvalidTokenScope):
-			return nil, apperrors.ErrInvalidJWTScope
+			return nil, errs.ErrInvalidJWTScope
 		default:
-			return nil, apperrors.ErrInternal.WithCause(err)
+			return nil, errs.ErrInternal.WithCause(err)
 		}
 	}
 
 	// ユーザーが存在するか確認
 	u, err := uc.userRepo.GetUserByID(ctx, uID)
 	if err != nil {
-		if errors.Is(err, apperrors.ErrUserNotFound) {
-			return nil, apperrors.ErrRequestUserNotFound
+		if errors.Is(err, errs.ErrUserNotFound) {
+			return nil, errs.ErrRequestUserNotFound
 		}
-		return nil, apperrors.ErrInternal.WithCause(err)
+		return nil, errs.ErrInternal.WithCause(err)
 	}
 
 	// 念の為TCMにログイン
 	rawPassword, err := cryptohelper.DecryptAES(u.EncryptedPassword, []byte(params.PasswordAESKey))
 	if err != nil {
-		return nil, apperrors.ErrInternal.WithCause(err)
+		return nil, errs.ErrInternal.WithCause(err)
 	}
 
 	if err := uc.tcmClient.Login(&tcmrsv.LoginParams{
 		UserID:   u.ID,
 		Password: rawPassword,
 	}); err != nil {
-		return nil, apperrors.ErrInvalidEmailOrPassword
+		return nil, errs.ErrInvalidEmailOrPassword
 	}
 
 	// アクセストークンとリフレッシュトークンを生成
@@ -67,7 +67,7 @@ func (uc *Usecase) Reauthorize(ctx context.Context, params *input.Reauthorize) (
 		[]byte(params.JWTSecret),
 	)
 	if err != nil {
-		return nil, apperrors.ErrInternal.WithCause(err)
+		return nil, errs.ErrInternal.WithCause(err)
 	}
 
 	refreshToken, err := jwter.Generate(
@@ -79,7 +79,7 @@ func (uc *Usecase) Reauthorize(ctx context.Context, params *input.Reauthorize) (
 		[]byte(params.JWTSecret),
 	)
 	if err != nil {
-		return nil, apperrors.ErrInternal.WithCause(err)
+		return nil, errs.ErrInternal.WithCause(err)
 	}
 
 	return output.NewReauthorize(

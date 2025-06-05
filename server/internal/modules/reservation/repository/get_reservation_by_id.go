@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -27,9 +27,9 @@ func (r *Repository) GetReservationByID(ctx context.Context, id int64) (entity.R
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return rsv, apperrors.ErrReservationNotFound
+			return rsv, errs.ErrReservationNotFound
 		}
-		return rsv, apperrors.ErrInternal.WithCause(err)
+		return rsv, errs.ErrInternal.WithCause(err)
 	}
 
 	return rsv, nil

@@ -7,3 +7,12 @@ const (
 	CampusTypeNakameguro CampusType = 1
 	CampusTypeIkebukuro  CampusType = 2
 )
+
+func (mu CampusType) IsValid() bool {
+	_, ok := map[CampusType]struct{}{
+		CampusTypeUnknown:    {},
+		CampusTypeNakameguro: {},
+		CampusTypeIkebukuro:  {},
+	}[mu]
+	return ok
+}

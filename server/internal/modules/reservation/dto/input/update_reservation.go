@@ -11,22 +11,17 @@ import (
 )
 
 type UpdateReservation struct {
-	Actor        actor.Actor
-	ID           int64
-	ExternalID   *string
-	CampusType   enum.CampusType
-	Date         time.Time
-	FromHour     int32
-	FromMinute   int32
-	ToHour       int32
-	ToMinute     int32
-	IsAutoSelect bool
-	RoomID       *string
-	BookerName   *string
-	PianoNumbers []int32
-	PianoTypes   []enum.PianoType
-	Floors       []int32
-	IsBasement   *bool
+	Actor      actor.Actor
+	ID         int64
+	ExternalID *string
+	CampusType enum.CampusType
+	Date       time.Time
+	FromHour   int32
+	FromMinute int32
+	ToHour     int32
+	ToMinute   int32
+	RoomID     string
+	BookerName *string
 }
 
 func NewUpdateReservation() *UpdateReservation {
@@ -39,14 +34,6 @@ func (input *UpdateReservation) FromProto(ctx context.Context, req *rsv_v1.Updat
 		date = req.Reservation.Date.AsTime()
 	}
 
-	var pianoTypes []enum.PianoType
-	if req.Reservation.PianoTypes != nil {
-		pianoTypes = make([]enum.PianoType, len(req.Reservation.PianoTypes))
-		for i, pianoType := range req.Reservation.PianoTypes {
-			pianoTypes[i] = enum.PianoType(pianoType)
-		}
-	}
-
 	input.Actor = ctxhelper.GetActor(ctx)
 	input.ID = req.ReservationId
 	input.CampusType = enum.CampusType(req.Reservation.CampusType)
@@ -55,13 +42,8 @@ func (input *UpdateReservation) FromProto(ctx context.Context, req *rsv_v1.Updat
 	input.FromMinute = req.Reservation.FromMinute
 	input.ToHour = req.Reservation.ToHour
 	input.ToMinute = req.Reservation.ToMinute
-	input.IsAutoSelect = req.Reservation.IsAutoSelect
 	input.RoomID = req.Reservation.RoomId
 	input.BookerName = req.Reservation.BookerName
-	input.PianoNumbers = req.Reservation.PianoNumbers
-	input.PianoTypes = pianoTypes
-	input.Floors = req.Reservation.Floors
-	input.IsBasement = req.Reservation.IsBasement
 
 	return input
 }

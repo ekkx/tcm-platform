@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 )
 
 type UpdateUserPasswordArgs struct {
@@ -26,7 +26,7 @@ func (r *Repository) UpdateUserPassword(ctx context.Context, args *UpdateUserPas
 	var n int
 	err := row.Scan(&n)
 	if err != nil {
-		return apperrors.ErrInternal.WithCause(err)
+		return errs.ErrInternal.WithCause(err)
 	}
 
 	return nil

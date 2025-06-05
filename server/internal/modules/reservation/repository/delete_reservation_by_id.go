@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 )
 
 func (r *Repository) DeleteReservationByID(ctx context.Context, reservationID int64) error {
@@ -18,7 +18,7 @@ func (r *Repository) DeleteReservationByID(ctx context.Context, reservationID in
 	var n int
 	err := row.Scan(&n)
 	if err != nil {
-		return apperrors.ErrInternal.WithCause(err)
+		return errs.ErrInternal.WithCause(err)
 	}
 
 	return nil

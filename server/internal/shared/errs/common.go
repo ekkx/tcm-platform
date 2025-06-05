@@ -1,4 +1,4 @@
-package apperrors
+package errs
 
 import "google.golang.org/grpc/codes"
 

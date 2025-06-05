@@ -3,8 +3,6 @@ package input
 import (
 	"context"
 
-	"github.com/go-playground/validator/v10"
-
 	auth_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/authorization"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
 )
@@ -21,7 +19,7 @@ func NewAuthorize() *Authorize {
 }
 
 func (auth *Authorize) Validate() error {
-	return validator.New().Struct(auth)
+	return validate.Struct(auth)
 }
 
 func (auth *Authorize) FromProto(ctx context.Context, req *auth_v1.AuthorizeRequest) *Authorize {

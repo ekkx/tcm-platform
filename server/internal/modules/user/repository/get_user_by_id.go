@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/apperrors"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -26,9 +26,9 @@ func (r *Repository) GetUserByID(ctx context.Context, id string) (entity.User, e
 	err := row.Scan(&u.ID, &u.EncryptedPassword, &u.CreatedAt)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return u, apperrors.ErrUserNotFound
+			return u, errs.ErrUserNotFound
 		}
-		return u, apperrors.ErrInternal.WithCause(err)
+		return u, errs.ErrInternal.WithCause(err)
 	}
 
 	return u, nil
