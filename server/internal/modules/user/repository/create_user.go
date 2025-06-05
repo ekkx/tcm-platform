@@ -9,7 +9,7 @@ type CreateUserArgs struct {
 	EncryptedPassword string `json:"encrypted_password"`
 }
 
-func (r *Repository) CreateUser(ctx context.Context, args *CreateUserArgs) (string, error) {
+func (r *Repository) CreateUser(ctx context.Context, args *CreateUserArgs) (*string, error) {
 	row := r.db.QueryRow(ctx, `
         INSERT INTO
             users (
@@ -28,8 +28,8 @@ func (r *Repository) CreateUser(ctx context.Context, args *CreateUserArgs) (stri
 	var userID string
 	err := row.Scan(&userID)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return userID, nil
+	return &userID, nil
 }
