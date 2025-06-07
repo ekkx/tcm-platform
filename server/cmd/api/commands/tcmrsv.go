@@ -7,6 +7,7 @@ import (
 	"os/signal"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/config"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/interceptor"
 
 	auth_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/authorization"
 	reservation_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation"
@@ -32,7 +33,7 @@ func Run(cfg *config.Config) error {
 	deps := GenerateServerDeps(pool)
 
 	s := grpc.NewServer(
-	// grpc.UnaryInterceptor(interceptor.Intercepter1),
+		grpc.UnaryInterceptor(interceptor.AuthUnaryInterceptor(cfg.JWTSecret)),
 	)
 
 	auth_v1.RegisterAuthorizationServiceServer(s, deps.AuthorizationServiceServer)
