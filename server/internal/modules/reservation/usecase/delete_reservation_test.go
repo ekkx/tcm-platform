@@ -2,20 +2,11 @@ package usecase_test
 
 import (
 	"testing"
-	"time"
 
-	"github.com/ekkx/tcmrsv"
-	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
-	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/dto/input"
-	rsv_repo "github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/repository"
-	rsv_uc "github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/usecase"
-	room_repo "github.com/ekkx/tcmrsv-web/server/internal/modules/room/repository"
-	user_repo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/actor"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 	"github.com/ekkx/tcmrsv-web/server/pkg/database"
-	"github.com/ekkx/tcmrsv-web/server/pkg/utils"
 	"github.com/ekkx/tcmrsv-web/server/tests/testhelper"
 	"github.com/stretchr/testify/require"
 )
@@ -28,65 +19,45 @@ func TestDeleteReservation_正常系(t *testing.T) {
 			ctx := testhelper.GetContextWithConfig(t)
 
 			// 依存関係のセットアップ
-			roomRepo := room_repo.NewRepository(tcmrsv.New())
-			rsvRepo := rsv_repo.NewRepository(db)
-			userRepo := user_repo.NewRepository(db)
-			rsvUC := rsv_uc.NewUsecase(rsvRepo, roomRepo)
+			deps := testhelper.SetupReservationTestDependencies(db)
 
 			// ユーザーを作成
-			_, err := userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
-				ID:                "testuser",
-				EncryptedPassword: "testpass",
-			})
-			require.NoError(t, err)
+			testhelper.CreateDefaultTestUser(ctx, t, deps.UserRepo)
 
 			// ルームを取得
-			rooms := roomRepo.SearchRooms(ctx, &room_repo.SearchRoomsArgs{})
-			require.NotEmpty(t, rooms)
-
-			// room.CampusType が enum.CampusTypeIkebukuro の練習室を一つ取得
-			var room entity.Room
-			for _, r := range rooms {
-				if r.CampusType == enum.CampusTypeIkebukuro {
-					room = r
-					break
-				}
-			}
+			room := testhelper.GetIkebukuroRoom(ctx, t, deps.RoomRepo)
 
 			// 予約を作成
 			bookerName := "Test Booker"
-			output, err := rsvUC.CreateReservation(ctx, &input.CreateReservation{
-				UserID:     "testuser",
-				CampusType: enum.CampusTypeIkebukuro,
-				Date:       time.Date(2033, 10, 1, 4, 2, 3, 4, utils.JST()),
+			rsv := testhelper.CreateTestReservationWithParams(ctx, t, deps.RsvUC, testhelper.TestReservationParams{
+				UserID:     testhelper.TestUserID,
+				Room:       room,
+				Date:       testhelper.GetTestDateTime(),
 				FromHour:   9,
 				FromMinute: 30,
 				ToHour:     12,
 				ToMinute:   0,
-				RoomID:     room.ID,
 				BookerName: &bookerName,
 			})
-			require.NoError(t, err)
-			require.Len(t, output.Reservations, 1)
 
 			// 予約が作成されたことを確認
-			_, err = rsvRepo.GetReservationByID(ctx, output.Reservations[0].ID)
+			_, err := deps.RsvRepo.GetReservationByID(ctx, rsv.ID)
 			require.NoError(t, err)
 
 			// 予約を削除
-			err = rsvUC.DeleteReservation(ctx, &input.DeleteReservation{
+			err = deps.RsvUC.DeleteReservation(ctx, &input.DeleteReservation{
 				Actor: actor.Actor{
-					ID:   "testuser",
+					ID:   testhelper.TestUserID,
 					Role: actor.RoleUser,
 				},
-				ReservationID: output.Reservations[0].ID,
+				ReservationID: rsv.ID,
 			})
 			require.NoError(t, err)
 
 			// 予約が削除されたことを確認
-			rsv, err := rsvRepo.GetReservationByID(ctx, output.Reservations[0].ID)
+			deletedRsv, err := deps.RsvRepo.GetReservationByID(ctx, rsv.ID)
 			require.NoError(t, err)
-			require.Nil(t, rsv)
+			require.Nil(t, deletedRsv)
 		})
 	})
 
@@ -95,60 +66,31 @@ func TestDeleteReservation_正常系(t *testing.T) {
 			ctx := testhelper.GetContextWithConfig(t)
 
 			// 依存関係のセットアップ
-			roomRepo := room_repo.NewRepository(tcmrsv.New())
-			rsvRepo := rsv_repo.NewRepository(db)
-			userRepo := user_repo.NewRepository(db)
-			rsvUC := rsv_uc.NewUsecase(rsvRepo, roomRepo)
+			deps := testhelper.SetupReservationTestDependencies(db)
 
 			// ユーザーを作成
-			_, err := userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
-				ID:                "testuser",
-				EncryptedPassword: "testpass",
-			})
-			require.NoError(t, err)
+			testhelper.CreateDefaultTestUser(ctx, t, deps.UserRepo)
 
 			// ルームを取得
-			rooms := roomRepo.SearchRooms(ctx, &room_repo.SearchRoomsArgs{})
-			require.NotEmpty(t, rooms)
-
-			// room.CampusType が enum.CampusTypeIkebukuro の練習室を一つ取得
-			var room entity.Room
-			for _, r := range rooms {
-				if r.CampusType == enum.CampusTypeIkebukuro {
-					room = r
-					break
-				}
-			}
+			room := testhelper.GetIkebukuroRoom(ctx, t, deps.RoomRepo)
 
 			// testuser の予約を作成
-			output, err := rsvUC.CreateReservation(ctx, &input.CreateReservation{
-				UserID:     "testuser",
-				CampusType: enum.CampusTypeIkebukuro,
-				Date:       time.Date(2033, 10, 1, 4, 2, 3, 4, utils.JST()),
-				FromHour:   9,
-				FromMinute: 30,
-				ToHour:     12,
-				ToMinute:   0,
-				RoomID:     room.ID,
-				BookerName: nil,
-			})
-			require.NoError(t, err)
-			require.Len(t, output.Reservations, 1)
+			rsv := testhelper.CreateDefaultTestReservation(ctx, t, deps.RsvUC, testhelper.TestUserID, room)
 
 			// システムが予約を削除
-			err = rsvUC.DeleteReservation(ctx, &input.DeleteReservation{
+			err := deps.RsvUC.DeleteReservation(ctx, &input.DeleteReservation{
 				Actor: actor.Actor{
-					ID:   "testsystem",
+					ID:   testhelper.TestSystemID,
 					Role: actor.RoleSystem,
 				},
-				ReservationID: output.Reservations[0].ID,
+				ReservationID: rsv.ID,
 			})
 			require.NoError(t, err)
 
 			// 予約が削除されたことを確認
-			rsv, err := rsvRepo.GetReservationByID(ctx, output.Reservations[0].ID)
+			deletedRsv, err := deps.RsvRepo.GetReservationByID(ctx, rsv.ID)
 			require.NoError(t, err)
-			require.Nil(t, rsv)
+			require.Nil(t, deletedRsv)
 		})
 	})
 }
@@ -161,29 +103,22 @@ func TestDeleteReservation_異常系(t *testing.T) {
 			ctx := testhelper.GetContextWithConfig(t)
 
 			// 依存関係のセットアップ
-			roomRepo := room_repo.NewRepository(tcmrsv.New())
-			rsvRepo := rsv_repo.NewRepository(db)
-			userRepo := user_repo.NewRepository(db)
-			rsvUC := rsv_uc.NewUsecase(rsvRepo, roomRepo)
+			deps := testhelper.SetupReservationTestDependencies(db)
 
 			// ユーザーを作成
-			_, err := userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
-				ID:                "testuser",
-				EncryptedPassword: "testpass",
-			})
-			require.NoError(t, err)
+			testhelper.CreateDefaultTestUser(ctx, t, deps.UserRepo)
 
 			nonExistentReservationID := 99999 // 存在しない予約ID
 
 			// 予約が存在しないことを確認
-			rsv, err := rsvRepo.GetReservationByID(ctx, nonExistentReservationID)
+			rsv, err := deps.RsvRepo.GetReservationByID(ctx, nonExistentReservationID)
 			require.NoError(t, err)
 			require.Nil(t, rsv)
 
 			// 予約を削除 (user として)
-			err = rsvUC.DeleteReservation(ctx, &input.DeleteReservation{
+			err = deps.RsvUC.DeleteReservation(ctx, &input.DeleteReservation{
 				Actor: actor.Actor{
-					ID:   "testuser",
+					ID:   testhelper.TestUserID,
 					Role: actor.RoleUser,
 				},
 				ReservationID: nonExistentReservationID,
@@ -191,9 +126,9 @@ func TestDeleteReservation_異常系(t *testing.T) {
 			require.ErrorIs(t, err, errs.ErrReservationNotFound)
 
 			// 予約を削除 (system として)
-			err = rsvUC.DeleteReservation(ctx, &input.DeleteReservation{
+			err = deps.RsvUC.DeleteReservation(ctx, &input.DeleteReservation{
 				Actor: actor.Actor{
-					ID:   "testsystem",
+					ID:   testhelper.TestSystemID,
 					Role: actor.RoleSystem,
 				},
 				ReservationID: nonExistentReservationID,
@@ -207,59 +142,24 @@ func TestDeleteReservation_異常系(t *testing.T) {
 			ctx := testhelper.GetContextWithConfig(t)
 
 			// 依存関係のセットアップ
-			roomRepo := room_repo.NewRepository(tcmrsv.New())
-			rsvRepo := rsv_repo.NewRepository(db)
-			userRepo := user_repo.NewRepository(db)
-			rsvUC := rsv_uc.NewUsecase(rsvRepo, roomRepo)
+			deps := testhelper.SetupReservationTestDependencies(db)
 
 			// ユーザーを作成
-			_, err := userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
-				ID:                "testuser1",
-				EncryptedPassword: "testpass1",
-			})
-			require.NoError(t, err)
-
-			_, err = userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
-				ID:                "testuser2",
-				EncryptedPassword: "testpass2",
-			})
-			require.NoError(t, err)
+			testhelper.CreateDefaultTestUsers(ctx, t, deps.UserRepo)
 
 			// ルームを取得
-			rooms := roomRepo.SearchRooms(ctx, &room_repo.SearchRoomsArgs{})
-			require.NotEmpty(t, rooms)
+			room := testhelper.GetIkebukuroRoom(ctx, t, deps.RoomRepo)
 
-			// room.CampusType が enum.CampusTypeIkebukuro の練習室を一つ取得
-			var room entity.Room
-			for _, r := range rooms {
-				if r.CampusType == enum.CampusTypeIkebukuro {
-					room = r
-					break
-				}
-			}
-
-			// testuser1 の予約を作成
-			output, err := rsvUC.CreateReservation(ctx, &input.CreateReservation{
-				UserID:     "testuser1",
-				CampusType: enum.CampusTypeIkebukuro,
-				Date:       time.Date(2033, 10, 1, 4, 2, 3, 4, utils.JST()),
-				FromHour:   9,
-				FromMinute: 30,
-				ToHour:     12,
-				ToMinute:   0,
-				RoomID:     room.ID,
-				BookerName: nil,
-			})
-			require.NoError(t, err)
-			require.Len(t, output.Reservations, 1)
+			// testuser の予約を作成
+			rsv := testhelper.CreateDefaultTestReservation(ctx, t, deps.RsvUC, testhelper.TestUserID, room)
 
 			// 他のユーザー(testuser2)が予約を削除しようとする
-			err = rsvUC.DeleteReservation(ctx, &input.DeleteReservation{
+			err := deps.RsvUC.DeleteReservation(ctx, &input.DeleteReservation{
 				Actor: actor.Actor{
-					ID:   "testuser2",
+					ID:   testhelper.TestUserID2,
 					Role: actor.RoleUser,
 				},
-				ReservationID: output.Reservations[0].ID,
+				ReservationID: rsv.ID,
 			})
 			require.ErrorIs(t, err, errs.ErrNotYourReservation)
 		})

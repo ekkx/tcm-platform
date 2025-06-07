@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ekkx/tcmrsv"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/dto/input"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/authorization/usecase"
 	user_repo "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
@@ -13,23 +12,13 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/pkg/cryptohelper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/database"
 	"github.com/ekkx/tcmrsv-web/server/pkg/jwter"
-	mock_tcmrsv "github.com/ekkx/tcmrsv-web/server/tests/mocks/tcmrsv"
 	"github.com/ekkx/tcmrsv-web/server/tests/testhelper"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/require"
 )
 
 func TestReauthorize_正常系(t *testing.T) {
-	testUserID := "testuser"
-	testPassword := "testpass"
-	mockTCMClient := &mock_tcmrsv.MockTCMClient{
-		LoginFunc: func(params *tcmrsv.LoginParams) error {
-			if params.UserID == testUserID && params.Password == testPassword {
-				return nil
-			}
-			return tcmrsv.ErrAuthenticationFailed
-		},
-	}
+	mockTCMClient := testhelper.GetMockTCMClient()
 
 	t.Run("再認証", func(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
@@ -40,8 +29,8 @@ func TestReauthorize_正常系(t *testing.T) {
 
 			// 初回認証でユーザーを作成
 			output, err := uc.Authorize(ctx, &input.Authorize{
-				UserID:         testUserID,
-				Password:       testPassword,
+				UserID:         testhelper.TestUserID,
+				Password:       testhelper.TestUserPassword,
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
@@ -58,26 +47,17 @@ func TestReauthorize_正常系(t *testing.T) {
 			// トークンの検証
 			uID, err := jwter.Verify(output2.Authorization.AccessToken, "access", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
 			require.NoError(t, err)
-			require.Equal(t, testUserID, uID)
+			require.Equal(t, testhelper.TestUserID, uID)
 
 			uID, err = jwter.Verify(output2.Authorization.RefreshToken, "refresh", []byte(ctxhelper.GetConfig(ctx).JWTSecret))
 			require.NoError(t, err)
-			require.Equal(t, testUserID, uID)
+			require.Equal(t, testhelper.TestUserID, uID)
 		})
 	})
 }
 
 func TestReauthorize_異常系(t *testing.T) {
-	testUserID := "testuser"
-	testPassword := "testpass"
-	mockTCMClient := &mock_tcmrsv.MockTCMClient{
-		LoginFunc: func(params *tcmrsv.LoginParams) error {
-			if params.UserID == testUserID && params.Password == testPassword {
-				return nil
-			}
-			return tcmrsv.ErrAuthenticationFailed
-		},
-	}
+	mockTCMClient := testhelper.GetMockTCMClient()
 
 	t.Run("リフレッシュトークンのスコープが不正", func(t *testing.T) {
 		testhelper.RunWithTx(t, func(db database.Execer) {
@@ -88,8 +68,8 @@ func TestReauthorize_異常系(t *testing.T) {
 
 			// 初回認証でユーザーを作成
 			output, err := uc.Authorize(ctx, &input.Authorize{
-				UserID:         testUserID,
-				Password:       testPassword,
+				UserID:         testhelper.TestUserID,
+				Password:       testhelper.TestUserPassword,
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
@@ -114,8 +94,8 @@ func TestReauthorize_異常系(t *testing.T) {
 
 			// 初回認証でユーザーを作成
 			_, err := uc.Authorize(ctx, &input.Authorize{
-				UserID:         testUserID,
-				Password:       testPassword,
+				UserID:         testhelper.TestUserID,
+				Password:       testhelper.TestUserPassword,
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
@@ -124,7 +104,7 @@ func TestReauthorize_異常系(t *testing.T) {
 			// 期限切れのリフレッシュトークンを生成
 			refreshToken, err := jwter.Generate(
 				jwt.MapClaims{
-					"sub":   testUserID,
+					"sub":   testhelper.TestUserID,
 					"exp":   jwt.NewNumericDate(time.Now().Add(-24 * time.Hour)),
 					"scope": "refresh",
 				},
@@ -179,8 +159,8 @@ func TestReauthorize_異常系(t *testing.T) {
 
 			// 初回認証でユーザーを作成
 			output, err := uc.Authorize(ctx, &input.Authorize{
-				UserID:         testUserID,
-				Password:       testPassword,
+				UserID:         testhelper.TestUserID,
+				Password:       testhelper.TestUserPassword,
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
@@ -191,7 +171,7 @@ func TestReauthorize_異常系(t *testing.T) {
 			require.NoError(t, err)
 
 			userRepo.UpdateUserPassword(ctx, &user_repo.UpdateUserPasswordArgs{
-				ID:                testUserID,
+				ID:                testhelper.TestUserID,
 				EncryptedPassword: encryptedPassword,
 			})
 
