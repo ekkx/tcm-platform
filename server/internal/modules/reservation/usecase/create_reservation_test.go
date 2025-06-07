@@ -131,15 +131,280 @@ func TestCreateReservation_異常系(t *testing.T) {
 		})
 	})
 
-	// t.Run("予約の開始時間が終了時刻と同じ", func(t *testing.T) {})
+	t.Run("予約の開始時間が終了時刻と同じ", func(t *testing.T) {
+		testhelper.RunWithTx(t, func(db database.Execer) {
+			ctx := testhelper.GetContextWithConfig(t)
 
-	// t.Run("予約の分単位が不正（0か30以外）", func(t *testing.T) {})
+			// 依存関係のセットアップ
+			roomRepo := room_repo.NewRepository(tcmrsv.New())
+			rsvRepo := rsv_repo.NewRepository(db)
+			userRepo := user_repo.NewRepository(db)
+			rsvUC := rsv_uc.NewUsecase(rsvRepo, roomRepo)
 
-	// t.Run("キャンパスが無効", func(t *testing.T) {})
+			// ユーザーを作成
+			_, err := userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
+				ID:                "testuser",
+				EncryptedPassword: "testpass",
+			})
+			require.NoError(t, err)
 
-	// t.Run("練習室が存在しない", func(t *testing.T) {})
+			// ルームを取得
+			rooms := roomRepo.SearchRooms(ctx, &room_repo.SearchRoomsArgs{})
+			require.NotEmpty(t, rooms)
 
-	// t.Run("予約の重複", func(t *testing.T) {})
+			// room.CampusType が enum.CampusTypeIkebukuro の練習室を一つ取得
+			var room entity.Room
+			for _, r := range rooms {
+				if r.CampusType == enum.CampusTypeIkebukuro {
+					room = r
+					break
+				}
+			}
 
-	// t.Run("予約のユーザーが存在しない", func(t *testing.T) {})
+			// 予約を作成（開始時間と終了時間が同じ）
+			_, err = rsvUC.CreateReservation(ctx, &input.CreateReservation{
+				UserID:     "testuser",
+				CampusType: enum.CampusTypeIkebukuro,
+				Date:       time.Date(2033, 10, 1, 4, 2, 3, 4, utils.JST()),
+				FromHour:   14,
+				FromMinute: 30,
+				ToHour:     14,
+				ToMinute:   30,
+				RoomID:     room.ID,
+				BookerName: nil,
+			})
+			require.ErrorIs(t, err, errs.ErrInvalidTimeRange)
+		})
+	})
+
+	t.Run("予約の分単位が不正（0か30以外）", func(t *testing.T) {
+		testhelper.RunWithTx(t, func(db database.Execer) {
+			ctx := testhelper.GetContextWithConfig(t)
+
+			// 依存関係のセットアップ
+			roomRepo := room_repo.NewRepository(tcmrsv.New())
+			rsvRepo := rsv_repo.NewRepository(db)
+			userRepo := user_repo.NewRepository(db)
+			rsvUC := rsv_uc.NewUsecase(rsvRepo, roomRepo)
+
+			// ユーザーを作成
+			_, err := userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
+				ID:                "testuser",
+				EncryptedPassword: "testpass",
+			})
+			require.NoError(t, err)
+
+			// ルームを取得
+			rooms := roomRepo.SearchRooms(ctx, &room_repo.SearchRoomsArgs{})
+			require.NotEmpty(t, rooms)
+
+			// room.CampusType が enum.CampusTypeIkebukuro の練習室を一つ取得
+			var room entity.Room
+			for _, r := range rooms {
+				if r.CampusType == enum.CampusTypeIkebukuro {
+					room = r
+					break
+				}
+			}
+
+			// FromMinuteが不正な値（15分）
+			_, err = rsvUC.CreateReservation(ctx, &input.CreateReservation{
+				UserID:     "testuser",
+				CampusType: enum.CampusTypeIkebukuro,
+				Date:       time.Date(2033, 10, 1, 4, 2, 3, 4, utils.JST()),
+				FromHour:   9,
+				FromMinute: 15,
+				ToHour:     10,
+				ToMinute:   0,
+				RoomID:     room.ID,
+				BookerName: nil,
+			})
+			require.ErrorIs(t, err, errs.ErrInvalidArgument)
+
+			// ToMinuteが不正な値（45分）
+			_, err = rsvUC.CreateReservation(ctx, &input.CreateReservation{
+				UserID:     "testuser",
+				CampusType: enum.CampusTypeIkebukuro,
+				Date:       time.Date(2033, 10, 1, 4, 2, 3, 4, utils.JST()),
+				FromHour:   9,
+				FromMinute: 0,
+				ToHour:     10,
+				ToMinute:   45,
+				RoomID:     room.ID,
+				BookerName: nil,
+			})
+			require.ErrorIs(t, err, errs.ErrInvalidArgument)
+		})
+	})
+
+	t.Run("キャンパスが無効", func(t *testing.T) {
+		testhelper.RunWithTx(t, func(db database.Execer) {
+			ctx := testhelper.GetContextWithConfig(t)
+
+			// 依存関係のセットアップ
+			roomRepo := room_repo.NewRepository(tcmrsv.New())
+			rsvRepo := rsv_repo.NewRepository(db)
+			userRepo := user_repo.NewRepository(db)
+			rsvUC := rsv_uc.NewUsecase(rsvRepo, roomRepo)
+
+			// ユーザーを作成
+			_, err := userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
+				ID:                "testuser",
+				EncryptedPassword: "testpass",
+			})
+			require.NoError(t, err)
+
+			// 無効なキャンパスタイプで予約を作成
+			_, err = rsvUC.CreateReservation(ctx, &input.CreateReservation{
+				UserID:     "testuser",
+				CampusType: 999, // 無効なキャンパスタイプ
+				Date:       time.Date(2033, 10, 1, 4, 2, 3, 4, utils.JST()),
+				FromHour:   9,
+				FromMinute: 0,
+				ToHour:     10,
+				ToMinute:   0,
+				RoomID:     "room-123",
+				BookerName: nil,
+			})
+			require.ErrorIs(t, err, errs.ErrInvalidCampusType)
+		})
+	})
+
+	t.Run("練習室が存在しない", func(t *testing.T) {
+		testhelper.RunWithTx(t, func(db database.Execer) {
+			ctx := testhelper.GetContextWithConfig(t)
+
+			// 依存関係のセットアップ
+			roomRepo := room_repo.NewRepository(tcmrsv.New())
+			rsvRepo := rsv_repo.NewRepository(db)
+			userRepo := user_repo.NewRepository(db)
+			rsvUC := rsv_uc.NewUsecase(rsvRepo, roomRepo)
+
+			// ユーザーを作成
+			_, err := userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
+				ID:                "testuser",
+				EncryptedPassword: "testpass",
+			})
+			require.NoError(t, err)
+
+			// 存在しないルームIDで予約を作成
+			_, err = rsvUC.CreateReservation(ctx, &input.CreateReservation{
+				UserID:     "testuser",
+				CampusType: enum.CampusTypeIkebukuro,
+				Date:       time.Date(2033, 10, 1, 4, 2, 3, 4, utils.JST()),
+				FromHour:   9,
+				FromMinute: 0,
+				ToHour:     10,
+				ToMinute:   0,
+				RoomID:     "non-existent-room-id",
+				BookerName: nil,
+			})
+			require.ErrorIs(t, err, errs.ErrRoomNotFound)
+		})
+	})
+
+	t.Run("予約の重複", func(t *testing.T) {
+		testhelper.RunWithTx(t, func(db database.Execer) {
+			ctx := testhelper.GetContextWithConfig(t)
+
+			// 依存関係のセットアップ
+			roomRepo := room_repo.NewRepository(tcmrsv.New())
+			rsvRepo := rsv_repo.NewRepository(db)
+			userRepo := user_repo.NewRepository(db)
+			rsvUC := rsv_uc.NewUsecase(rsvRepo, roomRepo)
+
+			// ユーザーを作成
+			_, err := userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
+				ID:                "testuser1",
+				EncryptedPassword: "testpass",
+			})
+			require.NoError(t, err)
+
+			_, err = userRepo.CreateUser(ctx, &user_repo.CreateUserArgs{
+				ID:                "testuser2",
+				EncryptedPassword: "testpass",
+			})
+			require.NoError(t, err)
+
+			// ルームを取得
+			rooms := roomRepo.SearchRooms(ctx, &room_repo.SearchRoomsArgs{})
+			require.NotEmpty(t, rooms)
+
+			// room.CampusType が enum.CampusTypeIkebukuro の練習室を一つ取得
+			var room entity.Room
+			for _, r := range rooms {
+				if r.CampusType == enum.CampusTypeIkebukuro {
+					room = r
+					break
+				}
+			}
+
+			// 最初の予約を作成
+			_, err = rsvUC.CreateReservation(ctx, &input.CreateReservation{
+				UserID:     "testuser1",
+				CampusType: enum.CampusTypeIkebukuro,
+				Date:       time.Date(2033, 10, 1, 4, 2, 3, 4, utils.JST()),
+				FromHour:   9,
+				FromMinute: 0,
+				ToHour:     11,
+				ToMinute:   0,
+				RoomID:     room.ID,
+				BookerName: nil,
+			})
+			require.NoError(t, err)
+
+			// 同じ時間帯で重複する予約を作成しようとする
+			_, err = rsvUC.CreateReservation(ctx, &input.CreateReservation{
+				UserID:     "testuser2",
+				CampusType: enum.CampusTypeIkebukuro,
+				Date:       time.Date(2033, 10, 1, 4, 2, 3, 4, utils.JST()),
+				FromHour:   10,
+				FromMinute: 0,
+				ToHour:     12,
+				ToMinute:   0,
+				RoomID:     room.ID,
+				BookerName: nil,
+			})
+			require.ErrorIs(t, err, errs.ErrReservationConflict)
+		})
+	})
+
+	t.Run("予約のユーザーが存在しない", func(t *testing.T) {
+		testhelper.RunWithTx(t, func(db database.Execer) {
+			ctx := testhelper.GetContextWithConfig(t)
+
+			// 依存関係のセットアップ
+			roomRepo := room_repo.NewRepository(tcmrsv.New())
+			rsvRepo := rsv_repo.NewRepository(db)
+			rsvUC := rsv_uc.NewUsecase(rsvRepo, roomRepo)
+
+			// ルームを取得
+			rooms := roomRepo.SearchRooms(ctx, &room_repo.SearchRoomsArgs{})
+			require.NotEmpty(t, rooms)
+
+			// room.CampusType が enum.CampusTypeIkebukuro の練習室を一つ取得
+			var room entity.Room
+			for _, r := range rooms {
+				if r.CampusType == enum.CampusTypeIkebukuro {
+					room = r
+					break
+				}
+			}
+
+			// 存在しないユーザーIDで予約を作成
+			_, err := rsvUC.CreateReservation(ctx, &input.CreateReservation{
+				UserID:     "non-existent-user",
+				CampusType: enum.CampusTypeIkebukuro,
+				Date:       time.Date(2033, 10, 1, 4, 2, 3, 4, utils.JST()),
+				FromHour:   9,
+				FromMinute: 0,
+				ToHour:     10,
+				ToMinute:   0,
+				RoomID:     room.ID,
+				BookerName: nil,
+			})
+			// ユーザーが存在しない場合、データベースの外部キー制約でエラーになる
+			require.Error(t, err)
+		})
+	})
 }

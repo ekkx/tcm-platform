@@ -23,4 +23,9 @@ var (
 		Message:  "invalid time range",
 		GRPCCode: codes.InvalidArgument,
 	}
+	ErrDateMustBeTodayOrFuture = &Error{
+		Code:     "date_must_be_today_or_future",
+		Message:  "date must be today or future",
+		GRPCCode: codes.InvalidArgument,
+	}
 )

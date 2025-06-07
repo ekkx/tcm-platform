@@ -15,7 +15,7 @@ import (
 
 func (u *Usecase) CreateReservation(ctx context.Context, params *input.CreateReservation) (*output.CreateReservation, error) {
 	if err := params.Validate(); err != nil {
-		return nil, errs.InvalidArgument.WithCause(err)
+		return nil, errs.ErrInvalidArgument.WithCause(err)
 	}
 
 	var date = time.Date(params.Date.Year(), params.Date.Month(), params.Date.Day(), 0, 0, 0, 0, utils.JST())

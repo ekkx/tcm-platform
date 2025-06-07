@@ -125,7 +125,7 @@ func TestAuthorize_異常系(t *testing.T) {
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
-			require.ErrorIs(t, err, errs.InvalidArgument)
+			require.ErrorIs(t, err, errs.ErrInvalidArgument)
 
 			// パスワードが空の場合
 			_, err = uc.Authorize(ctx, &input.Authorize{
@@ -134,7 +134,7 @@ func TestAuthorize_異常系(t *testing.T) {
 				PasswordAESKey: ctxhelper.GetConfig(ctx).PasswordAESKey,
 				JWTSecret:      ctxhelper.GetConfig(ctx).JWTSecret,
 			})
-			require.ErrorIs(t, err, errs.InvalidArgument)
+			require.ErrorIs(t, err, errs.ErrInvalidArgument)
 
 			// Note:
 			// PasswordAESKeyやJWTSecretが空の場合もInvalidArgumentになるが、

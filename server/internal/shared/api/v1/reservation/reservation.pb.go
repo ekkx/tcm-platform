@@ -237,6 +237,7 @@ func (x *GetReservationReply) GetReservation() *Reservation {
 
 type GetUserReservationsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	FromDate      *timestamp.Timestamp   `protobuf:"bytes,1,opt,name=from_date,json=fromDate,proto3,oneof" json:"from_date,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -269,6 +270,13 @@ func (x *GetUserReservationsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetUserReservationsRequest.ProtoReflect.Descriptor instead.
 func (*GetUserReservationsRequest) Descriptor() ([]byte, []int) {
 	return file_v1_reservation_reservation_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetUserReservationsRequest) GetFromDate() *timestamp.Timestamp {
+	if x != nil {
+		return x.FromDate
+	}
+	return nil
 }
 
 type GetUserReservationsReply struct {
@@ -707,8 +715,11 @@ const file_v1_reservation_reservation_proto_rawDesc = "" +
 	"\x15GetReservationRequest\x12%\n" +
 	"\x0ereservation_id\x18\x01 \x01(\x03R\rreservationId\"T\n" +
 	"\x13GetReservationReply\x12=\n" +
-	"\vreservation\x18\x01 \x01(\v2\x1b.reservation.v1.ReservationR\vreservation\"\x1c\n" +
-	"\x1aGetUserReservationsRequest\"[\n" +
+	"\vreservation\x18\x01 \x01(\v2\x1b.reservation.v1.ReservationR\vreservation\"h\n" +
+	"\x1aGetUserReservationsRequest\x12<\n" +
+	"\tfrom_date\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\bfromDate\x88\x01\x01B\f\n" +
+	"\n" +
+	"_from_date\"[\n" +
 	"\x18GetUserReservationsReply\x12?\n" +
 	"\freservations\x18\x01 \x03(\v2\x1b.reservation.v1.ReservationR\freservations\"\xbb\x02\n" +
 	"\x10ReservationInput\x124\n" +
@@ -777,28 +788,29 @@ var file_v1_reservation_reservation_proto_depIdxs = []int32{
 	13, // 1: reservation.v1.Reservation.date:type_name -> google.protobuf.Timestamp
 	13, // 2: reservation.v1.Reservation.created_at:type_name -> google.protobuf.Timestamp
 	0,  // 3: reservation.v1.GetReservationReply.reservation:type_name -> reservation.v1.Reservation
-	0,  // 4: reservation.v1.GetUserReservationsReply.reservations:type_name -> reservation.v1.Reservation
-	12, // 5: reservation.v1.ReservationInput.campus_type:type_name -> room.v1.CampusType
-	13, // 6: reservation.v1.ReservationInput.date:type_name -> google.protobuf.Timestamp
-	5,  // 7: reservation.v1.CreateReservationRequest.reservation:type_name -> reservation.v1.ReservationInput
-	0,  // 8: reservation.v1.CreateReservationReply.reservations:type_name -> reservation.v1.Reservation
-	5,  // 9: reservation.v1.UpdateReservationRequest.reservation:type_name -> reservation.v1.ReservationInput
-	0,  // 10: reservation.v1.UpdateReservationReply.reservation:type_name -> reservation.v1.Reservation
-	1,  // 11: reservation.v1.ReservationService.GetReservation:input_type -> reservation.v1.GetReservationRequest
-	3,  // 12: reservation.v1.ReservationService.GetMyReservations:input_type -> reservation.v1.GetUserReservationsRequest
-	6,  // 13: reservation.v1.ReservationService.CreateReservation:input_type -> reservation.v1.CreateReservationRequest
-	8,  // 14: reservation.v1.ReservationService.UpdateReservation:input_type -> reservation.v1.UpdateReservationRequest
-	10, // 15: reservation.v1.ReservationService.DeleteReservation:input_type -> reservation.v1.DeleteReservationRequest
-	2,  // 16: reservation.v1.ReservationService.GetReservation:output_type -> reservation.v1.GetReservationReply
-	4,  // 17: reservation.v1.ReservationService.GetMyReservations:output_type -> reservation.v1.GetUserReservationsReply
-	7,  // 18: reservation.v1.ReservationService.CreateReservation:output_type -> reservation.v1.CreateReservationReply
-	9,  // 19: reservation.v1.ReservationService.UpdateReservation:output_type -> reservation.v1.UpdateReservationReply
-	11, // 20: reservation.v1.ReservationService.DeleteReservation:output_type -> reservation.v1.DeleteReservationReply
-	16, // [16:21] is the sub-list for method output_type
-	11, // [11:16] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	13, // 4: reservation.v1.GetUserReservationsRequest.from_date:type_name -> google.protobuf.Timestamp
+	0,  // 5: reservation.v1.GetUserReservationsReply.reservations:type_name -> reservation.v1.Reservation
+	12, // 6: reservation.v1.ReservationInput.campus_type:type_name -> room.v1.CampusType
+	13, // 7: reservation.v1.ReservationInput.date:type_name -> google.protobuf.Timestamp
+	5,  // 8: reservation.v1.CreateReservationRequest.reservation:type_name -> reservation.v1.ReservationInput
+	0,  // 9: reservation.v1.CreateReservationReply.reservations:type_name -> reservation.v1.Reservation
+	5,  // 10: reservation.v1.UpdateReservationRequest.reservation:type_name -> reservation.v1.ReservationInput
+	0,  // 11: reservation.v1.UpdateReservationReply.reservation:type_name -> reservation.v1.Reservation
+	1,  // 12: reservation.v1.ReservationService.GetReservation:input_type -> reservation.v1.GetReservationRequest
+	3,  // 13: reservation.v1.ReservationService.GetMyReservations:input_type -> reservation.v1.GetUserReservationsRequest
+	6,  // 14: reservation.v1.ReservationService.CreateReservation:input_type -> reservation.v1.CreateReservationRequest
+	8,  // 15: reservation.v1.ReservationService.UpdateReservation:input_type -> reservation.v1.UpdateReservationRequest
+	10, // 16: reservation.v1.ReservationService.DeleteReservation:input_type -> reservation.v1.DeleteReservationRequest
+	2,  // 17: reservation.v1.ReservationService.GetReservation:output_type -> reservation.v1.GetReservationReply
+	4,  // 18: reservation.v1.ReservationService.GetMyReservations:output_type -> reservation.v1.GetUserReservationsReply
+	7,  // 19: reservation.v1.ReservationService.CreateReservation:output_type -> reservation.v1.CreateReservationReply
+	9,  // 20: reservation.v1.ReservationService.UpdateReservation:output_type -> reservation.v1.UpdateReservationReply
+	11, // 21: reservation.v1.ReservationService.DeleteReservation:output_type -> reservation.v1.DeleteReservationReply
+	17, // [17:22] is the sub-list for method output_type
+	12, // [12:17] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_v1_reservation_reservation_proto_init() }
@@ -807,6 +819,7 @@ func file_v1_reservation_reservation_proto_init() {
 		return
 	}
 	file_v1_reservation_reservation_proto_msgTypes[0].OneofWrappers = []any{}
+	file_v1_reservation_reservation_proto_msgTypes[3].OneofWrappers = []any{}
 	file_v1_reservation_reservation_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

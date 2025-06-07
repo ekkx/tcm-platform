@@ -25,7 +25,7 @@ func (r *Repository) UpdateReservationByID(ctx context.Context, args *UpdateRese
         UPDATE
             reservations
         SET
-            external_id = COALESCE($1, custom_id),
+            external_id = COALESCE($1, external_id),
             campus_type = COALESCE($2, campus_type),
             room_id = COALESCE($3, room_id),
             date = COALESCE($4, date),

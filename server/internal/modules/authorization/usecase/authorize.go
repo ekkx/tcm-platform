@@ -17,7 +17,7 @@ import (
 
 func (uc *Usecase) Authorize(ctx context.Context, params *input.Authorize) (*output.Authorize, error) {
 	if err := params.Validate(); err != nil {
-		return nil, errs.InvalidArgument.WithCause(err)
+		return nil, errs.ErrInvalidArgument.WithCause(err)
 	}
 
 	if err := uc.tcmClient.Login(&tcmrsv.LoginParams{

@@ -8,24 +8,35 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/actor"
 	rsv_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 )
 
 type UpdateReservation struct {
 	Actor      actor.Actor
-	ID         int
-	ExternalID *string
-	CampusType enum.CampusType
-	Date       time.Time
-	FromHour   int
-	FromMinute int
-	ToHour     int
-	ToMinute   int
-	RoomID     string
-	BookerName *string
+	ID         int             `validate:"required"`
+	ExternalID *string         `validate:"omitempty"`
+	CampusType enum.CampusType `validate:"required"`
+	Date       time.Time       `validate:"required"`
+	FromHour   int             `validate:"gte=0,lte=23"`
+	FromMinute int             `validate:"oneof=0 30"`
+	ToHour     int             `validate:"gte=0,lte=23"`
+	ToMinute   int             `validate:"oneof=0 30"`
+	RoomID     string          `validate:"required"`
+	BookerName *string         `validate:"omitempty"`
 }
 
 func NewUpdateReservation() *UpdateReservation {
 	return &UpdateReservation{}
+}
+
+func (input *UpdateReservation) Validate() error {
+	if !input.CampusType.IsValid() {
+		return errs.ErrInvalidCampusType
+	}
+	if input.FromHour > input.ToHour || (input.FromHour == input.ToHour && input.FromMinute >= input.ToMinute) {
+		return errs.ErrInvalidTimeRange
+	}
+	return validate.Struct(input)
 }
 
 func (input *UpdateReservation) FromProto(ctx context.Context, req *rsv_v1.UpdateReservationRequest) *UpdateReservation {

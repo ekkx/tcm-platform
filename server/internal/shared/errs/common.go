@@ -3,7 +3,7 @@ package errs
 import "google.golang.org/grpc/codes"
 
 var (
-	InvalidArgument = &Error{
+	ErrInvalidArgument = &Error{
 		Code:     "invalid_argument",
 		Message:  "invalid argument",
 		GRPCCode: codes.InvalidArgument,

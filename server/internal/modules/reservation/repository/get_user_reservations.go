@@ -5,11 +5,12 @@ import (
 	"time"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
+	"github.com/ekkx/tcmrsv-web/server/pkg/utils"
 )
 
 type GetUserReservationsArgs struct {
-	UserID string    `json:"user_id"`
-	Date   time.Time `json:"date"`
+	UserID   string    `json:"user_id"`
+	FromDate time.Time `json:"from_date"`
 }
 
 func (r *Repository) GetUserReservations(ctx context.Context, args *GetUserReservationsArgs) ([]entity.Reservation, error) {
@@ -21,7 +22,7 @@ func (r *Repository) GetUserReservations(ctx context.Context, args *GetUserReser
         WHERE
             reservations.user_id = $1
             AND reservations.date >= $2
-    `, args.UserID, args.Date)
+    `, args.UserID, args.FromDate)
 	if err != nil {
 		return nil, err
 	}
@@ -36,6 +37,7 @@ func (r *Repository) GetUserReservations(ctx context.Context, args *GetUserReser
 		); err != nil {
 			return nil, err
 		}
+		rsv.Date = rsv.Date.In(utils.JST())
 		items = append(items, rsv)
 	}
 	if err := rows.Err(); err != nil {

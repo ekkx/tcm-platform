@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
+	"github.com/ekkx/tcmrsv-web/server/pkg/utils"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -30,6 +31,8 @@ func (r *Repository) GetReservationByID(ctx context.Context, id int) (*entity.Re
 		}
 		return nil, err
 	}
+
+	rsv.Date = rsv.Date.In(utils.JST())
 
 	return &rsv, nil
 }

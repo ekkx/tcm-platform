@@ -10,7 +10,6 @@ const (
 
 func (ct CampusType) IsValid() bool {
 	_, ok := map[CampusType]struct{}{
-		CampusTypeUnknown:    {},
 		CampusTypeNakameguro: {},
 		CampusTypeIkebukuro:  {},
 	}[ct]

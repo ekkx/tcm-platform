@@ -37,7 +37,9 @@ message GetReservationReply {
     Reservation reservation = 1;
 }
 
-message GetUserReservationsRequest {}
+message GetUserReservationsRequest {
+    optional google.protobuf.Timestamp from_date = 1;
+}
 
 message GetUserReservationsReply {
     repeated Reservation reservations = 1;

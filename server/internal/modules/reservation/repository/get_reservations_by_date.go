@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
+	"github.com/ekkx/tcmrsv-web/server/pkg/utils"
 )
 
 type GetReservationsByDate struct {
@@ -34,6 +35,7 @@ func (r *Repository) GetReservationsByDate(ctx context.Context, args *GetReserva
 		); err != nil {
 			return nil, err
 		}
+		rsv.Date = rsv.Date.In(utils.JST())
 		items = append(items, rsv)
 	}
 	if err := rows.Err(); err != nil {

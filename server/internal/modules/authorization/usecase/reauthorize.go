@@ -17,7 +17,7 @@ import (
 
 func (uc *Usecase) Reauthorize(ctx context.Context, params *input.Reauthorize) (*output.Reauthorize, error) {
 	if err := params.Validate(); err != nil {
-		return nil, errs.InvalidArgument.WithCause(err)
+		return nil, errs.ErrInvalidArgument.WithCause(err)
 	}
 
 	// リフレッシュトークンの検証
