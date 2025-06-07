@@ -19,7 +19,7 @@ func NewGetMyReservations(reservations []entity.Reservation) *GetMyReservations 
 }
 
 func (output *GetMyReservations) ToProto() *rsv_v1.GetUserReservationsReply {
-	protoRsvs := make([]*rsv_v1.Reservation, len(output.Reservations))
+	protoRsvs := make([]*rsv_v1.Reservation, 0, len(output.Reservations))
 	if len(output.Reservations) == 0 {
 		return &rsv_v1.GetUserReservationsReply{
 			Reservations: protoRsvs,

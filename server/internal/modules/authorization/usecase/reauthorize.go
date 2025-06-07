@@ -15,7 +15,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func (uc *Usecase) Reauthorize(ctx context.Context, params *input.Reauthorize) (*output.Reauthorize, error) {
+func (uc *UsecaseImpl) Reauthorize(ctx context.Context, params *input.Reauthorize) (*output.Reauthorize, error) {
 	if err := params.Validate(); err != nil {
 		return nil, errs.ErrInvalidArgument.WithCause(err)
 	}

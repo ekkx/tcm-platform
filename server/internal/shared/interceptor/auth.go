@@ -16,8 +16,8 @@ import (
 )
 
 var publicMethods = map[string]bool{
-	"/proto.v1.authorization.AuthorizationService/Authorize":   true,
-	"/proto.v1.authorization.AuthorizationService/Reauthorize": true,
+	"/authorization.v1.AuthorizationService/Authorize":   true,
+	"/authorization.v1.AuthorizationService/Reauthorize": true,
 }
 
 func AuthUnaryInterceptor(jwtSecret string) grpc.UnaryServerInterceptor {

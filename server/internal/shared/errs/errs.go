@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type Error struct {
@@ -56,4 +57,9 @@ func (e *Error) WithMessage(message string) *Error {
 		GRPCCode: e.GRPCCode,
 		Cause:    e.Cause,
 	}
+}
+
+// GRPCStatus implements grpc/status.Status interface
+func (e *Error) GRPCStatus() *status.Status {
+	return status.New(e.GRPCCode, e.Error())
 }

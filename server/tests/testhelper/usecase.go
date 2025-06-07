@@ -101,7 +101,7 @@ func GetRoomByCampusType(ctx context.Context, t *testing.T, roomRepo *room_repo.
 func CreateTestReservation(
 	ctx context.Context,
 	t *testing.T,
-	rsvUC *rsv_uc.Usecase,
+	rsvUC rsv_uc.Usecase,
 	userID string,
 	room entity.Room,
 	date time.Time,
@@ -127,7 +127,7 @@ func CreateTestReservation(
 func CreateDefaultTestReservation(
 	ctx context.Context,
 	t *testing.T,
-	rsvUC *rsv_uc.Usecase,
+	rsvUC rsv_uc.Usecase,
 	userID string,
 	room entity.Room,
 ) *entity.Reservation {
@@ -159,7 +159,7 @@ type TestReservationParams struct {
 func CreateTestReservationWithParams(
 	ctx context.Context,
 	t *testing.T,
-	rsvUC *rsv_uc.Usecase,
+	rsvUC rsv_uc.Usecase,
 	params TestReservationParams,
 ) *entity.Reservation {
 	output, err := rsvUC.CreateReservation(ctx, &input.CreateReservation{
@@ -183,7 +183,7 @@ type ReservationTestDeps struct {
 	RoomRepo *room_repo.Repository
 	RsvRepo  *rsv_repo.Repository
 	UserRepo *user_repo.Repository
-	RsvUC    *rsv_uc.Usecase
+	RsvUC    rsv_uc.Usecase
 }
 
 func SetupReservationTestDependencies(db database.Execer) *ReservationTestDeps {

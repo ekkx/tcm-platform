@@ -8,10 +8,10 @@ import (
 type Handler struct {
 	room_v1.UnimplementedRoomServiceServer
 
-	Usecase *usecase.Usecase
+	Usecase usecase.Usecase
 }
 
-func NewHandler(usecase *usecase.Usecase) *Handler {
+func NewHandler(usecase usecase.Usecase) *Handler {
 	return &Handler{
 		Usecase: usecase,
 	}

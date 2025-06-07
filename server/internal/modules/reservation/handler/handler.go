@@ -8,10 +8,10 @@ import (
 type Handler struct {
 	reservation_v1.UnimplementedReservationServiceServer
 
-	Usecase *usecase.Usecase
+	Usecase usecase.Usecase
 }
 
-func NewHandler(usecase *usecase.Usecase) *Handler {
+func NewHandler(usecase usecase.Usecase) *Handler {
 	return &Handler{
 		Usecase: usecase,
 	}

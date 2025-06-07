@@ -8,7 +8,7 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 )
 
-func (uc *Usecase) DeleteReservation(ctx context.Context, params *input.DeleteReservation) error {
+func (uc *UsecaseImpl) DeleteReservation(ctx context.Context, params *input.DeleteReservation) error {
 	rsv, err := uc.rsvRepo.GetReservationByID(ctx, params.ReservationID)
 	if err != nil {
 		return errs.ErrInternal.WithCause(err)

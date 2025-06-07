@@ -11,7 +11,7 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/pkg/utils"
 )
 
-func (u *Usecase) GetUserReservations(ctx context.Context, params *input.GetUserReservations) (*output.GetMyReservations, error) {
+func (u *UsecaseImpl) GetUserReservations(ctx context.Context, params *input.GetUserReservations) (*output.GetMyReservations, error) {
 	if err := params.Validate(); err != nil {
 		return nil, errs.ErrInvalidArgument.WithCause(err)
 	}

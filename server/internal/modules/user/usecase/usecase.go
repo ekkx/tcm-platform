@@ -2,14 +2,18 @@ package usecase
 
 import "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
 
-type Usecase struct {
+type Usecase interface {
+	// TODO: Add user-related methods when implementing user handler
+}
+
+type UsecaseImpl struct {
 	userRepo *repository.Repository
 }
 
 func NewUsecase(
 	userRepo *repository.Repository,
-) *Usecase {
-	return &Usecase{
+) *UsecaseImpl {
+	return &UsecaseImpl{
 		userRepo: userRepo,
 	}
 }

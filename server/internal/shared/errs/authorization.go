@@ -36,6 +36,6 @@ var (
 	ErrInvalidEmailOrPassword = &Error{
 		Code:     "invalid_email_or_password",
 		Message:  "invalid email or password",
-		GRPCCode: codes.Unauthenticated,
+		GRPCCode: codes.InvalidArgument,
 	}
 )

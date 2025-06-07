@@ -16,12 +16,10 @@ func NewGetRooms(rooms []entity.Room) *GetRooms {
 }
 
 func (output *GetRooms) ToProto() *room_v1.GetRoomsReply {
-	reply := &room_v1.GetRoomsReply{
-		Rooms: make([]*room_v1.Room, len(output.Rooms)),
-	}
+	protoRooms := make([]*room_v1.Room, 0, len(output.Rooms))
 
-	for i, room := range output.Rooms {
-		reply.Rooms[i] = &room_v1.Room{
+	for _, room := range output.Rooms {
+		protoRooms = append(protoRooms, &room_v1.Room{
 			Id:          room.ID,
 			Name:        room.Name,
 			PianoType:   room_v1.PianoType(room.PianoType),
@@ -30,8 +28,10 @@ func (output *GetRooms) ToProto() *room_v1.GetRoomsReply {
 			IsBasement:  room.IsBasement,
 			CampusType:  room_v1.CampusType(room.CampusType),
 			Floor:       int32(room.Floor),
-		}
+		})
 	}
 
-	return reply
+	return &room_v1.GetRoomsReply{
+		Rooms: protoRooms,
+	}
 }

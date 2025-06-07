@@ -13,4 +13,9 @@ var (
 		Message:  "internal server error",
 		GRPCCode: codes.Internal,
 	}
+	ErrPermissionDenied = &Error{
+		Code:     "permission_denied",
+		Message:  "permission denied",
+		GRPCCode: codes.PermissionDenied,
+	}
 )

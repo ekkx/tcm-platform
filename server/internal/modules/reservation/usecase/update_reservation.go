@@ -11,7 +11,7 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 )
 
-func (uc *Usecase) UpdateReservation(ctx context.Context, params *input.UpdateReservation) (*output.UpdateReservation, error) {
+func (uc *UsecaseImpl) UpdateReservation(ctx context.Context, params *input.UpdateReservation) (*output.UpdateReservation, error) {
 	if err := params.Validate(); err != nil {
 		return nil, errs.ErrInvalidArgument.WithCause(err)
 	}

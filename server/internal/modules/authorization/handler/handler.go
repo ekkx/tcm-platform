@@ -8,10 +8,10 @@ import (
 type Handler struct {
 	auth_v1.UnimplementedAuthorizationServiceServer
 
-	Usecase *usecase.Usecase
+	Usecase usecase.Usecase
 }
 
-func NewHandler(usecase *usecase.Usecase) *Handler {
+func NewHandler(usecase usecase.Usecase) *Handler {
 	return &Handler{
 		Usecase: usecase,
 	}

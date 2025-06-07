@@ -13,7 +13,7 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/pkg/utils"
 )
 
-func (u *Usecase) CreateReservation(ctx context.Context, params *input.CreateReservation) (*output.CreateReservation, error) {
+func (u *UsecaseImpl) CreateReservation(ctx context.Context, params *input.CreateReservation) (*output.CreateReservation, error) {
 	if err := params.Validate(); err != nil {
 		return nil, errs.ErrInvalidArgument.WithCause(err)
 	}
