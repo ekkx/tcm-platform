@@ -53,20 +53,20 @@ export function createAuthenticatedClient<T>(
   const metadata = new grpc.Metadata();
   metadata.add('authorization', `Bearer ${accessToken}`);
   
-  const callCredentials = grpc.credentials.createFromMetadataGenerator(
-    (params, callback) => {
-      callback(null, metadata);
-    }
-  );
-  
-  const channelCredentials = grpc.credentials.createInsecure();
-  const combinedCredentials = grpc.credentials.combineChannelCredentials(
-    channelCredentials,
-    callCredentials
-  );
-  
   return new ClientConstructor(
     GRPC_SERVER_URL,
-    combinedCredentials
+    grpc.credentials.createInsecure(),
+    {
+      interceptors: [
+        (options: any, nextCall: any) => {
+          return new grpc.InterceptingCall(nextCall(options), {
+            start: function(metadata, listener, next) {
+              metadata.add('authorization', `Bearer ${accessToken}`);
+              next(metadata, listener);
+            }
+          });
+        }
+      ]
+    }
   );
 }
