@@ -33,7 +33,10 @@ func Run(cfg *config.Config) error {
 	deps := GenerateServerDeps(pool)
 
 	s := grpc.NewServer(
-		grpc.UnaryInterceptor(interceptor.AuthUnaryInterceptor(cfg.JWTSecret)),
+		grpc.ChainUnaryInterceptor(
+			interceptor.ConfigUnaryInterceptor(cfg),
+			interceptor.AuthUnaryInterceptor(cfg.JWTSecret),
+		),
 	)
 
 	auth_v1.RegisterAuthorizationServiceServer(s, deps.AuthorizationServiceServer)

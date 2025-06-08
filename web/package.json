@@ -6,18 +6,22 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "proto:generate": "pbjs -t static-module -w commonjs -o app/proto/proto.js ../proto/v1/**/*.proto && pbts -o app/proto/proto.d.ts app/proto/proto.js",
+    "proto:generate-ts": "protoc --plugin=protoc-gen-ts_proto=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./app/proto --ts_proto_opt=outputServices=grpc-js --ts_proto_opt=esModuleInterop=true --ts_proto_opt=env=node -I ../proto ../proto/v1/**/*.proto"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.13.4",
+    "@grpc/proto-loader": "^0.7.15",
     "@heroui/react": "^2.7.8",
     "@internationalized/date": "^3.8.0",
     "@react-aria/i18n": "^3.12.8",
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
     "date-fns": "^4.1.0",
-    "js-cookie": "^3.0.5",
     "framer-motion": "^11.13.5",
     "isbot": "^5.1.17",
+    "js-cookie": "^3.0.5",
     "openapi-fetch": "^0.13.7",
     "react": "^19.0.0",
     "react-aria-components": "^1.8.0",
@@ -33,6 +37,7 @@
     "autoprefixer": "^10.4.20",
     "react-router-devtools": "^1.1.0",
     "tailwindcss": "^3.4.15",
+    "ts-proto": "^2.7.3",
     "typescript": "^5.7.2",
     "vite": "^5.4.11",
     "vite-tsconfig-paths": "^5.1.4"
