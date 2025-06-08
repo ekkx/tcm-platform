@@ -1112,8 +1112,8 @@ export const ReservationServiceService = {
     responseSerialize: (value: GetReservationReply): Buffer => Buffer.from(GetReservationReply.encode(value).finish()),
     responseDeserialize: (value: Buffer): GetReservationReply => GetReservationReply.decode(value),
   },
-  getMyReservations: {
-    path: "/reservation.v1.ReservationService/GetMyReservations",
+  getUserReservations: {
+    path: "/reservation.v1.ReservationService/GetUserReservations",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: GetUserReservationsRequest): Buffer =>
@@ -1160,7 +1160,7 @@ export const ReservationServiceService = {
 
 export interface ReservationServiceServer extends UntypedServiceImplementation {
   getReservation: handleUnaryCall<GetReservationRequest, GetReservationReply>;
-  getMyReservations: handleUnaryCall<GetUserReservationsRequest, GetUserReservationsReply>;
+  getUserReservations: handleUnaryCall<GetUserReservationsRequest, GetUserReservationsReply>;
   createReservation: handleUnaryCall<CreateReservationRequest, CreateReservationReply>;
   updateReservation: handleUnaryCall<UpdateReservationRequest, UpdateReservationReply>;
   deleteReservation: handleUnaryCall<DeleteReservationRequest, DeleteReservationReply>;
@@ -1182,16 +1182,16 @@ export interface ReservationServiceClient extends Client {
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: GetReservationReply) => void,
   ): ClientUnaryCall;
-  getMyReservations(
+  getUserReservations(
     request: GetUserReservationsRequest,
     callback: (error: ServiceError | null, response: GetUserReservationsReply) => void,
   ): ClientUnaryCall;
-  getMyReservations(
+  getUserReservations(
     request: GetUserReservationsRequest,
     metadata: Metadata,
     callback: (error: ServiceError | null, response: GetUserReservationsReply) => void,
   ): ClientUnaryCall;
-  getMyReservations(
+  getUserReservations(
     request: GetUserReservationsRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,

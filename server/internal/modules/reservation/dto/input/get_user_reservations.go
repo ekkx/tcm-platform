@@ -29,6 +29,8 @@ func (input *GetUserReservations) Validate() error {
 
 func (input *GetUserReservations) FromProto(ctx context.Context, req *rsv_v1.GetUserReservationsRequest) *GetUserReservations {
 	input.UserID = ctxhelper.GetActor(ctx).ID
-	input.FromDate = req.FromDate.AsTime()
+	if req.FromDate != nil {
+		input.FromDate = req.FromDate.AsTime()
+	}
 	return input
 }

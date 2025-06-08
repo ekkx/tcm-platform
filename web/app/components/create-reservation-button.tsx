@@ -5,11 +5,10 @@ import {
   DrawerContent,
   useDisclosure,
 } from "@heroui/react";
-import type { components } from "~/api/client";
 import { ReservationForm } from "./reservation-form";
 
 type Props = {
-  rooms: components["schemas"]["Room"][];
+  rooms: any[];
   isConfirmed?: boolean;
 };
 

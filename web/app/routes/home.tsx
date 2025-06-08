@@ -55,7 +55,7 @@ export async function loader({ request }: Route.LoaderArgs): Promise<HomeLoaderD
     // Fetch data in parallel
     const [reservationsResult, roomsResult] = await Promise.all([
       new Promise<any>((resolve, reject) => {
-        reservationClient.getMyReservations(
+        reservationClient.getUserReservations(
           {},
           (error, response) => {
             if (error) {
@@ -216,6 +216,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                       roomName={r.roomId || "未定"}
                       pianoType={"グランドピアノ"}
                       reservationId={r.id}
+                      rooms={rooms}
                       onDelete={() => {
                         setReservations((prev) =>
                           prev.filter((reservation) => reservation.id !== r.id)

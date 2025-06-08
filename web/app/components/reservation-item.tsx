@@ -12,6 +12,7 @@ type Props = {
   pianoType: string;
   reservationId: number;
   onDelete?: () => void;
+  rooms?: any[];
 };
 
 export function ReservationItem(props: Props) {
@@ -149,7 +150,7 @@ export function ReservationItem(props: Props) {
           </div>
         </div>
         <div className="flex w-full gap-2 mt-2">
-          <EditReservationButton isConfirmed={props.isConfirmed} />
+          <EditReservationButton isConfirmed={props.isConfirmed} rooms={props.rooms} />
           <CancelReservationButton
             reservationId={props.reservationId}
             onDelete={props.onDelete}

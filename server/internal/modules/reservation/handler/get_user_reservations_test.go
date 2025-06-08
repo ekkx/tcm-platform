@@ -103,6 +103,43 @@ func TestHandler_GetUserReservations(t *testing.T) {
 			withAuth: true,
 		},
 		{
+			name:    "正常系: FromDateがnilの場合",
+			userID:  validUserID,
+			request: &reservation.GetUserReservationsRequest{
+				FromDate: nil,
+			},
+			mockSetup: func(m *mockusecase.MockReservationUsecase) {
+				m.GetUserReservationsFunc = func(ctx context.Context, input *input.GetUserReservations) (*output.GetMyReservations, error) {
+					// FromDateがゼロ値であることを確認
+					require.True(t, input.FromDate.IsZero(), "FromDate should be zero value when nil in request")
+					
+					return output.NewGetMyReservations([]entity.Reservation{
+						{
+							ID:         125,
+							ExternalID: ptr("ext-125"),
+							UserID:     validUserID,
+							CampusType: enum.CampusTypeIkebukuro,
+							Date:       validDate,
+							RoomID:     "room-3",
+							FromHour:   13,
+							FromMinute: 0,
+							ToHour:     14,
+							ToMinute:   0,
+							BookerName: ptr("Test User"),
+							CreatedAt:  time.Now(),
+						},
+					}), nil
+				}
+			},
+			checkFunc: func(t *testing.T, reply *reservation.GetUserReservationsReply, err error) {
+				require.NoError(t, err)
+				require.NotNil(t, reply)
+				require.Len(t, reply.Reservations, 1)
+				require.Equal(t, int64(125), reply.Reservations[0].Id)
+			},
+			withAuth: true,
+		},
+		{
 			name:    "異常系: 認証なし",
 			userID:  "",
 			request: &reservation.GetUserReservationsRequest{},
@@ -151,7 +188,7 @@ func TestHandler_GetUserReservations(t *testing.T) {
 			client := reservation.NewReservationServiceClient(conn)
 
 			// テスト実行
-			reply, err := client.GetMyReservations(ctx, tt.request)
+			reply, err := client.GetUserReservations(ctx, tt.request)
 
 			// 結果の検証
 			if tt.checkFunc != nil {

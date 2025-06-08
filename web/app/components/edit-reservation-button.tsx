@@ -12,6 +12,7 @@ import { ReservationForm } from "./reservation-form";
 
 type Props = {
   isConfirmed?: boolean;
+  rooms?: any[];
 };
 
 export function EditReservationButton(props: Props) {
@@ -73,7 +74,7 @@ export function EditReservationButton(props: Props) {
                       希望するセクションを変更してください。
                     </p>
                   </div>
-                  <ReservationForm type="update" />
+                  <ReservationForm type="update" rooms={props.rooms || []} />
                 </DrawerBody>
               </>
             )}

@@ -746,10 +746,10 @@ const file_v1_reservation_reservation_proto_rawDesc = "" +
 	"\vreservation\x18\x01 \x01(\v2\x1b.reservation.v1.ReservationR\vreservation\"A\n" +
 	"\x18DeleteReservationRequest\x12%\n" +
 	"\x0ereservation_id\x18\x01 \x01(\x03R\rreservationId\"\x18\n" +
-	"\x16DeleteReservationReply2\x92\x04\n" +
+	"\x16DeleteReservationReply2\x94\x04\n" +
 	"\x12ReservationService\x12\\\n" +
-	"\x0eGetReservation\x12%.reservation.v1.GetReservationRequest\x1a#.reservation.v1.GetReservationReply\x12i\n" +
-	"\x11GetMyReservations\x12*.reservation.v1.GetUserReservationsRequest\x1a(.reservation.v1.GetUserReservationsReply\x12e\n" +
+	"\x0eGetReservation\x12%.reservation.v1.GetReservationRequest\x1a#.reservation.v1.GetReservationReply\x12k\n" +
+	"\x13GetUserReservations\x12*.reservation.v1.GetUserReservationsRequest\x1a(.reservation.v1.GetUserReservationsReply\x12e\n" +
 	"\x11CreateReservation\x12(.reservation.v1.CreateReservationRequest\x1a&.reservation.v1.CreateReservationReply\x12e\n" +
 	"\x11UpdateReservation\x12(.reservation.v1.UpdateReservationRequest\x1a&.reservation.v1.UpdateReservationReply\x12e\n" +
 	"\x11DeleteReservation\x12(.reservation.v1.DeleteReservationRequest\x1a&.reservation.v1.DeleteReservationReplyBFZDgithub.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservationb\x06proto3"
@@ -797,12 +797,12 @@ var file_v1_reservation_reservation_proto_depIdxs = []int32{
 	5,  // 10: reservation.v1.UpdateReservationRequest.reservation:type_name -> reservation.v1.ReservationInput
 	0,  // 11: reservation.v1.UpdateReservationReply.reservation:type_name -> reservation.v1.Reservation
 	1,  // 12: reservation.v1.ReservationService.GetReservation:input_type -> reservation.v1.GetReservationRequest
-	3,  // 13: reservation.v1.ReservationService.GetMyReservations:input_type -> reservation.v1.GetUserReservationsRequest
+	3,  // 13: reservation.v1.ReservationService.GetUserReservations:input_type -> reservation.v1.GetUserReservationsRequest
 	6,  // 14: reservation.v1.ReservationService.CreateReservation:input_type -> reservation.v1.CreateReservationRequest
 	8,  // 15: reservation.v1.ReservationService.UpdateReservation:input_type -> reservation.v1.UpdateReservationRequest
 	10, // 16: reservation.v1.ReservationService.DeleteReservation:input_type -> reservation.v1.DeleteReservationRequest
 	2,  // 17: reservation.v1.ReservationService.GetReservation:output_type -> reservation.v1.GetReservationReply
-	4,  // 18: reservation.v1.ReservationService.GetMyReservations:output_type -> reservation.v1.GetUserReservationsReply
+	4,  // 18: reservation.v1.ReservationService.GetUserReservations:output_type -> reservation.v1.GetUserReservationsReply
 	7,  // 19: reservation.v1.ReservationService.CreateReservation:output_type -> reservation.v1.CreateReservationReply
 	9,  // 20: reservation.v1.ReservationService.UpdateReservation:output_type -> reservation.v1.UpdateReservationReply
 	11, // 21: reservation.v1.ReservationService.DeleteReservation:output_type -> reservation.v1.DeleteReservationReply

@@ -9,7 +9,7 @@ import "google/protobuf/timestamp.proto";
 
 service ReservationService {
     rpc GetReservation(GetReservationRequest) returns (GetReservationReply);
-    rpc GetMyReservations(GetUserReservationsRequest) returns (GetUserReservationsReply);
+    rpc GetUserReservations(GetUserReservationsRequest) returns (GetUserReservationsReply);
     rpc CreateReservation(CreateReservationRequest) returns (CreateReservationReply);
     rpc UpdateReservation(UpdateReservationRequest) returns (UpdateReservationReply);
     rpc DeleteReservation(DeleteReservationRequest) returns (DeleteReservationReply);

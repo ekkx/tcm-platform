@@ -13,10 +13,9 @@ import { CalendarDate, today } from "@internationalized/date";
 import { useState } from "react";
 import { I18nProvider, Label } from "react-aria-components";
 import client from "~/api";
-import type { components } from "~/api/client";
 
 type Props = {
-  rooms: components["schemas"]["Room"][];
+  rooms: any[];
   type: "create" | "update";
   defaultCampus?: "nakameguro" | "ikebukuro";
   defaultDate?: string;
