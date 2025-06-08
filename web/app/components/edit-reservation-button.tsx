@@ -13,6 +13,13 @@ import { ReservationForm } from "./reservation-form";
 type Props = {
   isConfirmed?: boolean;
   rooms?: any[];
+  reservationId: number;
+  campusType: string;
+  date: string;
+  timeRange: string;
+  roomName: string;
+  roomId?: string;
+  userName?: string;
 };
 
 export function EditReservationButton(props: Props) {
@@ -74,7 +81,18 @@ export function EditReservationButton(props: Props) {
                       希望するセクションを変更してください。
                     </p>
                   </div>
-                  <ReservationForm type="update" rooms={props.rooms || []} />
+                  <ReservationForm 
+                    type="update" 
+                    rooms={props.rooms || []} 
+                    reservationId={props.reservationId}
+                    defaultCampus={props.campusType === "池袋" ? "ikebukuro" : "nakameguro"}
+                    defaultDate={props.date}
+                    defaultStartTime={props.timeRange.split(" 〜 ")[0]}
+                    defaultEndTime={props.timeRange.split(" 〜 ")[1]}
+                    defaultRoomName={props.roomId}
+                    defaultUserName={props.userName}
+                    onSuccess={onClose}
+                  />
                 </DrawerBody>
               </>
             )}

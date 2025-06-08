@@ -9,6 +9,7 @@ type Props = {
   timeRange: string;
   userName?: string;
   roomName: string;
+  roomId?: string;
   pianoType: string;
   reservationId: number;
   onDelete?: () => void;
@@ -150,7 +151,17 @@ export function ReservationItem(props: Props) {
           </div>
         </div>
         <div className="flex w-full gap-2 mt-2">
-          <EditReservationButton isConfirmed={props.isConfirmed} rooms={props.rooms} />
+          <EditReservationButton 
+            isConfirmed={props.isConfirmed} 
+            rooms={props.rooms}
+            reservationId={props.reservationId}
+            campusType={props.campusName}
+            date={props.date}
+            timeRange={props.timeRange}
+            roomName={props.roomName}
+            roomId={props.roomId}
+            userName={props.userName}
+          />
           <CancelReservationButton
             reservationId={props.reservationId}
             onDelete={props.onDelete}

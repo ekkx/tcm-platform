@@ -18,6 +18,207 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+export async function action({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const intent = formData.get("intent")?.toString();
+
+  if (intent === "create-reservation") {
+    const { createAuthenticatedClient } = await import("~/api/grpc-client");
+    const { ReservationServiceClient } = await import("~/proto/v1/reservation/reservation.js");
+    const { CampusType: GrpcCampusType } = await import("~/proto/v1/room/room.js");
+
+    const cookieHeader = request.headers.get("Cookie");
+    const cookies = new Map<string, string>();
+    
+    if (cookieHeader) {
+      cookieHeader.split(';').forEach(cookie => {
+        const [key, value] = cookie.split('=').map(s => s.trim());
+        if (key && value) {
+          cookies.set(key, value);
+        }
+      });
+    }
+
+    const accessToken = cookies.get('access-token');
+    if (!accessToken) {
+      return { error: "認証が必要です" };
+    }
+
+    try {
+      const reservationClient = createAuthenticatedClient(
+        ReservationServiceClient,
+        accessToken
+      );
+
+      const campusCode = formData.get("campus_code")?.toString();
+      const dateStr = formData.get("date")?.toString();
+      const fromHour = Number(formData.get("from_hour"));
+      const fromMinute = Number(formData.get("from_minute"));
+      const toHour = Number(formData.get("to_hour"));
+      const toMinute = Number(formData.get("to_minute"));
+      const roomId = formData.get("room_id")?.toString();
+      const bookerName = formData.get("booker_name")?.toString();
+
+      const campusType = campusCode === "2" ? GrpcCampusType.IKEBUKURO : GrpcCampusType.NAKAMEGURO;
+
+      const result = await new Promise<any>((resolve, reject) => {
+        reservationClient.createReservation(
+          {
+            reservation: {
+              campusType,
+              date: dateStr ? new Date(dateStr) : undefined,
+              fromHour,
+              fromMinute,
+              toHour,
+              toMinute,
+              roomId: roomId || "",
+              bookerName
+            }
+          },
+          (error, response) => {
+            if (error) {
+              console.error("[Create Reservation] Failed:", error);
+              reject(error);
+            } else {
+              resolve(response);
+            }
+          }
+        );
+      });
+
+      return { success: true, reservations: result.reservations };
+    } catch (error: any) {
+      console.error("[Create Reservation] Error:", error);
+      return { error: error.message || "予約の作成に失敗しました" };
+    }
+  }
+
+  if (intent === "delete-reservation") {
+    const { createAuthenticatedClient } = await import("~/api/grpc-client");
+    const { ReservationServiceClient } = await import("~/proto/v1/reservation/reservation.js");
+
+    const cookieHeader = request.headers.get("Cookie");
+    const cookies = new Map<string, string>();
+    
+    if (cookieHeader) {
+      cookieHeader.split(';').forEach(cookie => {
+        const [key, value] = cookie.split('=').map(s => s.trim());
+        if (key && value) {
+          cookies.set(key, value);
+        }
+      });
+    }
+
+    const accessToken = cookies.get('access-token');
+    if (!accessToken) {
+      return { error: "認証が必要です" };
+    }
+
+    try {
+      const reservationClient = createAuthenticatedClient(
+        ReservationServiceClient,
+        accessToken
+      );
+
+      const reservationId = Number(formData.get("reservation_id"));
+
+      await new Promise<any>((resolve, reject) => {
+        reservationClient.deleteReservation(
+          { reservationId },
+          (error, response) => {
+            if (error) {
+              console.error("[Delete Reservation] Failed:", error);
+              reject(error);
+            } else {
+              resolve(response);
+            }
+          }
+        );
+      });
+
+      return { success: true, deleted: true };
+    } catch (error: any) {
+      console.error("[Delete Reservation] Error:", error);
+      return { error: error.message || "予約の削除に失敗しました" };
+    }
+  }
+
+  if (intent === "update-reservation") {
+    const { createAuthenticatedClient } = await import("~/api/grpc-client");
+    const { ReservationServiceClient } = await import("~/proto/v1/reservation/reservation.js");
+    const { CampusType: GrpcCampusType } = await import("~/proto/v1/room/room.js");
+
+    const cookieHeader = request.headers.get("Cookie");
+    const cookies = new Map<string, string>();
+    
+    if (cookieHeader) {
+      cookieHeader.split(';').forEach(cookie => {
+        const [key, value] = cookie.split('=').map(s => s.trim());
+        if (key && value) {
+          cookies.set(key, value);
+        }
+      });
+    }
+
+    const accessToken = cookies.get('access-token');
+    if (!accessToken) {
+      return { error: "認証が必要です" };
+    }
+
+    try {
+      const reservationClient = createAuthenticatedClient(
+        ReservationServiceClient,
+        accessToken
+      );
+
+      const reservationId = Number(formData.get("reservation_id"));
+      const campusCode = formData.get("campus_code")?.toString();
+      const dateStr = formData.get("date")?.toString();
+      const fromHour = Number(formData.get("from_hour"));
+      const fromMinute = Number(formData.get("from_minute"));
+      const toHour = Number(formData.get("to_hour"));
+      const toMinute = Number(formData.get("to_minute"));
+      const roomId = formData.get("room_id")?.toString();
+      const bookerName = formData.get("booker_name")?.toString();
+
+      const campusType = campusCode === "2" ? GrpcCampusType.IKEBUKURO : GrpcCampusType.NAKAMEGURO;
+
+      const result = await new Promise<any>((resolve, reject) => {
+        reservationClient.updateReservation(
+          {
+            reservationId,
+            reservation: {
+              campusType,
+              date: dateStr ? new Date(dateStr) : undefined,
+              fromHour,
+              fromMinute,
+              toHour,
+              toMinute,
+              roomId: roomId || "",
+              bookerName
+            }
+          },
+          (error, response) => {
+            if (error) {
+              console.error("[Update Reservation] Failed:", error);
+              reject(error);
+            } else {
+              resolve(response);
+            }
+          }
+        );
+      });
+
+      return { success: true, reservation: result.reservation };
+    } catch (error: any) {
+      console.error("[Update Reservation] Error:", error);
+      return { error: error.message || "予約の更新に失敗しました" };
+    }
+  }
+
+  return { error: "Invalid intent" };
+}
+
 export async function loader({ request }: Route.LoaderArgs): Promise<HomeLoaderData> {
   // Dynamic imports for server-side only
   const { createAuthenticatedClient } = await import("~/api/grpc-client");
@@ -169,7 +370,7 @@ const groupReservationsByDate = (
   return sorted;
 };
 
-export default function Home({ loaderData }: Route.ComponentProps) {
+export default function Home({ loaderData, actionData }: Route.ComponentProps) {
   const data = loaderData as HomeLoaderData | undefined;
   
   const [rooms] = useState<any[]>((data?.rooms || []).map(convertRoomToComponent));
@@ -182,6 +383,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       window.location.href = "/login";
     }
   }, [data]);
+
+  useEffect(() => {
+    if (actionData?.success && actionData?.reservations) {
+      // 予約作成成功後、ページをリロード
+      window.location.reload();
+    }
+  }, [actionData]);
 
   return (
     <>
@@ -213,7 +421,8 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                         .toString()
                         .padStart(2, "0")}`}
                       userName={r.bookerName}
-                      roomName={r.roomId || "未定"}
+                      roomName={rooms.find(room => room.id === r.roomId)?.name || r.roomId || "未定"}
+                      roomId={r.roomId}
                       pianoType={"グランドピアノ"}
                       reservationId={r.id}
                       rooms={rooms}

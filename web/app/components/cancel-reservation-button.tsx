@@ -6,7 +6,8 @@ import {
   ModalContent,
   useDisclosure,
 } from "@heroui/react";
-import client from "~/api";
+import { Form, useNavigation, useActionData } from "react-router";
+import { useEffect } from "react";
 
 type Props = {
   reservationId: number;
@@ -15,33 +16,25 @@ type Props = {
 
 export function CancelReservationButton(props: Props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const navigation = useNavigation();
+  const actionData = useActionData() as any;
+  const isDeleting = navigation.state === "submitting";
 
-  const onDeletePress = async ({ onClose }: { onClose: () => void }) => {
-    const response = await client.DELETE(
-      "/reservations/{reservation_id}/delete",
-      {
-        params: {
-          path: {
-            reservation_id: props.reservationId,
-          },
-        },
-      }
-    );
-
-    if (!response.data?.ok) {
-      alert("削除に失敗しました");
-      return;
+  useEffect(() => {
+    if (actionData?.deleted) {
+      addToast({
+        title: "予約を削除しました",
+        color: "success",
+      });
+      props.onDelete?.();
+      onOpenChange();
+    } else if (actionData?.error) {
+      addToast({
+        title: actionData.error,
+        color: "danger",
+      });
     }
-
-    onClose();
-    props.onDelete?.();
-
-    addToast({
-      title: "予約を削除しました",
-      
-      color: "success",
-    });
-  };
+  }, [actionData, props, onOpenChange]);
 
   return (
     <>
@@ -65,28 +58,33 @@ export function CancelReservationButton(props: Props) {
           {(onClose) => (
             <>
               <ModalBody className="p-0 gap-0">
-                <div className="grid gap-4 py-6 text-center">
-                  <p className="text-xl font-bold">予約を削除しますか？</p>
-                  <p className="text-xs">
-                    この予約を削除してもよろしいですか？
-                  </p>
-                </div>
-                <div className="flex justify-center gap-6 border-t py-3">
-                  <Button
-                    className="w-32 font-bold border"
-                    variant="bordered"
-                    onPress={onClose}
-                  >
-                    キャンセル
-                  </Button>
-                  <Button
-                    className="w-32 font-bold"
-                    color="danger"
-                    onPress={() => onDeletePress({ onClose })}
-                  >
-                    削除
-                  </Button>
-                </div>
+                <Form method="post">
+                  <input type="hidden" name="intent" value="delete-reservation" />
+                  <input type="hidden" name="reservation_id" value={props.reservationId} />
+                  <div className="grid gap-4 py-6 text-center">
+                    <p className="text-xl font-bold">予約を削除しますか？</p>
+                    <p className="text-xs">
+                      この予約を削除してもよろしいですか？
+                    </p>
+                  </div>
+                  <div className="flex justify-center gap-6 border-t py-3">
+                    <Button
+                      className="w-32 font-bold border"
+                      variant="bordered"
+                      onPress={onClose}
+                    >
+                      キャンセル
+                    </Button>
+                    <Button
+                      className="w-32 font-bold"
+                      color="danger"
+                      type="submit"
+                      isLoading={isDeleting}
+                    >
+                      削除
+                    </Button>
+                  </div>
+                </Form>
               </ModalBody>
             </>
           )}
