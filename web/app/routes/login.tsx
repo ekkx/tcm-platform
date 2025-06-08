@@ -1,6 +1,7 @@
 import { addToast, Button, Checkbox, Form, Input, Link } from "@heroui/react";
 import { useEffect, useState } from "react";
-import client from "~/api";
+import { createAuthorizationClient } from "~/api/grpc-client";
+import type { AuthorizeReply } from "~/proto/v1/authorization/authorization.js";
 import { Cookie } from "~/store/cookies";
 import type { Route } from "./+types/login";
 
@@ -14,7 +15,85 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Login() {
+export async function action({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const loginId = formData.get("login-id")?.toString();
+  const password = formData.get("password")?.toString();
+  const remember = formData.get("remember")?.toString();
+
+  if (!loginId || !password) {
+    return {
+      error: "IDとパスワードを入力してください。",
+    };
+  }
+
+  try {
+    console.log("[Login Action] Creating gRPC client...");
+    const authClient = createAuthorizationClient();
+
+    console.log("[Login Action] Attempting to authenticate user:", loginId);
+    const response = await new Promise<AuthorizeReply>((resolve, reject) => {
+      authClient.authorize(
+        {
+          userId: loginId,
+          password: password,
+        },
+        (error, response) => {
+          if (error) {
+            console.error("[Login Action] gRPC call failed:", error);
+            reject(error);
+          } else {
+            console.log("[Login Action] gRPC call successful");
+            resolve(response);
+          }
+        }
+      );
+    });
+
+    if (
+      response?.authorization?.accessToken &&
+      response?.authorization?.refreshToken
+    ) {
+      console.log("[Login Action] Authentication successful");
+      // Server-side cookie setting would be needed here in a real implementation
+      // For now, we'll return the tokens and handle them on the client
+      return {
+        success: true,
+        access_token: response.authorization.accessToken,
+        refresh_token: response.authorization.refreshToken,
+        remember: remember !== undefined,
+      };
+    }
+
+    console.error("[Login Action] Invalid response structure:", response);
+    return {
+      error: "認証に失敗しました。",
+    };
+  } catch (error: any) {
+    console.error("[Login Action] gRPC authentication error:", error);
+
+    // Check if it's a connection error
+    if (error.code === 14) {
+      return {
+        error:
+          "サーバーに接続できません。しばらくしてからもう一度お試しください。",
+      };
+    }
+
+    // Check if it's an authentication error
+    if (error.code === 16 || error.code === 7) {
+      return {
+        error: "IDまたはパスワードが違います。",
+      };
+    }
+
+    return {
+      error: "認証中にエラーが発生しました。",
+    };
+  }
+}
+
+export default function LoginGrpc({ actionData }: Route.ComponentProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,49 +106,21 @@ export default function Login() {
     }
   }, []);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsLoading(true);
-
-    const formData = new FormData(event.currentTarget);
-    const loginId = formData.get("login-id")?.toString();
-    const password = formData.get("password")?.toString();
-    const remember = formData.get("remember")?.toString();
-
-    if (!loginId || !password) {
-      return;
-    }
-
-    const response = await client.POST("/authorize", {
-      body: {
-        user_id: loginId,
-        password: password,
-      },
-    });
-
-    if (response.data?.ok) {
-      if (remember !== undefined) {
-        // クッキーに保存
-      } else {
-        // セッションストレージに保存
-      }
-
-      const { access_token, refresh_token } = response.data.data;
-
-      Cookie.setAccessToken(access_token);
-      Cookie.setRefreshToken(refresh_token);
-
+  useEffect(() => {
+    if (actionData?.success) {
+      // Handle successful login
+      Cookie.setAccessToken(actionData.access_token);
+      Cookie.setRefreshToken(actionData.refresh_token);
       window.location.href = "/";
-    } else {
+    } else if (actionData?.error) {
+      setIsLoading(false);
       addToast({
         title: "認証失敗",
-        description: "IDまたはパスワードが違います。",
+        description: actionData.error,
         color: "danger",
       });
     }
-
-    setIsLoading(false);
-  };
+  }, [actionData]);
 
   return (
     <div className="grid place-items-center w-dvw h-dvh">
@@ -86,7 +137,8 @@ export default function Login() {
         <Form
           className="flex flex-col gap-4"
           validationBehavior="native"
-          onSubmit={handleSubmit}
+          method="post"
+          onSubmit={() => setIsLoading(true)}
         >
           <Input
             isRequired
