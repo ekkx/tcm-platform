@@ -1,6 +1,8 @@
 package output
 
 import (
+	"time"
+
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
 	rsv_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation"
@@ -37,18 +39,22 @@ func (output *GetMyReservations) ToProto() *rsv_v1.GetUserReservationsReply {
 			campusType = room_v1.CampusType_CAMPUS_UNSPECIFIED
 		}
 
+		// For date-only fields, we want to preserve the date as-is
+		// Create a UTC time with the same date components
+		dateUTC := time.Date(rsv.Date.Year(), rsv.Date.Month(), rsv.Date.Day(), 0, 0, 0, 0, time.UTC)
+
 		protoRsvs = append(protoRsvs, &rsv_v1.Reservation{
 			Id:         int64(rsv.ID),
 			ExternalId: rsv.ExternalID,
 			CampusType: campusType,
-			Date:       timestamppb.New(rsv.Date),
+			Date:       timestamppb.New(dateUTC),
 			RoomId:     rsv.RoomID,
 			FromHour:   int32(rsv.FromHour),
 			FromMinute: int32(rsv.FromMinute),
 			ToHour:     int32(rsv.ToHour),
 			ToMinute:   int32(rsv.ToMinute),
 			BookerName: rsv.BookerName,
-			CreatedAt:  timestamppb.New(rsv.CreatedAt),
+			CreatedAt:  timestamppb.New(rsv.CreatedAt.In(time.UTC)),
 		})
 	}
 

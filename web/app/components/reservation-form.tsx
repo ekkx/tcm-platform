@@ -60,10 +60,22 @@ export function ReservationForm(props: Props) {
   const actionData = useActionData() as any;
   const isSubmitting = navigation.state === "submitting";
 
+
   const [selectedCampus, setSelectedCampus] = useState<
     "nakameguro" | "ikebukuro" | null
   >(props.defaultCampus ?? null);
-  const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(null);
+  const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(() => {
+    if (props.type === "update" && props.defaultDate) {
+      // For update mode, use the ISO date string from reservation
+      const date = new Date(props.defaultDate);
+      return new CalendarDate(date.getFullYear(), date.getMonth() + 1, date.getDate());
+    } else if (props.type === "create") {
+      // For create mode, default to 3 days from today
+      const todayDate = today("Asia/Tokyo");
+      return todayDate.add({ days: 3 });
+    }
+    return null;
+  });
   const [startTime, setStartTime] = useState<string | null>(
     props.defaultStartTime ?? null
   );
@@ -85,13 +97,14 @@ export function ReservationForm(props: Props) {
         color: "success",
       });
       props.onSuccess?.();
+      // Don't reload here - let the parent component handle it
     } else if (actionData?.error) {
       addToast({
         title: actionData.error,
         color: "danger",
       });
     }
-  }, [actionData, props]);
+  }, [actionData]);
 
   const campusRooms = props.rooms.filter((room) => {
     if (selectedCampus === "nakameguro") {
@@ -117,7 +130,7 @@ export function ReservationForm(props: Props) {
   };
 
   return (
-    <Form method="post">
+    <Form method="post" className="flex flex-col h-full">
       <input type="hidden" name="intent" value={`${props.type}-reservation`} />
       {props.reservationId && (
         <input
@@ -138,7 +151,7 @@ export function ReservationForm(props: Props) {
       <Select
         isRequired
         size="lg"
-        className="mb-4"
+        className="mt-2 mb-4"
         placeholder="キャンパスを選択"
         name="campus_code"
         selectedKeys={selectedCampus ? [selectedCampus] : []}
@@ -157,8 +170,8 @@ export function ReservationForm(props: Props) {
           isRequired
           fullWidth
           size="lg"
-          className="mb-4"
-          minValue={today("Asia/Tokyo")}
+          className="mt-2 mb-4"
+          minValue={today("Asia/Tokyo").add({ days: 3 })}
           value={selectedDate}
           onChange={setSelectedDate}
         />
@@ -167,7 +180,15 @@ export function ReservationForm(props: Props) {
         <input
           type="hidden"
           name="date"
-          value={selectedDate.toDate("Asia/Tokyo").toISOString()}
+          value={(() => {
+            const date = selectedDate.toDate("Asia/Tokyo");
+            // Create a date string that represents the date in JST
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            // Send as JST midnight
+            return `${year}-${month}-${day}T00:00:00+09:00`;
+          })()}
         />
       )}
 
@@ -179,6 +200,7 @@ export function ReservationForm(props: Props) {
           <Select
             isRequired
             size="lg"
+            className="mt-2"
             placeholder="開始時刻"
             name="start_time"
             selectedKeys={startTime ? [startTime] : []}
@@ -213,6 +235,7 @@ export function ReservationForm(props: Props) {
           <Select
             isRequired
             size="lg"
+            className="mt-2"
             placeholder="終了時刻"
             name="end_time"
             selectedKeys={endTime ? [endTime] : []}
@@ -253,7 +276,7 @@ export function ReservationForm(props: Props) {
         isRequired
         size="lg"
         placeholder="部屋を選択"
-        className="mb-4"
+        className="mt-2 mb-4"
         name="room_id"
         selectedKeys={selectedRoom ? [selectedRoom] : []}
         onSelectionChange={(key) => {
@@ -266,11 +289,13 @@ export function ReservationForm(props: Props) {
         ))}
       </Select>
 
-      <Label className="text-sm font-medium text-default-700">予約者名（任意）</Label>
+      <Label className="flex text-sm font-medium text-default-700">
+        予約者名<span className="text-foreground-400">（任意）</span>
+      </Label>
       <Input
         size="lg"
         placeholder="名前を入力"
-        className="mb-4"
+        className="mt-2 mb-4"
         name="booker_name"
         value={bookerName}
         onChange={(e) => setBookerName(e.target.value)}
@@ -280,7 +305,8 @@ export function ReservationForm(props: Props) {
         isLoading={isSubmitting}
         type="submit"
         color="primary"
-        className="w-full"
+        size="lg"
+        className="w-full mt-auto"
         isDisabled={
           !selectedCampus ||
           !selectedDate ||

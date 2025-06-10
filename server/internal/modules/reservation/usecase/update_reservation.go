@@ -16,8 +16,9 @@ func (uc *UsecaseImpl) UpdateReservation(ctx context.Context, params *input.Upda
 		return nil, errs.ErrInvalidArgument.WithCause(err)
 	}
 
-	// 日付の時間部分を0に正規化
-	params.Date = time.Date(params.Date.Year(), params.Date.Month(), params.Date.Day(), 0, 0, 0, 0, params.Date.Location())
+	// 日付の時間部分を0に正規化 - Convert to JST first, then extract date components
+	dateInJST := params.Date.In(time.FixedZone("Asia/Tokyo", 9*60*60))
+	params.Date = time.Date(dateInJST.Year(), dateInJST.Month(), dateInJST.Day(), 0, 0, 0, 0, dateInJST.Location())
 
 	// 予約更新を行う権限があるか確認
 	if params.Actor.Role == actor.RoleUser {

@@ -336,36 +336,42 @@ const groupReservationsByDate = (
   );
 
   reservations.forEach((r) => {
-    console.log(r.externalId);
-
     if (!r.date) return;
     const date = new Date(r.date);
     const end = new Date(date);
     end.setHours(r.toHour, r.toMinute, 0, 0);
 
-    console.log("nowJST", nowJST);
-    console.log("end", end);
-
     if (end <= nowJST) return; // 終了してたらスキップ
 
-    const dateKey = format(date, "yyyy-MM-dd");
+    // Use the local date components to create the key
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateKey = `${year}-${month}-${day}`;
+    
     if (!grouped[dateKey]) grouped[dateKey] = [];
     grouped[dateKey].push(r);
   });
 
   const sorted = Object.entries(grouped)
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([date, reservations]) => ({
-      date,
-      formattedDate: format(new Date(date), "yyyy年M月d日(EEE)", {
-        locale: ja,
-      }),
-      reservations: reservations.sort((a, b) => {
-        const aStart = a.fromHour * 60 + a.fromMinute;
-        const bStart = b.fromHour * 60 + b.fromMinute;
-        return aStart - bStart;
-      }),
-    }));
+    .map(([dateKey, reservations]) => {
+      // dateKey is in format "yyyy-MM-dd", parse it correctly
+      const [year, month, day] = dateKey.split('-').map(Number);
+      const dateObj = new Date(year, month - 1, day);
+      
+      return {
+        date: dateKey,
+        formattedDate: format(dateObj, "yyyy年M月d日(EEE)", {
+          locale: ja,
+        }),
+        reservations: reservations.sort((a, b) => {
+          const aStart = a.fromHour * 60 + a.fromMinute;
+          const bStart = b.fromHour * 60 + b.fromMinute;
+          return aStart - bStart;
+        }),
+      };
+    });
 
   return sorted;
 };
@@ -385,8 +391,8 @@ export default function Home({ loaderData, actionData }: Route.ComponentProps) {
   }, [data]);
 
   useEffect(() => {
-    if (actionData?.success && actionData?.reservations) {
-      // 予約作成成功後、ページをリロード
+    if (actionData?.success) {
+      // 予約作成・更新・削除成功後、ページをリロード
       window.location.reload();
     }
   }, [actionData]);
@@ -426,6 +432,7 @@ export default function Home({ loaderData, actionData }: Route.ComponentProps) {
                       pianoType={"グランドピアノ"}
                       reservationId={r.id}
                       rooms={rooms}
+                      reservation={r}
                       onDelete={() => {
                         setReservations((prev) =>
                           prev.filter((reservation) => reservation.id !== r.id)

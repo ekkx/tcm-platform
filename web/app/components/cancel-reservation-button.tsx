@@ -28,6 +28,8 @@ export function CancelReservationButton(props: Props) {
       });
       props.onDelete?.();
       onOpenChange();
+      // Reload the page after successful deletion
+      window.location.reload();
     } else if (actionData?.error) {
       addToast({
         title: actionData.error,

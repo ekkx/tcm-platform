@@ -19,6 +19,7 @@ type Props = {
   timeRange: string;
   roomName: string;
   roomId?: string;
+  reservation?: any;
   userName?: string;
 };
 
@@ -84,13 +85,13 @@ export function EditReservationButton(props: Props) {
                   <ReservationForm 
                     type="update" 
                     rooms={props.rooms || []} 
-                    reservationId={props.reservationId}
-                    defaultCampus={props.campusType === "池袋" ? "ikebukuro" : "nakameguro"}
-                    defaultDate={props.date}
-                    defaultStartTime={props.timeRange.split(" 〜 ")[0]}
-                    defaultEndTime={props.timeRange.split(" 〜 ")[1]}
-                    defaultRoomName={props.roomId}
-                    defaultUserName={props.userName}
+                    reservationId={props.reservation?.id || props.reservationId}
+                    defaultCampus={props.reservation?.campusType === 2 ? "ikebukuro" : "nakameguro"}
+                    defaultDate={props.reservation?.date}
+                    defaultStartTime={props.reservation ? `${props.reservation.fromHour}:${String(props.reservation.fromMinute).padStart(2, "0")}` : props.timeRange.split(" 〜 ")[0].replace(/^0(\d):/, '$1:')}
+                    defaultEndTime={props.reservation ? `${props.reservation.toHour}:${String(props.reservation.toMinute).padStart(2, "0")}` : props.timeRange.split(" 〜 ")[1].replace(/^0(\d):/, '$1:')}
+                    defaultRoomName={props.reservation?.roomId || props.roomId}
+                    defaultUserName={props.reservation?.bookerName || props.userName}
                     onSuccess={onClose}
                   />
                 </DrawerBody>

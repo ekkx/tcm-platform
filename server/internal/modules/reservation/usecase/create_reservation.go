@@ -18,7 +18,9 @@ func (u *UsecaseImpl) CreateReservation(ctx context.Context, params *input.Creat
 		return nil, errs.ErrInvalidArgument.WithCause(err)
 	}
 
-	var date = time.Date(params.Date.Year(), params.Date.Month(), params.Date.Day(), 0, 0, 0, 0, utils.JST())
+	// Convert the received date to JST first, then extract date components
+	dateInJST := params.Date.In(utils.JST())
+	var date = time.Date(dateInJST.Year(), dateInJST.Month(), dateInJST.Day(), 0, 0, 0, 0, utils.JST())
 
 	// 練習室の存在チェック
 	rooms := u.roomRepo.SearchRooms(ctx, &room_repo.SearchRoomsArgs{

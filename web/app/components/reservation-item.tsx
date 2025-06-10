@@ -12,6 +12,7 @@ type Props = {
   roomId?: string;
   pianoType: string;
   reservationId: number;
+  reservation?: any;
   onDelete?: () => void;
   rooms?: any[];
 };
@@ -160,6 +161,7 @@ export function ReservationItem(props: Props) {
             timeRange={props.timeRange}
             roomName={props.roomName}
             roomId={props.roomId}
+            reservation={props.reservation}
             userName={props.userName}
           />
           <CancelReservationButton
