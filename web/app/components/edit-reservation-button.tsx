@@ -26,12 +26,36 @@ type Props = {
 export function EditReservationButton(props: Props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  // Check if reservation is within 3 days
+  const isWithin3Days = () => {
+    // Use the actual date from reservation object
+    const dateString = props.reservation?.date;
+    
+    if (!dateString) {
+      return false; // If no date available, allow editing
+    }
+    
+    const reservationDate = new Date(dateString);
+    const today = new Date();
+    
+    // Set both dates to start of day for accurate comparison
+    today.setHours(0, 0, 0, 0);
+    reservationDate.setHours(0, 0, 0, 0);
+    
+    const diffTime = reservationDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    return diffDays < 3;
+  };
+
+  const cannotEdit = props.isConfirmed || isWithin3Days();
+
   return (
     <>
       <Button fullWidth onPress={onOpen} size="sm" variant="flat">
         編集
       </Button>
-      {props.isConfirmed ? (
+      {cannotEdit ? (
         <Modal
           isOpen={isOpen}
           onOpenChange={onOpenChange}
