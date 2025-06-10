@@ -478,7 +478,20 @@ export default function Home({ loaderData, actionData }: Route.ComponentProps) {
                       userName={r.bookerName}
                       roomName={rooms.find(room => room.id === r.roomId)?.name || r.roomId || "未定"}
                       roomId={r.roomId}
-                      pianoType={"グランドピアノ"}
+                      pianoType={(() => {
+                        const room = data?.rooms.find(room => room.id === r.roomId);
+                        if (!room) return "未定";
+                        switch (room.pianoType) {
+                          case PianoType.GRAND:
+                            return "グランドピアノ";
+                          case PianoType.UPRIGHT:
+                            return "アップライトピアノ";
+                          case PianoType.NONE:
+                            return "ピアノなし";
+                          default:
+                            return "未定";
+                        }
+                      })()}
                       reservationId={r.id}
                       rooms={rooms}
                       reservation={r}
