@@ -219,30 +219,16 @@ export async function action({ request }: Route.ActionArgs) {
   return { error: "Invalid intent" };
 }
 
-export async function loader({ request }: Route.LoaderArgs): Promise<HomeLoaderData> {
+export async function loader({ request }: Route.LoaderArgs): Promise<HomeLoaderData | Response> {
   // Dynamic imports for server-side only
+  const { tryAuthenticatedRequest } = await import("~/api/auth");
   const { createAuthenticatedClient } = await import("~/api/grpc-client");
   const { ReservationServiceClient } = await import("~/proto/v1/reservation/reservation.js");
   const { RoomServiceClient } = await import("~/proto/v1/room/room.js");
   const { CampusType: GrpcCampusType } = await import("~/proto/v1/room/room.js");
-  const cookieHeader = request.headers.get("Cookie");
-  const cookies = new Map<string, string>();
+  const { redirect } = await import("react-router");
   
-  if (cookieHeader) {
-    cookieHeader.split(';').forEach(cookie => {
-      const [key, value] = cookie.split('=').map(s => s.trim());
-      if (key && value) {
-        cookies.set(key, value);
-      }
-    });
-  }
-
-  const accessToken = cookies.get('access-token');
-  if (!accessToken) {
-    return { authenticated: false, rooms: [], reservations: [] };
-  }
-
-  try {
+  const result: any = await tryAuthenticatedRequest(request, async (accessToken) => {
     // Create authenticated clients
     const reservationClient = createAuthenticatedClient(
       ReservationServiceClient,
@@ -314,15 +300,28 @@ export async function loader({ request }: Route.LoaderArgs): Promise<HomeLoaderD
       rooms,
       reservations
     };
-  } catch (error: any) {
-    console.error("[Home Loader] Error fetching data:", error);
-    // Check if it's an authentication error
-    if (error.code === 16 || error.code === 7) {
-      return { authenticated: false, rooms: [], reservations: [] };
-    }
-    // For other errors, still return data structure but with empty arrays
-    return { authenticated: true, rooms: [], reservations: [] };
+  });
+
+  // Handle the result from tryAuthenticatedRequest
+  if (result.redirect) {
+    return redirect(result.redirect);
   }
+
+  // Handle successful response with potential new tokens
+  if (result.newTokens && result.data) {
+    // Create a Response with JSON data and set cookies
+    const headers = new Headers();
+    headers.append('Set-Cookie', `access-token=${result.newTokens.accessToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${30 * 24 * 60 * 60}`);
+    headers.append('Set-Cookie', `refresh-token=${result.newTokens.refreshToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${30 * 24 * 60 * 60}`);
+    headers.append('Content-Type', 'application/json');
+    
+    return new Response(JSON.stringify(result.data), {
+      status: 200,
+      headers
+    });
+  }
+
+  return result.data || { authenticated: false, rooms: [], reservations: [] };
 }
 
 
@@ -390,9 +389,10 @@ export default function Home({ loaderData, actionData }: Route.ComponentProps) {
   }>({});
 
   useEffect(() => {
-    if (data && !data.authenticated) {
-      window.location.href = "/login";
-    }
+    // The loader now handles authentication and redirects, so we don't need this check
+    // if (data && !data.authenticated) {
+    //   window.location.href = "/login";
+    // }
   }, [data]);
 
   useEffect(() => {
