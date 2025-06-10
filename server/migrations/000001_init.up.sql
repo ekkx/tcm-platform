@@ -23,3 +23,9 @@ CREATE TABLE IF NOT EXISTS reservations (
     booker_name TEXT DEFAULT NULL,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
+
+CREATE INDEX idx_reservations_room_id_date ON reservations(room_id, date);
+
+CREATE INDEX idx_reservations_date ON reservations(date);
+
+CREATE INDEX idx_reservations_user_id_date ON reservations(user_id, date);
