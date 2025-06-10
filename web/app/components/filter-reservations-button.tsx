@@ -9,15 +9,47 @@ import {
   SelectItem,
   useDisclosure,
 } from "@heroui/react";
-import { today } from "@internationalized/date";
+import { today, CalendarDate } from "@internationalized/date";
 import { I18nProvider, Label } from "react-aria-components";
+import { useState } from "react";
 
 type Props = {
-  isConfirmed?: boolean;
+  onFilterChange: (filters: {
+    campus?: string;
+    pianoType?: string;
+    date?: string;
+  }) => void;
 };
 
 export function FilterReservationsButton(props: Props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [campus, setCampus] = useState<string>("");
+  const [pianoType, setPianoType] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(null);
+
+  const handleFilter = () => {
+    const filters: { campus?: string; pianoType?: string; date?: string } = {};
+    
+    if (campus) filters.campus = campus;
+    if (pianoType) filters.pianoType = pianoType;
+    if (selectedDate) {
+      // Create date string directly from CalendarDate components
+      const year = selectedDate.year;
+      const month = String(selectedDate.month).padStart(2, '0');
+      const day = String(selectedDate.day).padStart(2, '0');
+      filters.date = `${year}-${month}-${day}`;
+    }
+    
+    props.onFilterChange(filters);
+    onOpenChange();
+  };
+
+  const handleReset = () => {
+    setCampus("");
+    setPianoType("");
+    setSelectedDate(null);
+    props.onFilterChange({});
+  };
 
   return (
     <>
@@ -66,45 +98,47 @@ export function FilterReservationsButton(props: Props) {
                     キャンパス
                   </Label>
                   <Select
-                    isRequired
                     className="mb-2"
                     placeholder="キャンパスを選択"
                     size="lg"
+                    selectedKeys={campus ? [campus] : []}
+                    onSelectionChange={(keys) => setCampus(Array.from(keys)[0] as string)}
                   >
-                    <SelectItem>中目黒・代官山キャンパス</SelectItem>
-                    <SelectItem>池袋キャンパス</SelectItem>
+                    <SelectItem key="nakameguro">中目黒・代官山キャンパス</SelectItem>
+                    <SelectItem key="ikebukuro">池袋キャンパス</SelectItem>
                   </Select>
                   <Label className="text-sm font-medium text-default-700">
                     ピアノ
                   </Label>
                   <Select
-                    isRequired
                     className="mb-2"
                     placeholder="ピアノを選択"
                     size="lg"
+                    selectedKeys={pianoType ? [pianoType] : []}
+                    onSelectionChange={(keys) => setPianoType(Array.from(keys)[0] as string)}
                   >
-                    <SelectItem>グランドピアノ</SelectItem>
-                    <SelectItem>アップライトピアノ</SelectItem>
-                    <SelectItem>ピアノなし</SelectItem>
+                    <SelectItem key="grand">グランドピアノ</SelectItem>
+                    <SelectItem key="upright">アップライトピアノ</SelectItem>
+                    <SelectItem key="none">ピアノなし</SelectItem>
                   </Select>
                   <Label className="text-sm font-medium text-default-700">
                     予約日
                   </Label>
                   <I18nProvider locale="ja">
                     <DatePicker
-                      isRequired
                       fullWidth
                       className="mb-2"
                       size="lg"
-                      defaultValue={today("Asia/Tokyo")}
+                      value={selectedDate}
+                      onChange={setSelectedDate}
                       minValue={today("Asia/Tokyo")}
                     />
                   </I18nProvider>
                   <div className="flex gap-2 w-full">
-                    <Button fullWidth color="primary" size="lg">
+                    <Button fullWidth color="primary" size="lg" onPress={handleFilter}>
                       絞り込む
                     </Button>
-                    <Button variant="flat" size="lg">
+                    <Button variant="flat" size="lg" onPress={handleReset}>
                       リセット
                     </Button>
                   </div>

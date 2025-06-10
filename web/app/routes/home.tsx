@@ -5,7 +5,7 @@ import { CreateReservationButton } from "~/components/create-reservation-button"
 import { FilterReservationsButton } from "~/components/filter-reservations-button";
 import { LogoutButton } from "~/components/logout-button";
 import { ReservationItem } from "~/components/reservation-item";
-import { CampusType, convertRoomToComponent, type Reservation, type HomeLoaderData } from "~/types/api";
+import { CampusType, PianoType, convertRoomToComponent, type Reservation, type HomeLoaderData } from "~/types/api";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
@@ -383,6 +383,11 @@ export default function Home({ loaderData, actionData }: Route.ComponentProps) {
   const [reservations, setReservations] = useState<Reservation[]>(
     data?.reservations || []
   );
+  const [filters, setFilters] = useState<{
+    campus?: string;
+    pianoType?: string;
+    date?: string;
+  }>({});
 
   useEffect(() => {
     if (data && !data.authenticated) {
@@ -397,15 +402,59 @@ export default function Home({ loaderData, actionData }: Route.ComponentProps) {
     }
   }, [actionData]);
 
+  // Filter reservations based on filters
+  const filteredReservations = reservations.filter((reservation) => {
+    // Campus filter
+    if (filters.campus) {
+      const campusMatch = filters.campus === "ikebukuro" 
+        ? reservation.campusType === CampusType.IKEBUKURO
+        : reservation.campusType === CampusType.NAKAMEGURO;
+      if (!campusMatch) return false;
+    }
+
+    // Piano type filter
+    if (filters.pianoType && reservation.roomId) {
+      const room = data?.rooms.find(r => r.id === reservation.roomId);
+      if (room) {
+        const pianoMatch = 
+          (filters.pianoType === "grand" && room.pianoType === PianoType.GRAND) ||
+          (filters.pianoType === "upright" && room.pianoType === PianoType.UPRIGHT) ||
+          (filters.pianoType === "none" && room.pianoType === PianoType.NONE);
+        if (!pianoMatch) return false;
+      }
+    }
+
+    // Date filter - show only reservations on or after the selected date
+    if (filters.date && reservation.date) {
+      // reservation.date is already a Date object
+      const date = reservation.date instanceof Date ? reservation.date : new Date(reservation.date);
+      
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const reservationDateKey = `${year}-${month}-${day}`;
+      
+      // Simple string comparison works because both are in YYYY-MM-DD format
+      if (reservationDateKey < filters.date) return false;
+    }
+
+    return true;
+  });
+
   return (
     <>
       <div className="w-full min-h-dvh">
         <div className="flex justify-center items-center pt-8 pb-4">
           <span className="text-2xl">予約一覧</span>
         </div>
+        {Object.keys(filters).length > 0 && (
+          <div className="text-center text-sm text-foreground-500 mb-2">
+            絞り込み中: {filteredReservations.length}件 / {reservations.length}件
+          </div>
+        )}
         <div className="mt-4 mx-4">
           <div className="grid gap-4">
-            {groupReservationsByDate(reservations).map((group) => (
+            {groupReservationsByDate(filteredReservations).map((group) => (
               <div key={group.date} className="grid">
                 <span>{group.formattedDate}</span>
                 <div className="flex gap-4 py-3 overflow-x-auto">
@@ -448,7 +497,7 @@ export default function Home({ loaderData, actionData }: Route.ComponentProps) {
       </div>
       <div className="sticky bottom-0 border-t backdrop-blur-xl">
         <div className="flex justify-between items-center h-16 px-14 max-w-[500px] mx-auto">
-          <FilterReservationsButton />
+          <FilterReservationsButton onFilterChange={setFilters} />
           <CreateReservationButton rooms={rooms} />
           <LogoutButton />
         </div>
