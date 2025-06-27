@@ -6,13 +6,13 @@
 
 html,
 body {
-  @apply bg-white;
+  @apply bg-background;
 
   @media (prefers-color-scheme: dark) {
-    color-scheme: light;
+    color-scheme: dark;
   }
 
   @media (prefers-color-scheme: light) {
-    color-scheme: light;
+    color-scheme: dark;
   }
 }

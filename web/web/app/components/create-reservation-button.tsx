@@ -7,20 +7,14 @@ import {
 } from "@heroui/react";
 import { ReservationForm } from "./reservation-form";
 
-type Props = {
-  rooms: any[];
-  isConfirmed?: boolean;
-};
-
-export function CreateReservationButton(props: Props) {
+export function CreateReservationButton() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
     <>
       <Button
         isIconOnly
-        color="primary"
-        className="w-12 h-12 rounded-full"
+        className="w-14 h-14 rounded-full bg-foreground/10 backdrop-blur-xl border-[0.5px] border-default-300"
         onPress={onOpen}
         startContent={
           <svg
@@ -35,7 +29,7 @@ export function CreateReservationButton(props: Props) {
               stroke="currentColor"
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth="2"
+              strokeWidth="1.5"
               d="M5 12h14m-7-7v14"
             />
           </svg>
@@ -46,7 +40,7 @@ export function CreateReservationButton(props: Props) {
         onOpenChange={onOpenChange}
         size="xl"
         classNames={{
-          closeButton: "top-4 right-4 scale-125 border",
+          closeButton: "top-4 right-4 scale-125 border-[0.5px] border-default-300",
         }}
       >
         <DrawerContent>
@@ -59,7 +53,7 @@ export function CreateReservationButton(props: Props) {
                     希望の日時と部屋を選択して予約してください。
                   </p>
                 </div>
-                <ReservationForm type="create" rooms={props.rooms} />
+                <ReservationForm />
               </DrawerBody>
             </>
           )}

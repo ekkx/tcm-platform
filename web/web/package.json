@@ -1,0 +1,35 @@
+{
+  "name": "web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "start": "react-router-serve ./build/server/index.js",
+    "typecheck": "react-router typegen && tsc"
+  },
+  "dependencies": {
+    "@heroui/react": "^2.7.11",
+    "@internationalized/date": "^3.8.2",
+    "@react-aria/i18n": "^3.12.10",
+    "@react-router/node": "^7.5.3",
+    "@react-router/serve": "^7.5.3",
+    "framer-motion": "^12.19.2",
+    "isbot": "^5.1.27",
+    "react": "^19.1.0",
+    "react-aria-components": "^1.10.1",
+    "react-dom": "^19.1.0",
+    "react-router": "^7.5.3"
+  },
+  "devDependencies": {
+    "@react-router/dev": "^7.5.3",
+    "@types/node": "^20",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "autoprefixer": "^10.4.20",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.3",
+    "vite-tsconfig-paths": "^5.1.4"
+  }
+}
