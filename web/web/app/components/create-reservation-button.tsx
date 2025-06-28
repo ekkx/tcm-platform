@@ -14,7 +14,7 @@ export function CreateReservationButton() {
     <>
       <Button
         isIconOnly
-        className="w-14 h-14 rounded-full bg-foreground/10 backdrop-blur-xl border-[0.5px] border-default-300"
+        className="w-16 h-16 rounded-full bg-foreground/10 backdrop-blur-xl border-[0.5px] border-default-300"
         onPress={onOpen}
         startContent={
           <svg
@@ -40,7 +40,8 @@ export function CreateReservationButton() {
         onOpenChange={onOpenChange}
         size="xl"
         classNames={{
-          closeButton: "top-4 right-4 scale-125 border-[0.5px] border-default-300",
+          closeButton:
+            "top-4 right-4 scale-125 border-[0.5px] border-default-300",
         }}
       >
         <DrawerContent>

@@ -11,7 +11,7 @@ export function Navigation() {
           classNames={{
             tabList:
               "p-2 justify-between gap-6 bg-foreground/10 backdrop-blur-xl border border-[0.5px] border-default-300",
-            tab: "w-10 h-10",
+            tab: "w-12 h-12",
           }}
         >
           <Tab
