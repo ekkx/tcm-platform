@@ -5,8 +5,12 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useHref,
+  useNavigate,
+  type NavigateOptions,
 } from "react-router";
 
+import { HeroUIProvider } from "@heroui/react";
 import type { Route } from "./+types/root";
 import "./app.css";
 
@@ -23,7 +27,15 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+declare module "@react-types/shared" {
+  interface RouterConfig {
+    routerOptions: NavigateOptions;
+  }
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+
   return (
     <html lang="en">
       <head>
@@ -32,10 +44,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="dark text-foreground w-dvw h-dvh">
-        {children}
-        <ScrollRestoration />
-        <Scripts />
+      <body className="dark text-foreground">
+        <HeroUIProvider navigate={navigate} useHref={useHref}>
+          {children}
+          <ScrollRestoration />
+          <Scripts />
+        </HeroUIProvider>
       </body>
     </html>
   );
@@ -62,7 +76,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
+    <main className="w-dvw h-dvh pt-16 p-4 container mx-auto">
       <h1>{message}</h1>
       <p>{details}</p>
       {stack && (

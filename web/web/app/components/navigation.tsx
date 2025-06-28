@@ -1,11 +1,15 @@
 import { Tab, Tabs } from "@heroui/react";
+import { useLocation } from "react-router";
 import { CreateReservationButton } from "./create-reservation-button";
 
 export function Navigation() {
+  const { pathname } = useLocation();
+
   return (
     <div className="fixed bottom-7 inset-x-0">
       <div className="flex items-center justify-center gap-4">
         <Tabs
+          selectedKey={pathname}
           color="primary"
           radius="full"
           classNames={{
@@ -15,7 +19,8 @@ export function Navigation() {
           }}
         >
           <Tab
-            key="home"
+            key="/home"
+            href="/home"
             title={
               <svg
                 className="w-5 h-5 text-foreground"
@@ -34,7 +39,8 @@ export function Navigation() {
             }
           />
           <Tab
-            key="history"
+            key="/history"
+            href="/history"
             title={
               <svg
                 className="w-5 h-5 text-foreground"
@@ -55,7 +61,8 @@ export function Navigation() {
             }
           />
           <Tab
-            key="profile"
+            key="/profile"
+            href="/profile"
             title={
               <svg
                 className="w-5 h-5 text-foreground"

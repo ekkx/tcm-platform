@@ -1,5 +1,4 @@
 import { Button } from "@heroui/react";
-import { Navigation } from "~/components/navigation";
 import { ReservationList } from "~/components/reservation-list";
 import type { Route } from "./+types/home";
 
@@ -12,8 +11,8 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   return (
-    <main className="grid gap-6 w-full h-full pt-6 py-28 overflow-y-auto">
-      <div className="grid gap-4 px-4">
+    <div className="grid gap-6">
+      <div className="grid gap-4 px-4 pt-6">
         <div className="flex gap-2">
           <Button
             fullWidth
@@ -79,7 +78,6 @@ export default function Home() {
         </div> */}
       </div>
       <ReservationList />
-      <Navigation />
-    </main>
+    </div>
   );
 }

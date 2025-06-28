@@ -35,18 +35,14 @@ export function ReservationForm() {
   return (
     <div className="flex flex-col gap-6 w-full h-full">
       <div className="grid gap-3">
-        <h4 className="text-sm font-semibold text-default-700 opacity-60">
-          キャンパス
-        </h4>
+        <h4 className="text-sm text-default-700 opacity-60">キャンパス</h4>
         <Select isRequired placeholder="キャンパスを選択" name="campus">
           <SelectItem key="nakameguro">中目黒・代官山キャンパス</SelectItem>
           <SelectItem key="ikebukuro">池袋キャンパス</SelectItem>
         </Select>
       </div>
       <div className="grid gap-3">
-        <h4 className="text-sm font-semibold text-default-700 opacity-60">
-          予約日
-        </h4>
+        <h4 className="text-sm text-default-700 opacity-60">予約日</h4>
         <I18nProvider locale="ja">
           <DatePicker
             labelPlacement="outside"
@@ -57,9 +53,7 @@ export function ReservationForm() {
         </I18nProvider>
       </div>
       <div className="grid gap-3">
-        <h4 className="text-sm font-semibold text-default-700 opacity-60">
-          開始時刻
-        </h4>
+        <h4 className="text-sm text-default-700 opacity-60">開始時刻</h4>
         <Select isRequired placeholder="開始時刻を選択" name="campus">
           {times.map((time) => {
             return <SelectItem key={time}>{time}</SelectItem>;
@@ -67,9 +61,7 @@ export function ReservationForm() {
         </Select>
       </div>
       <div className="grid">
-        <h4 className="text-sm font-semibold text-default-700 opacity-60">
-          利用時間
-        </h4>
+        <h4 className="text-sm text-default-700 opacity-60">利用時間</h4>
         <Slider
           showSteps
           color="foreground"
@@ -112,9 +104,7 @@ export function ReservationForm() {
         />
       </div>
       <div className="grid gap-3">
-        <h4 className="text-sm font-semibold text-default-700 opacity-60">
-          練習室
-        </h4>
+        <h4 className="text-sm text-default-700 opacity-60">練習室</h4>
         <div className="grid grid-cols-2 gap-2">
           {rooms.map((room) => {
             const isSelected = selectedRoom === room;
