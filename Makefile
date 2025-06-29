@@ -13,6 +13,11 @@ dev-up:
 	cd server && air
 .PHONY: dev-up
 
+#? proto: Protocol Buffers を生成
+proto:
+	cd proto && buf generate
+.PHONY: proto
+
 #? sqlc: SQL クエリを Go コードに変換
 sqlc:
 	cd server && sqlc generate
