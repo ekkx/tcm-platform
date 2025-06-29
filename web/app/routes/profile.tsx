@@ -1,4 +1,5 @@
 import { Avatar } from "@heroui/react";
+import { ProfileAccountSection } from "~/components/profile-account-section";
 import { ProfileLoginSection } from "~/components/profile-login-section";
 import { ProfileSettingSection } from "~/components/profile-setting-section";
 
@@ -15,6 +16,7 @@ export default function Profile() {
         </div>
       </div>
       <ProfileSettingSection />
+      <ProfileAccountSection />
       <ProfileLoginSection />
     </div>
   );

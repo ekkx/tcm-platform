@@ -38,7 +38,7 @@ export function Navigation() {
               </svg>
             }
           />
-          <Tab
+          {/* <Tab
             key="/history"
             href="/history"
             title={
@@ -59,7 +59,7 @@ export function Navigation() {
                 </g>
               </svg>
             }
-          />
+          /> */}
           <Tab
             key="/profile"
             href="/profile"
