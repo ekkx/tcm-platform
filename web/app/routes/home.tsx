@@ -1,4 +1,8 @@
+import { createClient } from "@connectrpc/connect";
 import { Button } from "@heroui/react";
+import { useEffect } from "react";
+import { transport } from "~/api";
+import { UserService } from "~/api/user/v1/user_pb";
 import { ReservationList } from "~/components/reservation-list";
 import type { Route } from "./+types/home";
 
@@ -10,6 +14,11 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
+  useEffect(() => {
+    const userClient = createClient(UserService, transport);
+    userClient.getUser({ userId: "someting" });
+  }, []);
+
   return (
     <div className="grid gap-6">
       <div className="grid gap-4 px-4 pt-6">

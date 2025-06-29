@@ -1,60 +1,56 @@
 package commands
 
 import (
+	"context"
 	"fmt"
-	"net"
-	"os"
-	"os/signal"
+	"net/http"
 
+	"connectrpc.com/connect"
 	"github.com/ekkx/tcmrsv-web/server/internal/config"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/interceptor"
-
-	auth_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/authorization"
-	reservation_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/reservation"
-	room_v1 "github.com/ekkx/tcmrsv-web/server/internal/shared/api/v1/room"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
+	userv1 "github.com/ekkx/tcmrsv-web/server/internal/shared/pb/user/v1"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/pb/user/v1/userv1connect"
+	"github.com/rs/cors"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
 )
 
+type UserServer struct {}
+
+func (s *UserServer) GetUser(ctx context.Context, req *connect.Request[userv1.GetUserRequest]) (*connect.Response[userv1.GetUserResponse], error) {
+    res := connect.NewResponse(&userv1.GetUserResponse{
+        User: &userv1.User{
+
+        },
+    })
+    return res, nil
+}
+
+func (s *UserServer) CreateSlaveUser(ctx context.Context, req *connect.Request[userv1.CreateSlaveUserRequest]) (*connect.Response[userv1.CreateSlaveUserResponse], error) {
+    return nil, nil
+}
+
+func (s *UserServer) DeleteSlaveUser(ctx context.Context, req *connect.Request[userv1.DeleteSlaveUserRequest]) (*connect.Response[userv1.DeleteSlaveUserResponse], error) {
+    return nil, nil
+}
+
+func (s *UserServer) DeleteUser(ctx context.Context, req *connect.Request[userv1.DeleteUserRequest]) (*connect.Response[userv1.DeleteUserResponse], error) {
+    return nil, nil
+}
+
+func (s *UserServer) ListSlaveUsers(ctx context.Context, req *connect.Request[userv1.ListSlaveUsersRequest]) (*connect.Response[userv1.ListSlaveUsersResponse], error) {
+    return nil, nil
+}
+
+func (s *UserServer) UpdateUser(ctx context.Context, req *connect.Request[userv1.UpdateUserRequest]) (*connect.Response[userv1.UpdateUserResponse], error) {
+    return nil, nil
+}
+
 func Run(cfg *config.Config) error {
-	pool, err := cfg.Database.Open()
-	if err != nil {
-		return err
-	}
-	defer pool.Close()
-
-	port := 50051 // TODO: make this configurable
-	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-	if err != nil {
-		return err
-	}
-
-	deps := GenerateServerDeps(pool)
-
-	s := grpc.NewServer(
-		grpc.ChainUnaryInterceptor(
-			interceptor.ConfigUnaryInterceptor(cfg),
-			interceptor.AuthUnaryInterceptor(cfg.JWTSecret),
-		),
-	)
-
-	auth_v1.RegisterAuthorizationServiceServer(s, deps.AuthorizationServiceServer)
-	reservation_v1.RegisterReservationServiceServer(s, deps.ReservationServiceServer)
-	room_v1.RegisterRoomServiceServer(s, deps.RoomServiceServer)
-
-	reflection.Register(s)
-
-	go func() {
-		fmt.Printf("Server is listening on port %d\n", port)
-		s.Serve(listener)
-	}()
-
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-	fmt.Println("Shutting down server...")
-	s.GracefulStop()
-
-	return nil
+    userServer := &UserServer{}
+    mux := http.NewServeMux()
+    path, handler := userv1connect.NewUserServiceHandler(userServer)
+    mux.Handle(path, handler)
+    corsHandler := cors.AllowAll().Handler(h2c.NewHandler(mux, &http2.Server{}))
+    http.ListenAndServe(fmt.Sprintf(":%d", 50051), corsHandler)
+    return nil
 }

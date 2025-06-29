@@ -1,6 +1,8 @@
 FROM golang:1.24-bullseye
 
-WORKDIR /reverie-api
+WORKDIR /tcmrsv-api
+
+RUN curl https://get.volta.sh | bash
 
 RUN go install github.com/air-verse/air@latest
 RUN go install github.com/bufbuild/buf/cmd/buf@v1.54.0

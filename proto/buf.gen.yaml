@@ -11,5 +11,8 @@ plugins:
   - remote: buf.build/connectrpc/go:v1.18.1
     out: ../server/internal/shared/pb
     opt: paths=source_relative
+  - remote: buf.build/bufbuild/es:v2.5.2
+    out: ../web/app/api
+    opt: target=ts
 inputs:
   - directory: .

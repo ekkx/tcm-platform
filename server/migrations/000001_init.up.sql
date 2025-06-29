@@ -1,27 +1,36 @@
+CREATE DOMAIN ulid AS TEXT CHECK (LENGTH(VALUE) = 26);
+
+CREATE TYPE user_role AS ENUM (
+    'master', -- 親アカウント
+    'slave' -- 子アカウント
+);
+
 CREATE TABLE IF NOT EXISTS users (
-    id TEXT PRIMARY KEY,
+    id ulid PRIMARY KEY,
+    display_name VARCHAR(255) NOT NULL DEFAULT '未設定',
+    role user_role NOT NULL,
     encrypted_password TEXT NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    create_time TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    update_time TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TYPE campus_type AS ENUM (
-    '1', -- 中目黒
-    '2' -- 池袋
+    'nakameguro', -- 中目黒
+    'ikebukuro' -- 池袋
 );
 
 CREATE TABLE IF NOT EXISTS reservations (
-    id SERIAL PRIMARY KEY,
+    id ulid PRIMARY KEY,
     external_id TEXT DEFAULT NULL UNIQUE,  -- ← ここが NULL = 確定してない
-    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id ulid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     campus_type campus_type NOT NULL,
     room_id TEXT NOT NULL,
-    date TIMESTAMP WITH TIME ZONE NOT NULL,
+    date TIMESTAMPTZ NOT NULL,
     from_hour INT NOT NULL,
     from_minute INT NOT NULL,
     to_hour INT NOT NULL,
     to_minute INT NOT NULL,
-    booker_name TEXT DEFAULT NULL,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    create_time TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX idx_reservations_room_id_date ON reservations(room_id, date);
