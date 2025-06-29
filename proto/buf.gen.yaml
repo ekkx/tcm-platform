@@ -1,0 +1,15 @@
+version: v2
+managed:
+  enabled: true
+  override:
+    - file_option: go_package_prefix
+      value: github.com/ekkx/tcmrsv-web/server/internal/shared/pb
+plugins:
+  - remote: buf.build/protocolbuffers/go
+    out: ../server/internal/shared/pb
+    opt: paths=source_relative
+  - remote: buf.build/connectrpc/go:v1.18.1
+    out: ../server/internal/shared/pb
+    opt: paths=source_relative
+inputs:
+  - directory: .

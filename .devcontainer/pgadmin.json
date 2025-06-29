@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "tcmrsv",
+      "Group": "Servers",
+      "Host": "tcmrsv-db",
+      "Port": 5432,
+      "MaintenanceDB": "postgres",
+      "Username": "tcmrsv",
+      "SSLMode": "prefer"
+    }
+  }
+}

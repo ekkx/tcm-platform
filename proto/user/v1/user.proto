@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package user.v1;
+
+import "google/protobuf/timestamp.proto";
+
+service UserService {
+    rpc GetUser(GetUserRequest) returns (GetUserResponse);
+    rpc ListSlaveUsers(ListSlaveUsersRequest) returns (ListSlaveUsersResponse);
+    rpc CreateSlaveUser(CreateSlaveUserRequest) returns (CreateSlaveUserResponse);
+    rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+    rpc DeleteSlaveUser(DeleteSlaveUserRequest) returns (DeleteSlaveUserResponse);
+}
+
+enum UserRole {
+    USER_ROLE_UNSPECIFIED = 0;
+    USER_ROLE_MASTER = 1;
+    USER_ROLE_SLAVE = 2;
+}
+
+message User {
+    string id = 1;
+    string display_name = 2;
+    UserRole role = 3;
+    google.protobuf.Timestamp create_time = 4;
+}
+
+message GetUserRequest {
+    string user_id = 1;
+}
+
+message GetUserResponse {
+    User user = 1;
+}
+
+message ListSlaveUsersRequest {}
+
+message ListSlaveUsersResponse {
+    repeated User users = 1;
+}
+
+message CreateSlaveUserRequest {
+    string display_name = 1;
+    string password = 2;
+}
+
+message CreateSlaveUserResponse {
+    User user = 1;
+}
+
+message UpdateUserRequest {
+    string display_name = 2;
+}
+
+message UpdateUserResponse {
+    User user = 1;
+}
+
+message DeleteUserRequest {}
+
+message DeleteUserResponse {}
+
+message DeleteSlaveUserRequest {
+    string user_id = 1;
+}
+
+message DeleteSlaveUserResponse {}

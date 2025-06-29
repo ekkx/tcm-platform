@@ -5,6 +5,7 @@ go 1.23.0
 toolchain go1.23.8
 
 require (
+	connectrpc.com/connect v1.18.1
 	github.com/caarlos0/env/v11 v11.3.1
 	github.com/ekkx/tcmrsv v0.0.0-20250607182637-29186764b01f
 	github.com/go-playground/validator/v10 v10.26.0

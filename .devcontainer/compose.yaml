@@ -1,0 +1,38 @@
+services:
+  tcmrsv-db:
+    container_name: tcmrsv-db
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - TZ="Asia/Tokyo"
+    ports:
+      - 5432:5432
+  tcmrsv-api:
+    container_name: tcmrsv-api
+    build:
+      context: .
+    ports:
+      - 50051:50051
+    volumes:
+      - ..:/tcmrsv-api:cached
+    env_file:
+      - ../server/.env.development
+    command: sleep infinity
+    depends_on:
+      - tcmrsv-db
+  tcmrsv-pgadmin:
+    container_name: tcmrsv-pgadmin
+    image: dpage/pgadmin4:9.4
+    ports:
+      - 8888:80
+    volumes:
+      - ./pgadmin.json:/pgadmin4/servers.json
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=tcmrsv@example.com
+      - PGADMIN_DEFAULT_PASSWORD=tcmrsv
+      - PGADMIN_CONFIG_SERVER_MODE=False
+      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
+    depends_on:
+      - tcmrsv-db
