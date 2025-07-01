@@ -53,6 +53,13 @@
           "source.organizeImports": "explicit",
           "quickfix.biome": "explicit",
           "source.organizeImports.biome": "explicit"
+        },
+        "[go]": {
+          "editor.formatOnSave": true,
+          "editor.defaultFormatter": "golang.go",
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+          }
         }
       }
     }
