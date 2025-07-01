@@ -8,6 +8,11 @@ var (
 		Message:  "invalid argument",
 		GRPCCode: codes.InvalidArgument,
 	}
+	ErrInvalidIDFormat = &Error{
+		Code:     "invalid_id_format",
+		Message:  "invalid id format",
+		GRPCCode: codes.InvalidArgument,
+	}
 	ErrInternal = &Error{
 		Code:     "internal_error",
 		Message:  "internal server error",

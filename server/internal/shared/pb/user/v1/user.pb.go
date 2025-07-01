@@ -22,60 +22,11 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type UserRole int32
-
-const (
-	UserRole_USER_ROLE_UNSPECIFIED UserRole = 0
-	UserRole_USER_ROLE_MASTER      UserRole = 1
-	UserRole_USER_ROLE_SLAVE       UserRole = 2
-)
-
-// Enum value maps for UserRole.
-var (
-	UserRole_name = map[int32]string{
-		0: "USER_ROLE_UNSPECIFIED",
-		1: "USER_ROLE_MASTER",
-		2: "USER_ROLE_SLAVE",
-	}
-	UserRole_value = map[string]int32{
-		"USER_ROLE_UNSPECIFIED": 0,
-		"USER_ROLE_MASTER":      1,
-		"USER_ROLE_SLAVE":       2,
-	}
-)
-
-func (x UserRole) Enum() *UserRole {
-	p := new(UserRole)
-	*p = x
-	return p
-}
-
-func (x UserRole) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (UserRole) Descriptor() protoreflect.EnumDescriptor {
-	return file_user_v1_user_proto_enumTypes[0].Descriptor()
-}
-
-func (UserRole) Type() protoreflect.EnumType {
-	return &file_user_v1_user_proto_enumTypes[0]
-}
-
-func (x UserRole) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use UserRole.Descriptor instead.
-func (UserRole) EnumDescriptor() ([]byte, []int) {
-	return file_user_v1_user_proto_rawDescGZIP(), []int{0}
-}
-
 type User struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	DisplayName   string                 `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
-	Role          UserRole               `protobuf:"varint,3,opt,name=role,proto3,enum=user.v1.UserRole" json:"role,omitempty"`
+	MasterUser    *User                  `protobuf:"bytes,3,opt,name=master_user,json=masterUser,proto3" json:"master_user,omitempty"`
 	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -125,11 +76,11 @@ func (x *User) GetDisplayName() string {
 	return ""
 }
 
-func (x *User) GetRole() UserRole {
+func (x *User) GetMasterUser() *User {
 	if x != nil {
-		return x.Role
+		return x.MasterUser
 	}
-	return UserRole_USER_ROLE_UNSPECIFIED
+	return nil
 }
 
 func (x *User) GetCreateTime() *timestamppb.Timestamp {
@@ -647,11 +598,12 @@ var File_user_v1_user_proto protoreflect.FileDescriptor
 
 const file_user_v1_user_proto_rawDesc = "" +
 	"\n" +
-	"\x12user/v1/user.proto\x12\auser.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x9d\x01\n" +
+	"\x12user/v1/user.proto\x12\auser.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa6\x01\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12!\n" +
-	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\x12%\n" +
-	"\x04role\x18\x03 \x01(\x0e2\x11.user.v1.UserRoleR\x04role\x12;\n" +
+	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\x12.\n" +
+	"\vmaster_user\x18\x03 \x01(\v2\r.user.v1.UserR\n" +
+	"masterUser\x12;\n" +
 	"\vcreate_time\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"createTime\")\n" +
 	"\x0eGetUserRequest\x12\x17\n" +
@@ -674,11 +626,7 @@ const file_user_v1_user_proto_rawDesc = "" +
 	"\x12DeleteUserResponse\"1\n" +
 	"\x16DeleteSlaveUserRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\"\x19\n" +
-	"\x17DeleteSlaveUserResponse*P\n" +
-	"\bUserRole\x12\x19\n" +
-	"\x15USER_ROLE_UNSPECIFIED\x10\x00\x12\x14\n" +
-	"\x10USER_ROLE_MASTER\x10\x01\x12\x13\n" +
-	"\x0fUSER_ROLE_SLAVE\x10\x022\xd8\x03\n" +
+	"\x17DeleteSlaveUserResponse2\xd8\x03\n" +
 	"\vUserService\x12<\n" +
 	"\aGetUser\x12\x17.user.v1.GetUserRequest\x1a\x18.user.v1.GetUserResponse\x12Q\n" +
 	"\x0eListSlaveUsers\x12\x1e.user.v1.ListSlaveUsersRequest\x1a\x1f.user.v1.ListSlaveUsersResponse\x12T\n" +
@@ -702,44 +650,42 @@ func file_user_v1_user_proto_rawDescGZIP() []byte {
 	return file_user_v1_user_proto_rawDescData
 }
 
-var file_user_v1_user_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_user_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_user_v1_user_proto_goTypes = []any{
-	(UserRole)(0),                   // 0: user.v1.UserRole
-	(*User)(nil),                    // 1: user.v1.User
-	(*GetUserRequest)(nil),          // 2: user.v1.GetUserRequest
-	(*GetUserResponse)(nil),         // 3: user.v1.GetUserResponse
-	(*ListSlaveUsersRequest)(nil),   // 4: user.v1.ListSlaveUsersRequest
-	(*ListSlaveUsersResponse)(nil),  // 5: user.v1.ListSlaveUsersResponse
-	(*CreateSlaveUserRequest)(nil),  // 6: user.v1.CreateSlaveUserRequest
-	(*CreateSlaveUserResponse)(nil), // 7: user.v1.CreateSlaveUserResponse
-	(*UpdateUserRequest)(nil),       // 8: user.v1.UpdateUserRequest
-	(*UpdateUserResponse)(nil),      // 9: user.v1.UpdateUserResponse
-	(*DeleteUserRequest)(nil),       // 10: user.v1.DeleteUserRequest
-	(*DeleteUserResponse)(nil),      // 11: user.v1.DeleteUserResponse
-	(*DeleteSlaveUserRequest)(nil),  // 12: user.v1.DeleteSlaveUserRequest
-	(*DeleteSlaveUserResponse)(nil), // 13: user.v1.DeleteSlaveUserResponse
-	(*timestamppb.Timestamp)(nil),   // 14: google.protobuf.Timestamp
+	(*User)(nil),                    // 0: user.v1.User
+	(*GetUserRequest)(nil),          // 1: user.v1.GetUserRequest
+	(*GetUserResponse)(nil),         // 2: user.v1.GetUserResponse
+	(*ListSlaveUsersRequest)(nil),   // 3: user.v1.ListSlaveUsersRequest
+	(*ListSlaveUsersResponse)(nil),  // 4: user.v1.ListSlaveUsersResponse
+	(*CreateSlaveUserRequest)(nil),  // 5: user.v1.CreateSlaveUserRequest
+	(*CreateSlaveUserResponse)(nil), // 6: user.v1.CreateSlaveUserResponse
+	(*UpdateUserRequest)(nil),       // 7: user.v1.UpdateUserRequest
+	(*UpdateUserResponse)(nil),      // 8: user.v1.UpdateUserResponse
+	(*DeleteUserRequest)(nil),       // 9: user.v1.DeleteUserRequest
+	(*DeleteUserResponse)(nil),      // 10: user.v1.DeleteUserResponse
+	(*DeleteSlaveUserRequest)(nil),  // 11: user.v1.DeleteSlaveUserRequest
+	(*DeleteSlaveUserResponse)(nil), // 12: user.v1.DeleteSlaveUserResponse
+	(*timestamppb.Timestamp)(nil),   // 13: google.protobuf.Timestamp
 }
 var file_user_v1_user_proto_depIdxs = []int32{
-	0,  // 0: user.v1.User.role:type_name -> user.v1.UserRole
-	14, // 1: user.v1.User.create_time:type_name -> google.protobuf.Timestamp
-	1,  // 2: user.v1.GetUserResponse.user:type_name -> user.v1.User
-	1,  // 3: user.v1.ListSlaveUsersResponse.users:type_name -> user.v1.User
-	1,  // 4: user.v1.CreateSlaveUserResponse.user:type_name -> user.v1.User
-	1,  // 5: user.v1.UpdateUserResponse.user:type_name -> user.v1.User
-	2,  // 6: user.v1.UserService.GetUser:input_type -> user.v1.GetUserRequest
-	4,  // 7: user.v1.UserService.ListSlaveUsers:input_type -> user.v1.ListSlaveUsersRequest
-	6,  // 8: user.v1.UserService.CreateSlaveUser:input_type -> user.v1.CreateSlaveUserRequest
-	8,  // 9: user.v1.UserService.UpdateUser:input_type -> user.v1.UpdateUserRequest
-	10, // 10: user.v1.UserService.DeleteUser:input_type -> user.v1.DeleteUserRequest
-	12, // 11: user.v1.UserService.DeleteSlaveUser:input_type -> user.v1.DeleteSlaveUserRequest
-	3,  // 12: user.v1.UserService.GetUser:output_type -> user.v1.GetUserResponse
-	5,  // 13: user.v1.UserService.ListSlaveUsers:output_type -> user.v1.ListSlaveUsersResponse
-	7,  // 14: user.v1.UserService.CreateSlaveUser:output_type -> user.v1.CreateSlaveUserResponse
-	9,  // 15: user.v1.UserService.UpdateUser:output_type -> user.v1.UpdateUserResponse
-	11, // 16: user.v1.UserService.DeleteUser:output_type -> user.v1.DeleteUserResponse
-	13, // 17: user.v1.UserService.DeleteSlaveUser:output_type -> user.v1.DeleteSlaveUserResponse
+	0,  // 0: user.v1.User.master_user:type_name -> user.v1.User
+	13, // 1: user.v1.User.create_time:type_name -> google.protobuf.Timestamp
+	0,  // 2: user.v1.GetUserResponse.user:type_name -> user.v1.User
+	0,  // 3: user.v1.ListSlaveUsersResponse.users:type_name -> user.v1.User
+	0,  // 4: user.v1.CreateSlaveUserResponse.user:type_name -> user.v1.User
+	0,  // 5: user.v1.UpdateUserResponse.user:type_name -> user.v1.User
+	1,  // 6: user.v1.UserService.GetUser:input_type -> user.v1.GetUserRequest
+	3,  // 7: user.v1.UserService.ListSlaveUsers:input_type -> user.v1.ListSlaveUsersRequest
+	5,  // 8: user.v1.UserService.CreateSlaveUser:input_type -> user.v1.CreateSlaveUserRequest
+	7,  // 9: user.v1.UserService.UpdateUser:input_type -> user.v1.UpdateUserRequest
+	9,  // 10: user.v1.UserService.DeleteUser:input_type -> user.v1.DeleteUserRequest
+	11, // 11: user.v1.UserService.DeleteSlaveUser:input_type -> user.v1.DeleteSlaveUserRequest
+	2,  // 12: user.v1.UserService.GetUser:output_type -> user.v1.GetUserResponse
+	4,  // 13: user.v1.UserService.ListSlaveUsers:output_type -> user.v1.ListSlaveUsersResponse
+	6,  // 14: user.v1.UserService.CreateSlaveUser:output_type -> user.v1.CreateSlaveUserResponse
+	8,  // 15: user.v1.UserService.UpdateUser:output_type -> user.v1.UpdateUserResponse
+	10, // 16: user.v1.UserService.DeleteUser:output_type -> user.v1.DeleteUserResponse
+	12, // 17: user.v1.UserService.DeleteSlaveUser:output_type -> user.v1.DeleteSlaveUserResponse
 	12, // [12:18] is the sub-list for method output_type
 	6,  // [6:12] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
@@ -757,14 +703,13 @@ func file_user_v1_user_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_v1_user_proto_rawDesc), len(file_user_v1_user_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      0,
 			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_user_v1_user_proto_goTypes,
 		DependencyIndexes: file_user_v1_user_proto_depIdxs,
-		EnumInfos:         file_user_v1_user_proto_enumTypes,
 		MessageInfos:      file_user_v1_user_proto_msgTypes,
 	}.Build()
 	File_user_v1_user_proto = out.File

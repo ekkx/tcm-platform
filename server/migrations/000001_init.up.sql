@@ -5,8 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
     display_name VARCHAR(255) NOT NULL DEFAULT '未設定',
     master_user_id ulid DEFAULT NULL REFERENCES users(id) ON DELETE CASCADE,
     encrypted_password TEXT NOT NULL,
-    create_time TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    update_time TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    create_time TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TYPE campus_type AS ENUM (

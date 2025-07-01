@@ -13,6 +13,7 @@ import (
 type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (ulid.ULID, error)
 	DeleteUserByID(ctx context.Context, userID ulid.ULID) (int32, error)
+	GetUserMetaByID(ctx context.Context, userID ulid.ULID) (GetUserMetaByIDRow, error)
 	ListSlaveUsersMeta(ctx context.Context, arg ListSlaveUsersMetaParams) ([]ListSlaveUsersMetaRow, error)
 	ListUsersByIDs(ctx context.Context, userIds []ulid.ULID) ([]User, error)
 	UpdateUserByID(ctx context.Context, arg UpdateUserByIDParams) (int32, error)

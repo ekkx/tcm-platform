@@ -74,5 +74,4 @@ type User struct {
 	MasterUserID      *ulid.ULID `json:"master_user_id"`
 	EncryptedPassword string     `json:"encrypted_password"`
 	CreateTime        time.Time  `json:"create_time"`
-	UpdateTime        time.Time  `json:"update_time"`
 }

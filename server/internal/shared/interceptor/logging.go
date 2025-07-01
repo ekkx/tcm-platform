@@ -33,7 +33,7 @@ func NewLoggingInterceptor() connect.UnaryInterceptorFunc {
 
 			resp, err := next(newCtx, req)
 			duration := time.Since(start)
-			if err == nil {
+			if err != nil {
 				logger.Error(
 					"[RES]",
 					slog.String("procedure", procedure),

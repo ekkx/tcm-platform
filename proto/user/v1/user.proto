@@ -13,16 +13,10 @@ service UserService {
     rpc DeleteSlaveUser(DeleteSlaveUserRequest) returns (DeleteSlaveUserResponse);
 }
 
-enum UserRole {
-    USER_ROLE_UNSPECIFIED = 0;
-    USER_ROLE_MASTER = 1;
-    USER_ROLE_SLAVE = 2;
-}
-
 message User {
     string id = 1;
     string display_name = 2;
-    UserRole role = 3;
+    User master_user = 3;
     google.protobuf.Timestamp create_time = 4;
 }
 

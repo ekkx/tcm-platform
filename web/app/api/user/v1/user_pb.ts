@@ -2,8 +2,8 @@
 // @generated from file user/v1/user.proto (package user.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
-import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
+import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
 import type { Message } from "@bufbuild/protobuf";
@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file user/v1/user.proto.
  */
 export const file_user_v1_user: GenFile = /*@__PURE__*/
-  fileDesc("ChJ1c2VyL3YxL3VzZXIucHJvdG8SB3VzZXIudjEiegoEVXNlchIKCgJpZBgBIAEoCRIUCgxkaXNwbGF5X25hbWUYAiABKAkSHwoEcm9sZRgDIAEoDjIRLnVzZXIudjEuVXNlclJvbGUSLwoLY3JlYXRlX3RpbWUYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIiEKDkdldFVzZXJSZXF1ZXN0Eg8KB3VzZXJfaWQYASABKAkiLgoPR2V0VXNlclJlc3BvbnNlEhsKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXIiFwoVTGlzdFNsYXZlVXNlcnNSZXF1ZXN0IjYKFkxpc3RTbGF2ZVVzZXJzUmVzcG9uc2USHAoFdXNlcnMYASADKAsyDS51c2VyLnYxLlVzZXIiQAoWQ3JlYXRlU2xhdmVVc2VyUmVxdWVzdBIUCgxkaXNwbGF5X25hbWUYASABKAkSEAoIcGFzc3dvcmQYAiABKAkiNgoXQ3JlYXRlU2xhdmVVc2VyUmVzcG9uc2USGwoEdXNlchgBIAEoCzINLnVzZXIudjEuVXNlciIpChFVcGRhdGVVc2VyUmVxdWVzdBIUCgxkaXNwbGF5X25hbWUYAiABKAkiMQoSVXBkYXRlVXNlclJlc3BvbnNlEhsKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXIiEwoRRGVsZXRlVXNlclJlcXVlc3QiFAoSRGVsZXRlVXNlclJlc3BvbnNlIikKFkRlbGV0ZVNsYXZlVXNlclJlcXVlc3QSDwoHdXNlcl9pZBgBIAEoCSIZChdEZWxldGVTbGF2ZVVzZXJSZXNwb25zZSpQCghVc2VyUm9sZRIZChVVU0VSX1JPTEVfVU5TUEVDSUZJRUQQABIUChBVU0VSX1JPTEVfTUFTVEVSEAESEwoPVVNFUl9ST0xFX1NMQVZFEAIy2AMKC1VzZXJTZXJ2aWNlEjwKB0dldFVzZXISFy51c2VyLnYxLkdldFVzZXJSZXF1ZXN0GhgudXNlci52MS5HZXRVc2VyUmVzcG9uc2USUQoOTGlzdFNsYXZlVXNlcnMSHi51c2VyLnYxLkxpc3RTbGF2ZVVzZXJzUmVxdWVzdBofLnVzZXIudjEuTGlzdFNsYXZlVXNlcnNSZXNwb25zZRJUCg9DcmVhdGVTbGF2ZVVzZXISHy51c2VyLnYxLkNyZWF0ZVNsYXZlVXNlclJlcXVlc3QaIC51c2VyLnYxLkNyZWF0ZVNsYXZlVXNlclJlc3BvbnNlEkUKClVwZGF0ZVVzZXISGi51c2VyLnYxLlVwZGF0ZVVzZXJSZXF1ZXN0GhsudXNlci52MS5VcGRhdGVVc2VyUmVzcG9uc2USRQoKRGVsZXRlVXNlchIaLnVzZXIudjEuRGVsZXRlVXNlclJlcXVlc3QaGy51c2VyLnYxLkRlbGV0ZVVzZXJSZXNwb25zZRJUCg9EZWxldGVTbGF2ZVVzZXISHy51c2VyLnYxLkRlbGV0ZVNsYXZlVXNlclJlcXVlc3QaIC51c2VyLnYxLkRlbGV0ZVNsYXZlVXNlclJlc3BvbnNlQpoBCgtjb20udXNlci52MUIJVXNlclByb3RvUAFaQ2dpdGh1Yi5jb20vZWtreC90Y21yc3Ytd2ViL3NlcnZlci9pbnRlcm5hbC9zaGFyZWQvcGIvdXNlci92MTt1c2VydjGiAgNVWFiqAgdVc2VyLlYxygIHVXNlclxWMeICE1VzZXJcVjFcR1BCTWV0YWRhdGHqAghVc2VyOjpWMWIGcHJvdG8z", [file_google_protobuf_timestamp]);
+  fileDesc("ChJ1c2VyL3YxL3VzZXIucHJvdG8SB3VzZXIudjEifQoEVXNlchIKCgJpZBgBIAEoCRIUCgxkaXNwbGF5X25hbWUYAiABKAkSIgoLbWFzdGVyX3VzZXIYAyABKAsyDS51c2VyLnYxLlVzZXISLwoLY3JlYXRlX3RpbWUYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIiEKDkdldFVzZXJSZXF1ZXN0Eg8KB3VzZXJfaWQYASABKAkiLgoPR2V0VXNlclJlc3BvbnNlEhsKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXIiFwoVTGlzdFNsYXZlVXNlcnNSZXF1ZXN0IjYKFkxpc3RTbGF2ZVVzZXJzUmVzcG9uc2USHAoFdXNlcnMYASADKAsyDS51c2VyLnYxLlVzZXIiQAoWQ3JlYXRlU2xhdmVVc2VyUmVxdWVzdBIUCgxkaXNwbGF5X25hbWUYASABKAkSEAoIcGFzc3dvcmQYAiABKAkiNgoXQ3JlYXRlU2xhdmVVc2VyUmVzcG9uc2USGwoEdXNlchgBIAEoCzINLnVzZXIudjEuVXNlciIpChFVcGRhdGVVc2VyUmVxdWVzdBIUCgxkaXNwbGF5X25hbWUYAiABKAkiMQoSVXBkYXRlVXNlclJlc3BvbnNlEhsKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXIiEwoRRGVsZXRlVXNlclJlcXVlc3QiFAoSRGVsZXRlVXNlclJlc3BvbnNlIikKFkRlbGV0ZVNsYXZlVXNlclJlcXVlc3QSDwoHdXNlcl9pZBgBIAEoCSIZChdEZWxldGVTbGF2ZVVzZXJSZXNwb25zZTLYAwoLVXNlclNlcnZpY2USPAoHR2V0VXNlchIXLnVzZXIudjEuR2V0VXNlclJlcXVlc3QaGC51c2VyLnYxLkdldFVzZXJSZXNwb25zZRJRCg5MaXN0U2xhdmVVc2VycxIeLnVzZXIudjEuTGlzdFNsYXZlVXNlcnNSZXF1ZXN0Gh8udXNlci52MS5MaXN0U2xhdmVVc2Vyc1Jlc3BvbnNlElQKD0NyZWF0ZVNsYXZlVXNlchIfLnVzZXIudjEuQ3JlYXRlU2xhdmVVc2VyUmVxdWVzdBogLnVzZXIudjEuQ3JlYXRlU2xhdmVVc2VyUmVzcG9uc2USRQoKVXBkYXRlVXNlchIaLnVzZXIudjEuVXBkYXRlVXNlclJlcXVlc3QaGy51c2VyLnYxLlVwZGF0ZVVzZXJSZXNwb25zZRJFCgpEZWxldGVVc2VyEhoudXNlci52MS5EZWxldGVVc2VyUmVxdWVzdBobLnVzZXIudjEuRGVsZXRlVXNlclJlc3BvbnNlElQKD0RlbGV0ZVNsYXZlVXNlchIfLnVzZXIudjEuRGVsZXRlU2xhdmVVc2VyUmVxdWVzdBogLnVzZXIudjEuRGVsZXRlU2xhdmVVc2VyUmVzcG9uc2VCmgEKC2NvbS51c2VyLnYxQglVc2VyUHJvdG9QAVpDZ2l0aHViLmNvbS9la2t4L3RjbXJzdi13ZWIvc2VydmVyL2ludGVybmFsL3NoYXJlZC9wYi91c2VyL3YxO3VzZXJ2MaICA1VYWKoCB1VzZXIuVjHKAgdVc2VyXFYx4gITVXNlclxWMVxHUEJNZXRhZGF0YeoCCFVzZXI6OlYxYgZwcm90bzM", [file_google_protobuf_timestamp]);
 
 /**
  * @generated from message user.v1.User
@@ -29,9 +29,9 @@ export type User = Message<"user.v1.User"> & {
   displayName: string;
 
   /**
-   * @generated from field: user.v1.UserRole role = 3;
+   * @generated from field: user.v1.User master_user = 3;
    */
-  role: UserRole;
+  masterUser?: User;
 
   /**
    * @generated from field: google.protobuf.Timestamp create_time = 4;
@@ -238,32 +238,6 @@ export type DeleteSlaveUserResponse = Message<"user.v1.DeleteSlaveUserResponse">
  */
 export const DeleteSlaveUserResponseSchema: GenMessage<DeleteSlaveUserResponse> = /*@__PURE__*/
   messageDesc(file_user_v1_user, 12);
-
-/**
- * @generated from enum user.v1.UserRole
- */
-export enum UserRole {
-  /**
-   * @generated from enum value: USER_ROLE_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: USER_ROLE_MASTER = 1;
-   */
-  MASTER = 1,
-
-  /**
-   * @generated from enum value: USER_ROLE_SLAVE = 2;
-   */
-  SLAVE = 2,
-}
-
-/**
- * Describes the enum user.v1.UserRole.
- */
-export const UserRoleSchema: GenEnum<UserRole> = /*@__PURE__*/
-  enumDesc(file_user_v1_user, 0);
 
 /**
  * @generated from service user.v1.UserService

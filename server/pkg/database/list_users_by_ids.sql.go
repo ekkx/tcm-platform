@@ -13,7 +13,7 @@ import (
 
 const listUsersByIDs = `-- name: ListUsersByIDs :many
 SELECT
-    users.id, users.display_name, users.master_user_id, users.encrypted_password, users.create_time, users.update_time
+    users.id, users.display_name, users.master_user_id, users.encrypted_password, users.create_time
 FROM
     users
 WHERE
@@ -35,7 +35,6 @@ func (q *Queries) ListUsersByIDs(ctx context.Context, userIds []ulid.ULID) ([]Us
 			&i.MasterUserID,
 			&i.EncryptedPassword,
 			&i.CreateTime,
-			&i.UpdateTime,
 		); err != nil {
 			return nil, err
 		}

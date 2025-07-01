@@ -1,9 +1,15 @@
 package entity
 
-import "time"
+import (
+	"time"
+
+	"github.com/ekkx/tcmrsv-web/server/pkg/ulid"
+)
 
 type User struct {
-	ID                string    `json:"id"`
-	EncryptedPassword string    `json:"encrypted_password"`
-	CreatedAt         time.Time `json:"created_at"`
+	ID          ulid.ULID
+	DisplayName string
+	MasterUser  *User
+	CreateTime  time.Time
+	UpdateTime  time.Time
 }
