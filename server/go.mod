@@ -9,7 +9,6 @@ require (
 	github.com/caarlos0/env/v11 v11.3.1
 	github.com/ekkx/tcmrsv v0.0.0-20250607182637-29186764b01f
 	github.com/golang-jwt/jwt/v5 v5.2.2
-	github.com/golang/protobuf v1.5.4
 	github.com/jackc/pgx/v5 v5.7.4
 	github.com/oklog/ulid/v2 v2.1.1
 	github.com/rs/cors v1.11.1
