@@ -2,38 +2,41 @@ package ctxhelper
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/config"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/actor"
 )
 
 type configKey struct{}
-type accessTokenKey struct{}
-type actorKey struct{}
 
-func SetConfig(ctx context.Context, cfg *config.Config) context.Context {
+func WithConfig(ctx context.Context, cfg *config.Config) context.Context {
 	return context.WithValue(ctx, configKey{}, cfg)
 }
 
-func GetConfig(ctx context.Context) *config.Config {
+func Config(ctx context.Context) *config.Config {
 	cfg, _ := ctx.Value(configKey{}).(*config.Config)
 	return cfg
 }
 
-func SetAccessToken(ctx context.Context, token string) context.Context {
-	return context.WithValue(ctx, accessTokenKey{}, token)
+type loggerKey struct{}
+
+func WithLogger(ctx context.Context, logger *slog.Logger) context.Context {
+	return context.WithValue(ctx, loggerKey{}, logger)
 }
 
-func GetAccessToken(ctx context.Context) string {
-	token, _ := ctx.Value(accessTokenKey{}).(string)
-	return token
+func Logger(ctx context.Context) *slog.Logger {
+	logger, _ := ctx.Value(loggerKey{}).(*slog.Logger)
+	return logger
 }
 
-func SetActor(ctx context.Context, actor actor.Actor) context.Context {
+type actorKey struct{}
+
+func WithActor(ctx context.Context, actor actor.Actor) context.Context {
 	return context.WithValue(ctx, actorKey{}, actor)
 }
 
-func GetActor(ctx context.Context) actor.Actor {
+func Actor(ctx context.Context) actor.Actor {
 	token, _ := ctx.Value(actorKey{}).(actor.Actor)
 	return token
 }

@@ -1,17 +1,15 @@
 package main
 
 import (
-	"log"
+	"log/slog"
+	"os"
 
-	"github.com/ekkx/tcmrsv-web/server/cmd/api/commands"
-	"github.com/ekkx/tcmrsv-web/server/internal/config"
+	"github.com/ekkx/tcmrsv-web/server/cmd/api/server"
 )
 
 func main() {
-	cfg, err := config.New()
-	if err != nil {
-		log.Fatalf("failed initializing config: %v", err)
+	if err := server.Run(); err != nil {
+		slog.Error("server exited with error", slog.String("err", err.Error()))
+		os.Exit(1)
 	}
-
-	commands.Run(cfg)
 }
