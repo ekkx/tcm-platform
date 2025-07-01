@@ -54,48 +54,6 @@ func (ns NullCampusType) Value() (driver.Value, error) {
 	return string(ns.CampusType), nil
 }
 
-type UserRole string
-
-const (
-	UserRoleMaster UserRole = "master"
-	UserRoleSlave  UserRole = "slave"
-)
-
-func (e *UserRole) Scan(src interface{}) error {
-	switch s := src.(type) {
-	case []byte:
-		*e = UserRole(s)
-	case string:
-		*e = UserRole(s)
-	default:
-		return fmt.Errorf("unsupported scan type for UserRole: %T", src)
-	}
-	return nil
-}
-
-type NullUserRole struct {
-	UserRole UserRole `json:"user_role"`
-	Valid    bool     `json:"valid"` // Valid is true if UserRole is not NULL
-}
-
-// Scan implements the Scanner interface.
-func (ns *NullUserRole) Scan(value interface{}) error {
-	if value == nil {
-		ns.UserRole, ns.Valid = "", false
-		return nil
-	}
-	ns.Valid = true
-	return ns.UserRole.Scan(value)
-}
-
-// Value implements the driver Valuer interface.
-func (ns NullUserRole) Value() (driver.Value, error) {
-	if !ns.Valid {
-		return nil, nil
-	}
-	return string(ns.UserRole), nil
-}
-
 type Reservation struct {
 	ID         ulid.ULID  `json:"id"`
 	ExternalID *string    `json:"external_id"`
@@ -111,10 +69,10 @@ type Reservation struct {
 }
 
 type User struct {
-	ID                ulid.ULID `json:"id"`
-	DisplayName       string    `json:"display_name"`
-	Role              UserRole  `json:"role"`
-	EncryptedPassword string    `json:"encrypted_password"`
-	CreateTime        time.Time `json:"create_time"`
-	UpdateTime        time.Time `json:"update_time"`
+	ID                ulid.ULID  `json:"id"`
+	DisplayName       string     `json:"display_name"`
+	MasterUserID      *ulid.ULID `json:"master_user_id"`
+	EncryptedPassword string     `json:"encrypted_password"`
+	CreateTime        time.Time  `json:"create_time"`
+	UpdateTime        time.Time  `json:"update_time"`
 }

@@ -11,7 +11,11 @@ import (
 )
 
 type Querier interface {
-	GetUserByID(ctx context.Context, id ulid.ULID) (User, error)
+	CreateUser(ctx context.Context, arg CreateUserParams) (ulid.ULID, error)
+	DeleteUserByID(ctx context.Context, userID ulid.ULID) (int32, error)
+	ListSlaveUsersMeta(ctx context.Context, arg ListSlaveUsersMetaParams) ([]ListSlaveUsersMetaRow, error)
+	ListUsersByIDs(ctx context.Context, userIds []ulid.ULID) ([]User, error)
+	UpdateUserByID(ctx context.Context, arg UpdateUserByIDParams) (int32, error)
 }
 
 var _ Querier = (*Queries)(nil)

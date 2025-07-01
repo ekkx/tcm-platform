@@ -9,4 +9,6 @@ DROP TABLE IF EXISTS users;
 
 -- drop types
 DROP TYPE IF EXISTS campus_type;
-DROP TYPE IF EXISTS user_role;
+
+-- drop domain
+DROP DOMAIN IF EXISTS ulid;

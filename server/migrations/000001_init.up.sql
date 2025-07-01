@@ -1,14 +1,9 @@
 CREATE DOMAIN ulid AS TEXT CHECK (LENGTH(VALUE) = 26);
 
-CREATE TYPE user_role AS ENUM (
-    'master', -- 親アカウント
-    'slave' -- 子アカウント
-);
-
 CREATE TABLE IF NOT EXISTS users (
     id ulid PRIMARY KEY,
     display_name VARCHAR(255) NOT NULL DEFAULT '未設定',
-    role user_role NOT NULL,
+    master_user_id ulid DEFAULT NULL REFERENCES users(id) ON DELETE CASCADE,
     encrypted_password TEXT NOT NULL,
     create_time TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     update_time TIMESTAMPTZ NOT NULL DEFAULT NOW()
