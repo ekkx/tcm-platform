@@ -2,19 +2,21 @@
 INSERT INTO
     users (
         id,
-        display_name,
+        password,
+        official_site_id,
+        official_site_password,
         master_user_id,
-        encrypted_password,
-        create_time,
-        update_time
+        display_name,
+        create_time
     )
 VALUES
     (
         sqlc.arg(id)::ulid,
-        sqlc.arg(display_name)::TEXT,
+        sqlc.arg(password)::TEXT,
+        sqlc.narg(official_site_id)::TEXT,
+        sqlc.narg(official_site_password)::TEXT,
         sqlc.narg(master_user_id)::ulid,
-        sqlc.arg(encrypted_password)::TEXT,
-        NOW(),
+        sqlc.arg(display_name)::TEXT,
         NOW()
     )
 RETURNING users.id;

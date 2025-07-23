@@ -55,23 +55,25 @@ func (ns NullCampusType) Value() (driver.Value, error) {
 }
 
 type Reservation struct {
-	ID         ulid.ULID  `json:"id"`
-	ExternalID *string    `json:"external_id"`
-	UserID     ulid.ULID  `json:"user_id"`
-	CampusType CampusType `json:"campus_type"`
-	RoomID     string     `json:"room_id"`
-	Date       time.Time  `json:"date"`
-	FromHour   int32      `json:"from_hour"`
-	FromMinute int32      `json:"from_minute"`
-	ToHour     int32      `json:"to_hour"`
-	ToMinute   int32      `json:"to_minute"`
-	CreateTime time.Time  `json:"create_time"`
+	ID             ulid.ULID  `json:"id"`
+	OfficialSiteID *string    `json:"official_site_id"`
+	UserID         ulid.ULID  `json:"user_id"`
+	CampusType     CampusType `json:"campus_type"`
+	RoomID         string     `json:"room_id"`
+	Date           time.Time  `json:"date"`
+	FromHour       int32      `json:"from_hour"`
+	FromMinute     int32      `json:"from_minute"`
+	ToHour         int32      `json:"to_hour"`
+	ToMinute       int32      `json:"to_minute"`
+	CreateTime     time.Time  `json:"create_time"`
 }
 
 type User struct {
-	ID                ulid.ULID  `json:"id"`
-	DisplayName       string     `json:"display_name"`
-	MasterUserID      *ulid.ULID `json:"master_user_id"`
-	EncryptedPassword string     `json:"encrypted_password"`
-	CreateTime        time.Time  `json:"create_time"`
+	ID                   ulid.ULID  `json:"id"`
+	Password             string     `json:"password"`
+	OfficialSiteID       *string    `json:"official_site_id"`
+	OfficialSitePassword *string    `json:"official_site_password"`
+	MasterUserID         *ulid.ULID `json:"master_user_id"`
+	DisplayName          string     `json:"display_name"`
+	CreateTime           time.Time  `json:"create_time"`
 }

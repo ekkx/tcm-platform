@@ -7,20 +7,18 @@ package database
 
 import (
 	"context"
-
-	"github.com/ekkx/tcmrsv-web/server/pkg/ulid"
 )
 
 const listUsersByIDs = `-- name: ListUsersByIDs :many
 SELECT
-    users.id, users.display_name, users.master_user_id, users.encrypted_password, users.create_time
+    users.id, users.password, users.official_site_id, users.official_site_password, users.master_user_id, users.display_name, users.create_time
 FROM
     users
 WHERE
-    users.id = ANY($1::ulid[])
+    users.id = ANY($1::TEXT[])
 `
 
-func (q *Queries) ListUsersByIDs(ctx context.Context, userIds []ulid.ULID) ([]User, error) {
+func (q *Queries) ListUsersByIDs(ctx context.Context, userIds []string) ([]User, error) {
 	rows, err := q.db.Query(ctx, listUsersByIDs, userIds)
 	if err != nil {
 		return nil, err
@@ -31,9 +29,11 @@ func (q *Queries) ListUsersByIDs(ctx context.Context, userIds []ulid.ULID) ([]Us
 		var i User
 		if err := rows.Scan(
 			&i.ID,
-			&i.DisplayName,
+			&i.Password,
+			&i.OfficialSiteID,
+			&i.OfficialSitePassword,
 			&i.MasterUserID,
-			&i.EncryptedPassword,
+			&i.DisplayName,
 			&i.CreateTime,
 		); err != nil {
 			return nil, err

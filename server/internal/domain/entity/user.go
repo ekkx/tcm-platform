@@ -7,9 +7,24 @@ import (
 )
 
 type User struct {
-	ID          ulid.ULID
-	DisplayName string
-	MasterUser  *User
-	CreateTime  time.Time
-	UpdateTime  time.Time
+	ID                   ulid.ULID
+	Password             string
+	OfficialSiteID       *string
+	OfficialSitePassword *string
+	MasterUser           *User
+	DisplayName          string
+	CreateTime           time.Time
+}
+
+func (u *User) IsMaster() bool {
+	return u.MasterUser == nil
+}
+
+func (u *User) IsSlave() bool {
+	return u.MasterUser != nil
+}
+
+func (u *User) CheckPassword(password string) bool {
+	// TODO: パスワードのハッシュ化と比較を行う
+	return u.Password == password
 }

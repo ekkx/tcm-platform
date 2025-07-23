@@ -15,37 +15,43 @@ const createUser = `-- name: CreateUser :one
 INSERT INTO
     users (
         id,
-        display_name,
+        password,
+        official_site_id,
+        official_site_password,
         master_user_id,
-        encrypted_password,
-        create_time,
-        update_time
+        display_name,
+        create_time
     )
 VALUES
     (
         $1::ulid,
         $2::TEXT,
-        $3::ulid,
+        $3::TEXT,
         $4::TEXT,
-        NOW(),
+        $5::ulid,
+        $6::TEXT,
         NOW()
     )
 RETURNING users.id
 `
 
 type CreateUserParams struct {
-	ID                ulid.ULID  `json:"id"`
-	DisplayName       string     `json:"display_name"`
-	MasterUserID      *ulid.ULID `json:"master_user_id"`
-	EncryptedPassword string     `json:"encrypted_password"`
+	ID                   ulid.ULID  `json:"id"`
+	Password             string     `json:"password"`
+	OfficialSiteID       *string    `json:"official_site_id"`
+	OfficialSitePassword *string    `json:"official_site_password"`
+	MasterUserID         *ulid.ULID `json:"master_user_id"`
+	DisplayName          string     `json:"display_name"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (ulid.ULID, error) {
 	row := q.db.QueryRow(ctx, createUser,
 		arg.ID,
-		arg.DisplayName,
+		arg.Password,
+		arg.OfficialSiteID,
+		arg.OfficialSitePassword,
 		arg.MasterUserID,
-		arg.EncryptedPassword,
+		arg.DisplayName,
 	)
 	var id ulid.ULID
 	err := row.Scan(&id)

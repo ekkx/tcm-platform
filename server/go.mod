@@ -17,6 +17,8 @@ require (
 	google.golang.org/protobuf v1.36.5
 )
 
+require connectrpc.com/grpcreflect v1.3.0 // indirect
+
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect

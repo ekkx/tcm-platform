@@ -18,6 +18,11 @@ proto:
 	cd proto && buf generate
 .PHONY: proto
 
+#? grpcui: gRPC UI を起動
+grpcui:
+	grpcui -bind 0.0.0.0 -port 37611 -plaintext -open-browser=false localhost:50051
+.PHONY: grpcui
+
 #? sqlc: SQL クエリを Go コードに変換
 sqlc:
 	cd server && sqlc generate

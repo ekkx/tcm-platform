@@ -26,6 +26,7 @@ type Auth struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
 	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	User          *v1.User               `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -72,6 +73,13 @@ func (x *Auth) GetRefreshToken() string {
 		return x.RefreshToken
 	}
 	return ""
+}
+
+func (x *Auth) GetUser() *v1.User {
+	if x != nil {
+		return x.User
+	}
+	return nil
 }
 
 type AuthorizeRequest struct {
@@ -129,7 +137,6 @@ func (x *AuthorizeRequest) GetPassword() string {
 type AuthorizeResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Auth          *Auth                  `protobuf:"bytes,1,opt,name=auth,proto3" json:"auth,omitempty"`
-	User          *v1.User               `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -167,13 +174,6 @@ func (*AuthorizeResponse) Descriptor() ([]byte, []int) {
 func (x *AuthorizeResponse) GetAuth() *Auth {
 	if x != nil {
 		return x.Auth
-	}
-	return nil
-}
-
-func (x *AuthorizeResponse) GetUser() *v1.User {
-	if x != nil {
-		return x.User
 	}
 	return nil
 }
@@ -225,7 +225,6 @@ func (x *ReauthorizeRequest) GetRefreshToken() string {
 type ReauthorizeResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Auth          *Auth                  `protobuf:"bytes,1,opt,name=auth,proto3" json:"auth,omitempty"`
-	User          *v1.User               `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -263,13 +262,6 @@ func (*ReauthorizeResponse) Descriptor() ([]byte, []int) {
 func (x *ReauthorizeResponse) GetAuth() *Auth {
 	if x != nil {
 		return x.Auth
-	}
-	return nil
-}
-
-func (x *ReauthorizeResponse) GetUser() *v1.User {
-	if x != nil {
-		return x.User
 	}
 	return nil
 }
@@ -366,21 +358,20 @@ var File_auth_v1_auth_proto protoreflect.FileDescriptor
 
 const file_auth_v1_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x12auth/v1/auth.proto\x12\aauth.v1\x1a\x12user/v1/user.proto\"N\n" +
+	"\x12auth/v1/auth.proto\x12\aauth.v1\x1a\x12user/v1/user.proto\"q\n" +
 	"\x04Auth\x12!\n" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
-	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"G\n" +
+	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\x12!\n" +
+	"\x04user\x18\x03 \x01(\v2\r.user.v1.UserR\x04user\"G\n" +
 	"\x10AuthorizeRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"Y\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"6\n" +
 	"\x11AuthorizeResponse\x12!\n" +
-	"\x04auth\x18\x01 \x01(\v2\r.auth.v1.AuthR\x04auth\x12!\n" +
-	"\x04user\x18\x02 \x01(\v2\r.user.v1.UserR\x04user\"9\n" +
+	"\x04auth\x18\x01 \x01(\v2\r.auth.v1.AuthR\x04auth\"9\n" +
 	"\x12ReauthorizeRequest\x12#\n" +
-	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"[\n" +
+	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"8\n" +
 	"\x13ReauthorizeResponse\x12!\n" +
-	"\x04auth\x18\x01 \x01(\v2\r.auth.v1.AuthR\x04auth\x12!\n" +
-	"\x04user\x18\x02 \x01(\v2\r.user.v1.UserR\x04user\"]\n" +
+	"\x04auth\x18\x01 \x01(\v2\r.auth.v1.AuthR\x04auth\"]\n" +
 	"\x15UpdatePasswordRequest\x12!\n" +
 	"\fold_password\x18\x02 \x01(\tR\voldPassword\x12!\n" +
 	"\fnew_password\x18\x03 \x01(\tR\vnewPassword\"\x18\n" +
@@ -415,21 +406,20 @@ var file_auth_v1_auth_proto_goTypes = []any{
 	(*v1.User)(nil),                // 7: user.v1.User
 }
 var file_auth_v1_auth_proto_depIdxs = []int32{
-	0, // 0: auth.v1.AuthorizeResponse.auth:type_name -> auth.v1.Auth
-	7, // 1: auth.v1.AuthorizeResponse.user:type_name -> user.v1.User
+	7, // 0: auth.v1.Auth.user:type_name -> user.v1.User
+	0, // 1: auth.v1.AuthorizeResponse.auth:type_name -> auth.v1.Auth
 	0, // 2: auth.v1.ReauthorizeResponse.auth:type_name -> auth.v1.Auth
-	7, // 3: auth.v1.ReauthorizeResponse.user:type_name -> user.v1.User
-	1, // 4: auth.v1.AuthService.Authorize:input_type -> auth.v1.AuthorizeRequest
-	3, // 5: auth.v1.AuthService.Reauthorize:input_type -> auth.v1.ReauthorizeRequest
-	5, // 6: auth.v1.AuthService.UpdatePassword:input_type -> auth.v1.UpdatePasswordRequest
-	2, // 7: auth.v1.AuthService.Authorize:output_type -> auth.v1.AuthorizeResponse
-	4, // 8: auth.v1.AuthService.Reauthorize:output_type -> auth.v1.ReauthorizeResponse
-	6, // 9: auth.v1.AuthService.UpdatePassword:output_type -> auth.v1.UpdatePasswordResponse
-	7, // [7:10] is the sub-list for method output_type
-	4, // [4:7] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	1, // 3: auth.v1.AuthService.Authorize:input_type -> auth.v1.AuthorizeRequest
+	3, // 4: auth.v1.AuthService.Reauthorize:input_type -> auth.v1.ReauthorizeRequest
+	5, // 5: auth.v1.AuthService.UpdatePassword:input_type -> auth.v1.UpdatePasswordRequest
+	2, // 6: auth.v1.AuthService.Authorize:output_type -> auth.v1.AuthorizeResponse
+	4, // 7: auth.v1.AuthService.Reauthorize:output_type -> auth.v1.ReauthorizeResponse
+	6, // 8: auth.v1.AuthService.UpdatePassword:output_type -> auth.v1.UpdatePasswordResponse
+	6, // [6:9] is the sub-list for method output_type
+	3, // [3:6] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_auth_v1_auth_proto_init() }

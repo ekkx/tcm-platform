@@ -1,15 +1,35 @@
 package usecase
 
-import "github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
+import (
+	"context"
 
-type Usecase interface{}
+	"github.com/ekkx/tcmrsv"
+	"github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
+	"github.com/ekkx/tcmrsv-web/server/internal/modules/user/service"
+	"github.com/ekkx/tcmrsv-web/server/pkg/jwt"
+)
 
-type UsecaseImpl struct {
-	userRepository repository.Repository
+type UseCase interface {
+	Authorize(ctx context.Context, params *AuthorizeInput) (*AuthorizeOutput, error)
 }
 
-func New(userRepository repository.Repository) Usecase {
-	return &UsecaseImpl{
-		userRepository: userRepository,
+type UseCaseImpl struct {
+	jwtManager  *jwt.JWTManager
+	tcmClient   *tcmrsv.Client
+	userRepo    repository.Repository
+	userService service.Service
+}
+
+func New(
+	jwtManager *jwt.JWTManager,
+	tcmClient *tcmrsv.Client,
+	userRepo repository.Repository,
+	userService service.Service,
+) UseCase {
+	return &UseCaseImpl{
+		jwtManager:  jwtManager,
+		tcmClient:   tcmClient,
+		userRepo:    userRepo,
+		userService: userService,
 	}
 }

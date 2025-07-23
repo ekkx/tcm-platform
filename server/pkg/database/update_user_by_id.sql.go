@@ -15,22 +15,28 @@ const updateUserByID = `-- name: UpdateUserByID :one
 UPDATE
     users
 SET
-    display_name = COALESCE($1::TEXT, users.display_name),
-    encrypted_password = COALESCE($2::TEXT, users.encrypted_password),
-    update_time = NOW()
+    password = COALESCE($1::TEXT, users.password),
+    official_site_password = COALESCE($2::TEXT, users.official_site_password),
+    display_name = COALESCE($3::TEXT, users.display_name)
 WHERE
-    users.id = $3::ulid
+    users.id = $4::ulid
 RETURNING 1
 `
 
 type UpdateUserByIDParams struct {
-	DisplayName       string    `json:"display_name"`
-	EncryptedPassword string    `json:"encrypted_password"`
-	UserID            ulid.ULID `json:"user_id"`
+	Password             *string   `json:"password"`
+	OfficialSitePassword *string   `json:"official_site_password"`
+	DisplayName          *string   `json:"display_name"`
+	UserID               ulid.ULID `json:"user_id"`
 }
 
 func (q *Queries) UpdateUserByID(ctx context.Context, arg UpdateUserByIDParams) (int32, error) {
-	row := q.db.QueryRow(ctx, updateUserByID, arg.DisplayName, arg.EncryptedPassword, arg.UserID)
+	row := q.db.QueryRow(ctx, updateUserByID,
+		arg.Password,
+		arg.OfficialSitePassword,
+		arg.DisplayName,
+		arg.UserID,
+	)
 	var column_1 int32
 	err := row.Scan(&column_1)
 	return column_1, err

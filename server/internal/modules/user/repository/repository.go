@@ -9,7 +9,10 @@ import (
 )
 
 type Repository interface {
-	GetUserByID(ctx context.Context, userID ulid.ULID) (*entity.User, error)
+	GetUserIDByOfficialSiteID(ctx context.Context, officialSiteID string) (*ulid.ULID, error)
+	ListSkeletonUsersByIDs(ctx context.Context, userIDs []ulid.ULID) ([]*entity.User, error)
+	CreateUser(ctx context.Context, params *CreateUserParams) (*ulid.ULID, error)
+	UpdateUserByID(ctx context.Context, params *UpdateUserByIDParams) error
 }
 
 type RepositoryImpl struct {

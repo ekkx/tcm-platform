@@ -2,9 +2,17 @@ CREATE DOMAIN ulid AS TEXT CHECK (LENGTH(VALUE) = 26);
 
 CREATE TABLE IF NOT EXISTS users (
     id ulid PRIMARY KEY,
-    display_name VARCHAR(255) NOT NULL DEFAULT '未設定',
+    password TEXT NOT NULL,
+
+    -- 外部連携（公式サイト）
+    official_site_id TEXT DEFAULT NULL UNIQUE,  -- マスターのみ
+    official_site_password TEXT DEFAULT NULL, -- マスターのみ
+
+    -- リレーション
     master_user_id ulid DEFAULT NULL REFERENCES users(id) ON DELETE CASCADE,
-    encrypted_password TEXT NOT NULL,
+
+    -- 表示情報
+    display_name VARCHAR(255) NOT NULL DEFAULT '未設定',
     create_time TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -15,8 +23,14 @@ CREATE TYPE campus_type AS ENUM (
 
 CREATE TABLE IF NOT EXISTS reservations (
     id ulid PRIMARY KEY,
-    external_id TEXT DEFAULT NULL UNIQUE,  -- ← ここが NULL = 確定してない
+
+    -- 外部連携（公式サイト）
+    official_site_id TEXT DEFAULT NULL UNIQUE,  -- ← ここが NULL = 確定してない
+
+    -- リレーション
     user_id ulid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+
+    -- 予約内容
     campus_type campus_type NOT NULL,
     room_id TEXT NOT NULL,
     date TIMESTAMPTZ NOT NULL,

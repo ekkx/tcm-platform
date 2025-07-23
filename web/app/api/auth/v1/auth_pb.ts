@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file auth/v1/auth.proto.
  */
 export const file_auth_v1_auth: GenFile = /*@__PURE__*/
-  fileDesc("ChJhdXRoL3YxL2F1dGgucHJvdG8SB2F1dGgudjEiMwoEQXV0aBIUCgxhY2Nlc3NfdG9rZW4YASABKAkSFQoNcmVmcmVzaF90b2tlbhgCIAEoCSI1ChBBdXRob3JpemVSZXF1ZXN0Eg8KB3VzZXJfaWQYASABKAkSEAoIcGFzc3dvcmQYAiABKAkiTQoRQXV0aG9yaXplUmVzcG9uc2USGwoEYXV0aBgBIAEoCzINLmF1dGgudjEuQXV0aBIbCgR1c2VyGAIgASgLMg0udXNlci52MS5Vc2VyIisKElJlYXV0aG9yaXplUmVxdWVzdBIVCg1yZWZyZXNoX3Rva2VuGAIgASgJIk8KE1JlYXV0aG9yaXplUmVzcG9uc2USGwoEYXV0aBgBIAEoCzINLmF1dGgudjEuQXV0aBIbCgR1c2VyGAIgASgLMg0udXNlci52MS5Vc2VyIkMKFVVwZGF0ZVBhc3N3b3JkUmVxdWVzdBIUCgxvbGRfcGFzc3dvcmQYAiABKAkSFAoMbmV3X3Bhc3N3b3JkGAMgASgJIhgKFlVwZGF0ZVBhc3N3b3JkUmVzcG9uc2Uy7gEKC0F1dGhTZXJ2aWNlEkIKCUF1dGhvcml6ZRIZLmF1dGgudjEuQXV0aG9yaXplUmVxdWVzdBoaLmF1dGgudjEuQXV0aG9yaXplUmVzcG9uc2USSAoLUmVhdXRob3JpemUSGy5hdXRoLnYxLlJlYXV0aG9yaXplUmVxdWVzdBocLmF1dGgudjEuUmVhdXRob3JpemVSZXNwb25zZRJRCg5VcGRhdGVQYXNzd29yZBIeLmF1dGgudjEuVXBkYXRlUGFzc3dvcmRSZXF1ZXN0Gh8uYXV0aC52MS5VcGRhdGVQYXNzd29yZFJlc3BvbnNlQpoBCgtjb20uYXV0aC52MUIJQXV0aFByb3RvUAFaQ2dpdGh1Yi5jb20vZWtreC90Y21yc3Ytd2ViL3NlcnZlci9pbnRlcm5hbC9zaGFyZWQvcGIvYXV0aC92MTthdXRodjGiAgNBWFiqAgdBdXRoLlYxygIHQXV0aFxWMeICE0F1dGhcVjFcR1BCTWV0YWRhdGHqAghBdXRoOjpWMWIGcHJvdG8z", [file_user_v1_user]);
+  fileDesc("ChJhdXRoL3YxL2F1dGgucHJvdG8SB2F1dGgudjEiUAoEQXV0aBIUCgxhY2Nlc3NfdG9rZW4YASABKAkSFQoNcmVmcmVzaF90b2tlbhgCIAEoCRIbCgR1c2VyGAMgASgLMg0udXNlci52MS5Vc2VyIjUKEEF1dGhvcml6ZVJlcXVlc3QSDwoHdXNlcl9pZBgBIAEoCRIQCghwYXNzd29yZBgCIAEoCSIwChFBdXRob3JpemVSZXNwb25zZRIbCgRhdXRoGAEgASgLMg0uYXV0aC52MS5BdXRoIisKElJlYXV0aG9yaXplUmVxdWVzdBIVCg1yZWZyZXNoX3Rva2VuGAIgASgJIjIKE1JlYXV0aG9yaXplUmVzcG9uc2USGwoEYXV0aBgBIAEoCzINLmF1dGgudjEuQXV0aCJDChVVcGRhdGVQYXNzd29yZFJlcXVlc3QSFAoMb2xkX3Bhc3N3b3JkGAIgASgJEhQKDG5ld19wYXNzd29yZBgDIAEoCSIYChZVcGRhdGVQYXNzd29yZFJlc3BvbnNlMu4BCgtBdXRoU2VydmljZRJCCglBdXRob3JpemUSGS5hdXRoLnYxLkF1dGhvcml6ZVJlcXVlc3QaGi5hdXRoLnYxLkF1dGhvcml6ZVJlc3BvbnNlEkgKC1JlYXV0aG9yaXplEhsuYXV0aC52MS5SZWF1dGhvcml6ZVJlcXVlc3QaHC5hdXRoLnYxLlJlYXV0aG9yaXplUmVzcG9uc2USUQoOVXBkYXRlUGFzc3dvcmQSHi5hdXRoLnYxLlVwZGF0ZVBhc3N3b3JkUmVxdWVzdBofLmF1dGgudjEuVXBkYXRlUGFzc3dvcmRSZXNwb25zZUKaAQoLY29tLmF1dGgudjFCCUF1dGhQcm90b1ABWkNnaXRodWIuY29tL2Vra3gvdGNtcnN2LXdlYi9zZXJ2ZXIvaW50ZXJuYWwvc2hhcmVkL3BiL2F1dGgvdjE7YXV0aHYxogIDQVhYqgIHQXV0aC5WMcoCB0F1dGhcVjHiAhNBdXRoXFYxXEdQQk1ldGFkYXRh6gIIQXV0aDo6VjFiBnByb3RvMw", [file_user_v1_user]);
 
 /**
  * @generated from message auth.v1.Auth
@@ -27,6 +27,11 @@ export type Auth = Message<"auth.v1.Auth"> & {
    * @generated from field: string refresh_token = 2;
    */
   refreshToken: string;
+
+  /**
+   * @generated from field: user.v1.User user = 3;
+   */
+  user?: User;
 };
 
 /**
@@ -66,11 +71,6 @@ export type AuthorizeResponse = Message<"auth.v1.AuthorizeResponse"> & {
    * @generated from field: auth.v1.Auth auth = 1;
    */
   auth?: Auth;
-
-  /**
-   * @generated from field: user.v1.User user = 2;
-   */
-  user?: User;
 };
 
 /**
@@ -105,11 +105,6 @@ export type ReauthorizeResponse = Message<"auth.v1.ReauthorizeResponse"> & {
    * @generated from field: auth.v1.Auth auth = 1;
    */
   auth?: Auth;
-
-  /**
-   * @generated from field: user.v1.User user = 2;
-   */
-  user?: User;
 };
 
 /**

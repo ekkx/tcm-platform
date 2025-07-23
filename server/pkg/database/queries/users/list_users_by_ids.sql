@@ -4,4 +4,4 @@ SELECT
 FROM
     users
 WHERE
-    users.id = ANY(sqlc.arg(user_ids)::ulid[]);
+    users.id = ANY(sqlc.arg(user_ids)::TEXT[]);
