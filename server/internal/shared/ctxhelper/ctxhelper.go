@@ -5,7 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/config"
-	"github.com/ekkx/tcmrsv-web/server/internal/shared/actor"
+	"github.com/ekkx/tcmrsv-web/server/pkg/actor"
 )
 
 type configKey struct{}
@@ -32,11 +32,11 @@ func Logger(ctx context.Context) *slog.Logger {
 
 type actorKey struct{}
 
-func WithActor(ctx context.Context, actor actor.Actor) context.Context {
+func WithActor(ctx context.Context, actor *actor.Actor) context.Context {
 	return context.WithValue(ctx, actorKey{}, actor)
 }
 
-func Actor(ctx context.Context) actor.Actor {
-	token, _ := ctx.Value(actorKey{}).(actor.Actor)
-	return token
+func Actor(ctx context.Context) *actor.Actor {
+	actor, _ := ctx.Value(actorKey{}).(*actor.Actor)
+	return actor
 }

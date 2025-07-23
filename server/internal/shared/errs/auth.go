@@ -10,34 +10,24 @@ var (
 		Message:     "unauthorized",
 		ConnectCode: connect.CodeUnauthenticated,
 	}
-	ErrInvalidAccessToken = &Error{
-		Code:        "invalid_access_token",
-		Message:     "invalid access token",
+	ErrInvalidAuthorizationHeader = &Error{
+		Code:        "invalid_authorization_header",
+		Message:     "invalid authorization header",
 		ConnectCode: connect.CodeUnauthenticated,
 	}
-	ErrInvalidRefreshToken = &Error{
-		Code:        "invalid_refresh_token",
-		Message:     "invalid refresh token",
+	ErrInvalidToken = &Error{
+		Code:        "invalid_token",
+		Message:     "invalid token",
 		ConnectCode: connect.CodeUnauthenticated,
 	}
-	ErrAccessTokenExpired = &Error{
-		Code:        "access_token_expired",
-		Message:     "access token expired",
+	ErrInvalidTokenType = &Error{
+		Code:        "invalid_token_type",
+		Message:     "invalid token type",
 		ConnectCode: connect.CodeUnauthenticated,
 	}
-	ErrRefreshTokenExpired = &Error{
-		Code:        "refresh_token_expired",
-		Message:     "refresh token expired",
+	ErrExpiredToken = &Error{
+		Code:        "expired_token",
+		Message:     "expired token",
 		ConnectCode: connect.CodeUnauthenticated,
-	}
-	ErrInvalidJWTScope = &Error{
-		Code:        "invalid_jwt_scope",
-		Message:     "invalid jwt scope",
-		ConnectCode: connect.CodePermissionDenied,
-	}
-	ErrInvalidEmailOrPassword = &Error{
-		Code:        "invalid_email_or_password",
-		Message:     "invalid email or password",
-		ConnectCode: connect.CodeInvalidArgument,
 	}
 )

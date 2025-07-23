@@ -14,7 +14,6 @@ type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (ulid.ULID, error)
 	DeleteUserByID(ctx context.Context, userID ulid.ULID) (int32, error)
 	GetUserIDByOfficialSiteID(ctx context.Context, officialSiteID string) (ulid.ULID, error)
-	GetUserMetaByID(ctx context.Context, userID ulid.ULID) (GetUserMetaByIDRow, error)
 	ListSlaveUsersMeta(ctx context.Context, arg ListSlaveUsersMetaParams) ([]ListSlaveUsersMetaRow, error)
 	ListUsersByIDs(ctx context.Context, userIds []string) ([]User, error)
 	UpdateUserByID(ctx context.Context, arg UpdateUserByIDParams) (int32, error)

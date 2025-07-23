@@ -45,6 +45,8 @@ func getServiceDefinitions(cfg *config.Config, dbPool *pgxpool.Pool, jwtManager 
 						interceptor.NewConfigInterceptor(cfg),
 						interceptor.ErrorInterceptor(cfg.Env),
 						interceptor.NewLoggingInterceptor(),
+						interceptor.AuthInterceptor(jwtManager),
+						interceptor.UserVerificationInterceptor(dbPool),
 					),
 				))
 			},
@@ -58,6 +60,8 @@ func getServiceDefinitions(cfg *config.Config, dbPool *pgxpool.Pool, jwtManager 
 						interceptor.NewConfigInterceptor(cfg),
 						interceptor.ErrorInterceptor(cfg.Env),
 						interceptor.NewLoggingInterceptor(),
+						interceptor.AuthInterceptor(jwtManager),
+						interceptor.UserVerificationInterceptor(dbPool),
 					),
 				))
 			},
