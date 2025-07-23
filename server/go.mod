@@ -1,8 +1,6 @@
 module github.com/ekkx/tcmrsv-web/server
 
-go 1.23.0
-
-toolchain go1.23.8
+go 1.24
 
 require (
 	connectrpc.com/connect v1.18.1
@@ -13,11 +11,13 @@ require (
 	github.com/oklog/ulid/v2 v2.1.1
 	github.com/rs/cors v1.11.1
 	golang.org/x/net v0.41.0
-	google.golang.org/grpc v1.72.0
 	google.golang.org/protobuf v1.36.5
 )
 
-require connectrpc.com/grpcreflect v1.3.0 // indirect
+require (
+	connectrpc.com/grpcreflect v1.3.0
+	github.com/google/go-cmp v0.6.0 // indirect
+)
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
@@ -27,7 +27,5 @@ require (
 	github.com/stretchr/testify v1.8.4 // indirect
 	golang.org/x/crypto v0.39.0 // indirect
 	golang.org/x/sync v0.15.0 // indirect
-	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.26.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250218202821-56aae31c358a // indirect
 )
