@@ -3,30 +3,29 @@ package errs
 import (
 	"fmt"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"connectrpc.com/connect"
 )
 
 type Error struct {
-	Code     string
-	Message  string
-	GRPCCode codes.Code
-	Cause    error
+	Code        string
+	Message     string
+	Cause       error
+	ConnectCode connect.Code
 }
 
-func New(code, message string, grpcCode codes.Code) *Error {
+func New(code, message string, connectCode connect.Code) *Error {
 	return &Error{
-		Code:     code,
-		Message:  message,
-		GRPCCode: grpcCode,
+		Code:        code,
+		Message:     message,
+		ConnectCode: connectCode,
 	}
 }
 
 func (e *Error) Error() string {
 	if e.Cause != nil {
-		return fmt.Sprintf("[%s] %s: %v", e.Code, e.Message, e.Cause)
+		return fmt.Sprintf("%s: %v", e.Message, e.Cause)
 	}
-	return fmt.Sprintf("[%s] %s", e.Code, e.Message)
+	return e.Message
 }
 
 func (e *Error) Is(target error) bool {
@@ -41,25 +40,20 @@ func (e *Error) Unwrap() error {
 	return e.Cause
 }
 
-func (e *Error) WithCause(cause error) *Error {
-	return &Error{
-		Code:     e.Code,
-		Message:  e.Message,
-		GRPCCode: e.GRPCCode,
-		Cause:    cause,
-	}
-}
-
 func (e *Error) WithMessage(message string) *Error {
 	return &Error{
-		Code:     e.Code,
-		Message:  message,
-		GRPCCode: e.GRPCCode,
-		Cause:    e.Cause,
+		Code:        e.Code,
+		Message:     message,
+		Cause:       e.Cause,
+		ConnectCode: e.ConnectCode,
 	}
 }
 
-// GRPCStatus implements grpc/status.Status interface
-func (e *Error) GRPCStatus() *status.Status {
-	return status.New(e.GRPCCode, e.Error())
+func (e *Error) WithCause(cause error) *Error {
+	return &Error{
+		Code:        e.Code,
+		Message:     e.Message,
+		Cause:       cause,
+		ConnectCode: e.ConnectCode,
+	}
 }

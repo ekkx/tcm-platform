@@ -30,6 +30,7 @@ func getServiceDefinitions(cfg *config.Config, dbPool *pgxpool.Pool, jwtManager 
 					auth.InitModule(dbPool, jwtManager),
 					connect.WithInterceptors(
 						interceptor.NewConfigInterceptor(cfg),
+						interceptor.ErrorInterceptor(cfg.Env),
 						interceptor.NewLoggingInterceptor(),
 					),
 				))
@@ -42,6 +43,7 @@ func getServiceDefinitions(cfg *config.Config, dbPool *pgxpool.Pool, jwtManager 
 					reservation.InitModule(),
 					connect.WithInterceptors(
 						interceptor.NewConfigInterceptor(cfg),
+						interceptor.ErrorInterceptor(cfg.Env),
 						interceptor.NewLoggingInterceptor(),
 					),
 				))
@@ -54,6 +56,7 @@ func getServiceDefinitions(cfg *config.Config, dbPool *pgxpool.Pool, jwtManager 
 					user.InitModule(),
 					connect.WithInterceptors(
 						interceptor.NewConfigInterceptor(cfg),
+						interceptor.ErrorInterceptor(cfg.Env),
 						interceptor.NewLoggingInterceptor(),
 					),
 				))

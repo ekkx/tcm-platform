@@ -1,26 +1,26 @@
 package errs
 
-import "google.golang.org/grpc/codes"
+import "connectrpc.com/connect"
 
 var (
 	ErrInvalidArgument = &Error{
-		Code:     "invalid_argument",
-		Message:  "invalid argument",
-		GRPCCode: codes.InvalidArgument,
+		Code:        "invalid_argument",
+		Message:     "invalid argument",
+		ConnectCode: connect.CodeInvalidArgument,
 	}
 	ErrInvalidIDFormat = &Error{
-		Code:     "invalid_id_format",
-		Message:  "invalid id format",
-		GRPCCode: codes.InvalidArgument,
+		Code:        "invalid_id_format",
+		Message:     "invalid id format",
+		ConnectCode: connect.CodeInvalidArgument,
 	}
 	ErrInternal = &Error{
-		Code:     "internal_error",
-		Message:  "internal server error",
-		GRPCCode: codes.Internal,
+		Code:        "internal_error",
+		Message:     "internal server error",
+		ConnectCode: connect.CodeInternal,
 	}
 	ErrPermissionDenied = &Error{
-		Code:     "permission_denied",
-		Message:  "permission denied",
-		GRPCCode: codes.PermissionDenied,
+		Code:        "permission_denied",
+		Message:     "permission denied",
+		ConnectCode: connect.CodePermissionDenied,
 	}
 )
