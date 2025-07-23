@@ -7,6 +7,6 @@ import (
 	userv1 "github.com/ekkx/tcmrsv-web/server/internal/shared/pb/user/v1"
 )
 
-func (h *Handler) DeleteUser(ctx context.Context, req *connect.Request[userv1.DeleteUserRequest]) (*connect.Response[userv1.DeleteUserResponse], error) {
+func (h *HandlerImpl) DeleteUser(ctx context.Context, req *connect.Request[userv1.DeleteUserRequest]) (*connect.Response[userv1.DeleteUserResponse], error) {
     return nil, nil
 }

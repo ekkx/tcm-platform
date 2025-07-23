@@ -20,7 +20,9 @@ func (svc *ServiceImpl) ListUsersByIDs(ctx context.Context, userIDs []ulid.ULID)
 	// 重複を避けるためのセットを使用
 	masterUserIDSet := make(map[ulid.ULID]struct{})
 	for _, user := range skeletonUsers {
-		masterUserIDSet[user.ID] = struct{}{}
+		if user.MasterUser != nil {
+			masterUserIDSet[user.MasterUser.ID] = struct{}{}
+		}
 	}
 
 	masterUserIDs := make([]ulid.ULID, 0, len(masterUserIDSet))

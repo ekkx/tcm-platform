@@ -90,6 +90,9 @@ func (uc *UseCaseImpl) authorizeByULID(ctx context.Context, params *AuthorizeInp
 	if user.IsMaster() {
 		return uc.handleMasterUserLogin(ctx, params, user)
 	}
+
+	slog.Debug("slave user login successful", slog.String("user_id", user.ID.String()))
+
 	return uc.issueTokens(user)
 }
 

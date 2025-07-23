@@ -55,7 +55,7 @@ func getServiceDefinitions(cfg *config.Config, dbPool *pgxpool.Pool, jwtManager 
 			Name: userv1connect.UserServiceName,
 			RegisterHandler: func(mux *http.ServeMux) {
 				mux.Handle(userv1connect.NewUserServiceHandler(
-					user.InitModule(),
+					user.InitModule(dbPool),
 					connect.WithInterceptors(
 						interceptor.NewConfigInterceptor(cfg),
 						interceptor.ErrorInterceptor(cfg.Env),
