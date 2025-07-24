@@ -7,7 +7,7 @@ import (
 	reservationv1 "github.com/ekkx/tcmrsv-web/server/internal/shared/pb/reservation/v1"
 )
 
-func (h *Handler) DeleteReservation(ctx context.Context, req *connect.Request[reservationv1.DeleteReservationRequest]) (*connect.Response[reservationv1.DeleteReservationResponse], error) {
+func (h *HandlerImpl) DeleteReservation(ctx context.Context, req *connect.Request[reservationv1.DeleteReservationRequest]) (*connect.Response[reservationv1.DeleteReservationResponse], error) {
     return nil, nil
 }
 

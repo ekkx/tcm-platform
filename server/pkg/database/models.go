@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/ekkx/tcmrsv-web/server/pkg/ulid"
+	"github.com/ekkx/tcmrsv-web/server/pkg/ymd"
 )
 
 type CampusType string
@@ -60,7 +61,7 @@ type Reservation struct {
 	UserID         ulid.ULID  `json:"user_id"`
 	CampusType     CampusType `json:"campus_type"`
 	RoomID         string     `json:"room_id"`
-	Date           time.Time  `json:"date"`
+	Date           ymd.YMD    `json:"date"`
 	FromHour       int32      `json:"from_hour"`
 	FromMinute     int32      `json:"from_minute"`
 	ToHour         int32      `json:"to_hour"`

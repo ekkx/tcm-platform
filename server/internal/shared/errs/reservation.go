@@ -23,6 +23,11 @@ var (
 		Message:     "invalid time range",
 		ConnectCode: connect.CodeInvalidArgument,
 	}
+	ErrInvalidDate = &Error{
+		Code:        "invalid_date",
+		Message:     "invalid date",
+		ConnectCode: connect.CodeInvalidArgument,
+	}
 	ErrDateMustBeTodayOrFuture = &Error{
 		Code:        "date_must_be_today_or_future",
 		Message:     "date must be today or future",

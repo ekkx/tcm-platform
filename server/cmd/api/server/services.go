@@ -40,7 +40,7 @@ func getServiceDefinitions(cfg *config.Config, dbPool *pgxpool.Pool, jwtManager 
 			Name: reservationv1connect.ReservationServiceName,
 			RegisterHandler: func(mux *http.ServeMux) {
 				mux.Handle(reservationv1connect.NewReservationServiceHandler(
-					reservation.InitModule(),
+					reservation.InitModule(dbPool),
 					connect.WithInterceptors(
 						interceptor.NewConfigInterceptor(cfg),
 						interceptor.ErrorInterceptor(cfg.Env),

@@ -4,19 +4,19 @@ import (
 	"time"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
+	"github.com/ekkx/tcmrsv-web/server/pkg/ymd"
 )
 
 type Reservation struct {
-	ID         int             `json:"id"`
-	ExternalID *string         `json:"external_id"`
-	UserID     string          `json:"user_id"`
-	CampusType enum.CampusType `json:"campus_type"`
-	RoomID     string          `json:"room_id"`
-	Date       time.Time       `json:"date"`
-	FromHour   int             `json:"from_hour"`
-	FromMinute int             `json:"from_minute"`
-	ToHour     int             `json:"to_hour"`
-	ToMinute   int             `json:"to_minute"`
-	BookerName *string         `json:"booker_name"`
-	CreatedAt  time.Time       `json:"created_at"`
+	ID             int
+	OfficialSiteID *string
+	User           User
+	CampusType     enum.CampusType
+	RoomID         string
+	Date           ymd.YMD
+	FromHour       int
+	FromMinute     int
+	ToHour         int
+	ToMinute       int
+	CreateTime     time.Time
 }

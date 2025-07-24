@@ -7,6 +7,6 @@ import (
 	reservationv1 "github.com/ekkx/tcmrsv-web/server/internal/shared/pb/reservation/v1"
 )
 
-func (h *Handler) CreateReservation(ctx context.Context, req *connect.Request[reservationv1.CreateReservationRequest]) (*connect.Response[reservationv1.CreateReservationResponse], error) {
+func (h *HandlerImpl) CreateReservation(ctx context.Context, req *connect.Request[reservationv1.CreateReservationRequest]) (*connect.Response[reservationv1.CreateReservationResponse], error) {
     return nil, nil
 }

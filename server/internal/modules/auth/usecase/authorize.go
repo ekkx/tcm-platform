@@ -40,7 +40,7 @@ func (uc *UseCaseImpl) authorizeByOfficialSite(ctx context.Context, params *Auth
 		slog.Debug("no master user found, attempting to login to official site", slog.String("user_id", params.UserID))
 
 		// 公式サイトにログイン
-		if err := uc.tcmClient.Login(&tcmrsv.LoginParams{
+		if err := tcmrsv.New().Login(&tcmrsv.LoginParams{
 			UserID:   params.UserID,
 			Password: params.Password,
 		}); err != nil {
@@ -98,7 +98,7 @@ func (uc *UseCaseImpl) authorizeByULID(ctx context.Context, params *AuthorizeInp
 
 func (uc *UseCaseImpl) handleMasterUserLogin(ctx context.Context, params *AuthorizeInput, user *entity.User) (*AuthorizeOutput, error) {
 	// 公式サイトにログイン
-	if err := uc.tcmClient.Login(&tcmrsv.LoginParams{
+	if err := tcmrsv.New().Login(&tcmrsv.LoginParams{
 		UserID:   params.UserID,
 		Password: params.Password,
 	}); err != nil {

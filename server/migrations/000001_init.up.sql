@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS reservations (
     -- 予約内容
     campus_type campus_type NOT NULL,
     room_id TEXT NOT NULL,
-    date TIMESTAMPTZ NOT NULL,
+    date DATE NOT NULL,
     from_hour INT NOT NULL,
     from_minute INT NOT NULL,
     to_hour INT NOT NULL,

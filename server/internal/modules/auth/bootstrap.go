@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"github.com/ekkx/tcmrsv"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/auth/handler"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/auth/usecase"
 	"github.com/ekkx/tcmrsv-web/server/internal/modules/user/repository"
@@ -16,7 +15,6 @@ func InitModule(dbPool *pgxpool.Pool, jwtManager *jwt.JWTManager) authv1connect.
 	querier := database.New(dbPool)
 	userRepository := repository.New(querier)
 	userService := service.New(userRepository)
-	tcmClient := tcmrsv.New()
-	authUseCase := usecase.New(jwtManager, tcmClient, userRepository, userService)
+	authUseCase := usecase.New(jwtManager, userRepository, userService)
 	return handler.New(authUseCase)
 }
