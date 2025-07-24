@@ -3,6 +3,7 @@ sql:
   - engine: "postgresql"
     schema: "./migrations"
     queries:
+      - "./pkg/database/queries/reservations"
       - "./pkg/database/queries/users"
     gen:
       go:
@@ -22,6 +23,16 @@ sql:
             go_type:
               import: github.com/ekkx/tcmrsv-web/server/pkg/ulid
               type: ULID
+              pointer: true
+            nullable: true
+          - db_type: date
+            go_type:
+              import: github.com/ekkx/tcmrsv-web/server/pkg/ymd
+              type: YMD
+          - db_type: date
+            go_type:
+              import: github.com/ekkx/tcmrsv-web/server/pkg/ymd
+              type: YMD
               pointer: true
             nullable: true
           - db_type: timestamptz

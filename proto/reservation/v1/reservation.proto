@@ -43,7 +43,7 @@ message Reservation {
     user.v1.User user = 3;
     CampusType campus_type = 4;
     string room_id = 5;
-    google.protobuf.Timestamp date = 6;
+    string date = 6;
     int32 from_hour = 7;
     int32 from_minute = 8;
     int32 to_hour = 9;
@@ -61,7 +61,7 @@ message GetReservationResponse {
 
 message ListAvailableRoomsRequest {
     CampusType campus_type = 1;
-    google.protobuf.Timestamp date = 2;
+    string date = 2;
     int32 from_hour = 3;
     int32 from_minute = 4;
     int32 to_hour = 5;
@@ -82,7 +82,7 @@ message ListReservationsResponse {
 
 message CreateReservationRequest {
     CampusType campus_type = 1;
-    google.protobuf.Timestamp date = 2;
+    string date = 2;
     int32 from_hour = 3;
     int32 from_minute = 4;
     int32 to_hour = 5;
