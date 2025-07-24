@@ -34,6 +34,10 @@ func (ulid ULID) String() string {
 
 var zeroULID oklogulid.ULID
 
+func Zero() ULID {
+	return ULID{id: zeroULID}
+}
+
 func (ulid *ULID) IsZero() bool {
 	if ulid == nil {
 		return true
