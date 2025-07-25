@@ -4,11 +4,12 @@ import (
 	"time"
 
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
+	"github.com/ekkx/tcmrsv-web/server/pkg/ulid"
 	"github.com/ekkx/tcmrsv-web/server/pkg/ymd"
 )
 
 type Reservation struct {
-	ID             int
+	ID             ulid.ULID
 	OfficialSiteID *string
 	User           User
 	CampusType     enum.CampusType

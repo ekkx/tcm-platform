@@ -39,7 +39,7 @@ message Room {
 
 message Reservation {
     string id = 1;
-    string external_id = 2;
+    optional string official_site_id = 2;
     user.v1.User user = 3;
     CampusType campus_type = 4;
     string room_id = 5;

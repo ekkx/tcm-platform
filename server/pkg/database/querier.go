@@ -11,9 +11,11 @@ import (
 )
 
 type Querier interface {
+	CreateReservation(ctx context.Context, arg CreateReservationParams) (ulid.ULID, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (ulid.ULID, error)
 	DeleteUserByID(ctx context.Context, userID ulid.ULID) (int32, error)
 	GetUserIDByOfficialSiteID(ctx context.Context, officialSiteID string) (ulid.ULID, error)
+	ListReservationsByIDs(ctx context.Context, reservationIds []string) ([]Reservation, error)
 	ListSlaveUsersMeta(ctx context.Context, arg ListSlaveUsersMetaParams) ([]ListSlaveUsersMetaRow, error)
 	ListUnavailableRoomIDs(ctx context.Context, arg ListUnavailableRoomIDsParams) ([]string, error)
 	ListUsersByIDs(ctx context.Context, userIds []string) ([]User, error)

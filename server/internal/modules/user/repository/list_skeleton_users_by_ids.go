@@ -10,6 +10,10 @@ import (
 )
 
 func (repo *RepositoryImpl) ListSkeletonUsersByIDs(ctx context.Context, userIDs []ulid.ULID) ([]*entity.User, error) {
+	if len(userIDs) == 0 {
+		return nil, nil
+	}
+
 	dbUsers, err := repo.querier.ListUsersByIDs(ctx, util.ToULIDStrings(userIDs))
 	if err != nil {
 		return nil, err

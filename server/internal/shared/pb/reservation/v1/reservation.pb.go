@@ -225,20 +225,20 @@ func (x *Room) GetFloor() int32 {
 }
 
 type Reservation struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	ExternalId    string                 `protobuf:"bytes,2,opt,name=external_id,json=externalId,proto3" json:"external_id,omitempty"`
-	User          *v1.User               `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
-	CampusType    CampusType             `protobuf:"varint,4,opt,name=campus_type,json=campusType,proto3,enum=reservation.v1.CampusType" json:"campus_type,omitempty"`
-	RoomId        string                 `protobuf:"bytes,5,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
-	Date          string                 `protobuf:"bytes,6,opt,name=date,proto3" json:"date,omitempty"`
-	FromHour      int32                  `protobuf:"varint,7,opt,name=from_hour,json=fromHour,proto3" json:"from_hour,omitempty"`
-	FromMinute    int32                  `protobuf:"varint,8,opt,name=from_minute,json=fromMinute,proto3" json:"from_minute,omitempty"`
-	ToHour        int32                  `protobuf:"varint,9,opt,name=to_hour,json=toHour,proto3" json:"to_hour,omitempty"`
-	ToMinute      int32                  `protobuf:"varint,10,opt,name=to_minute,json=toMinute,proto3" json:"to_minute,omitempty"`
-	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	OfficialSiteId *string                `protobuf:"bytes,2,opt,name=official_site_id,json=officialSiteId,proto3,oneof" json:"official_site_id,omitempty"`
+	User           *v1.User               `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
+	CampusType     CampusType             `protobuf:"varint,4,opt,name=campus_type,json=campusType,proto3,enum=reservation.v1.CampusType" json:"campus_type,omitempty"`
+	RoomId         string                 `protobuf:"bytes,5,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
+	Date           string                 `protobuf:"bytes,6,opt,name=date,proto3" json:"date,omitempty"`
+	FromHour       int32                  `protobuf:"varint,7,opt,name=from_hour,json=fromHour,proto3" json:"from_hour,omitempty"`
+	FromMinute     int32                  `protobuf:"varint,8,opt,name=from_minute,json=fromMinute,proto3" json:"from_minute,omitempty"`
+	ToHour         int32                  `protobuf:"varint,9,opt,name=to_hour,json=toHour,proto3" json:"to_hour,omitempty"`
+	ToMinute       int32                  `protobuf:"varint,10,opt,name=to_minute,json=toMinute,proto3" json:"to_minute,omitempty"`
+	CreateTime     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *Reservation) Reset() {
@@ -278,9 +278,9 @@ func (x *Reservation) GetId() string {
 	return ""
 }
 
-func (x *Reservation) GetExternalId() string {
-	if x != nil {
-		return x.ExternalId
+func (x *Reservation) GetOfficialSiteId() string {
+	if x != nil && x.OfficialSiteId != nil {
+		return *x.OfficialSiteId
 	}
 	return ""
 }
@@ -877,11 +877,10 @@ const file_reservation_v1_reservation_proto_rawDesc = "" +
 	"isBasement\x12;\n" +
 	"\vcampus_type\x18\a \x01(\x0e2\x1a.reservation.v1.CampusTypeR\n" +
 	"campusType\x12\x14\n" +
-	"\x05floor\x18\b \x01(\x05R\x05floor\"\xfc\x02\n" +
+	"\x05floor\x18\b \x01(\x05R\x05floor\"\x9f\x03\n" +
 	"\vReservation\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n" +
-	"\vexternal_id\x18\x02 \x01(\tR\n" +
-	"externalId\x12!\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12-\n" +
+	"\x10official_site_id\x18\x02 \x01(\tH\x00R\x0eofficialSiteId\x88\x01\x01\x12!\n" +
 	"\x04user\x18\x03 \x01(\v2\r.user.v1.UserR\x04user\x12;\n" +
 	"\vcampus_type\x18\x04 \x01(\x0e2\x1a.reservation.v1.CampusTypeR\n" +
 	"campusType\x12\x17\n" +
@@ -894,7 +893,8 @@ const file_reservation_v1_reservation_proto_rawDesc = "" +
 	"\tto_minute\x18\n" +
 	" \x01(\x05R\btoMinute\x12;\n" +
 	"\vcreate_time\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"createTime\">\n" +
+	"createTimeB\x13\n" +
+	"\x11_official_site_id\">\n" +
 	"\x15GetReservationRequest\x12%\n" +
 	"\x0ereservation_id\x18\x01 \x01(\tR\rreservationId\"W\n" +
 	"\x16GetReservationResponse\x12=\n" +
@@ -1012,6 +1012,7 @@ func file_reservation_v1_reservation_proto_init() {
 	if File_reservation_v1_reservation_proto != nil {
 		return
 	}
+	file_reservation_v1_reservation_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

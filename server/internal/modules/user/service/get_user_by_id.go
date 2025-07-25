@@ -12,10 +12,8 @@ func (svc *ServiceImpl) GetUserByID(ctx context.Context, userID ulid.ULID) (*ent
 	if err != nil {
 		return nil, err
 	}
-
 	if len(users) == 0 {
 		return nil, nil
 	}
-
 	return users[0], nil
 }
