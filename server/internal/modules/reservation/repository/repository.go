@@ -9,6 +9,7 @@ import (
 )
 
 type Repository interface {
+	IsReservationConflicted(ctx context.Context, params *IsReservationConflictedParams) (bool, error)
 	ListUnavailableRoomIDs(ctx context.Context, params *ListUnavailableRoomIDsParams) ([]string, error)
 	ListSkeletonReservationsByIDs(ctx context.Context, reservationIDs []ulid.ULID) ([]*entity.Reservation, error)
 	CreateReservation(ctx context.Context, params *CreateReservationParams) (*ulid.ULID, error)

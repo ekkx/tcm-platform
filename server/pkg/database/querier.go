@@ -15,6 +15,7 @@ type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (ulid.ULID, error)
 	DeleteUserByID(ctx context.Context, userID ulid.ULID) (int32, error)
 	GetUserIDByOfficialSiteID(ctx context.Context, officialSiteID string) (ulid.ULID, error)
+	IsReservationConflicted(ctx context.Context, arg IsReservationConflictedParams) (bool, error)
 	ListReservationsByIDs(ctx context.Context, reservationIds []string) ([]Reservation, error)
 	ListSlaveUsersMeta(ctx context.Context, arg ListSlaveUsersMetaParams) ([]ListSlaveUsersMetaRow, error)
 	ListUnavailableRoomIDs(ctx context.Context, arg ListUnavailableRoomIDsParams) ([]string, error)

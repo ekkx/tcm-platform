@@ -82,5 +82,8 @@ func (st *CreateReservationInput) Validate() error {
 	if st.Date.IsZero() || !st.Date.IsValid() {
 		return errs.ErrInvalidDate
 	}
+
+	// TODO: 時間のチェック（2日以内時間じゃないか）
+
 	return nil
 }
