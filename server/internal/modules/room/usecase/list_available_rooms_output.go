@@ -3,7 +3,7 @@ package usecase
 import (
 	"connectrpc.com/connect"
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
-	reservationv1 "github.com/ekkx/tcmrsv-web/server/internal/shared/pb/reservation/v1"
+	roomv1 "github.com/ekkx/tcmrsv-web/server/internal/shared/pb/room/v1"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/presenter"
 )
 
@@ -17,8 +17,8 @@ func NewListAvailableRoomsOutput(rooms []*entity.Room) *ListAvailableRoomsOutput
 	}
 }
 
-func (st *ListAvailableRoomsOutput) ToResponse() *connect.Response[reservationv1.ListAvailableRoomsResponse] {
-	return connect.NewResponse(&reservationv1.ListAvailableRoomsResponse{
+func (st *ListAvailableRoomsOutput) ToResponse() *connect.Response[roomv1.ListAvailableRoomsResponse] {
+	return connect.NewResponse(&roomv1.ListAvailableRoomsResponse{
 		Rooms: presenter.ToRoomList(st.Rooms),
 	})
 }

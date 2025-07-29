@@ -8,6 +8,7 @@ import (
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/ctxhelper"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 	reservationv1 "github.com/ekkx/tcmrsv-web/server/internal/shared/pb/reservation/v1"
+	roomv1 "github.com/ekkx/tcmrsv-web/server/internal/shared/pb/room/v1"
 	"github.com/ekkx/tcmrsv-web/server/pkg/actor"
 	"github.com/ekkx/tcmrsv-web/server/pkg/ymd"
 )
@@ -35,11 +36,11 @@ func NewCreateReservationInputFromRequest(ctx context.Context, req *connect.Requ
 	// TODO: ここら辺共通化できる
 	var campusType enum.CampusType
 	switch req.Msg.CampusType {
-	case reservationv1.CampusType_CAMPUS_TYPE_IKEBUKURO:
+	case roomv1.CampusType_CAMPUS_TYPE_IKEBUKURO:
 		campusType = enum.CampusTypeIkebukuro
-	case reservationv1.CampusType_CAMPUS_TYPE_NAKAMEGURO:
+	case roomv1.CampusType_CAMPUS_TYPE_NAKAMEGURO:
 		campusType = enum.CampusTypeNakameguro
-	case reservationv1.CampusType_CAMPUS_TYPE_UNSPECIFIED:
+	case roomv1.CampusType_CAMPUS_TYPE_UNSPECIFIED:
 		campusType = enum.CampusTypeUnknown
 	}
 

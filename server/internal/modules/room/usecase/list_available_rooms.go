@@ -7,7 +7,7 @@ import (
 	"github.com/ekkx/tcmrsv"
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
-	"github.com/ekkx/tcmrsv-web/server/internal/modules/reservation/repository"
+	"github.com/ekkx/tcmrsv-web/server/internal/modules/room/repository"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/mapper"
 )
@@ -17,7 +17,7 @@ func (uc *UseCaseImpl) ListAvailableRooms(ctx context.Context, input *ListAvaila
 		return nil, err
 	}
 
-	roomIDs, err := uc.reservationRepo.ListUnavailableRoomIDs(ctx, &repository.ListUnavailableRoomIDsParams{
+	roomIDs, err := uc.roomRepo.ListUnavailableRoomIDs(ctx, &repository.ListUnavailableRoomIDsParams{
 		CampusType: input.CampusType,
 		Date:       input.Date,
 		FromHour:   input.FromHour,

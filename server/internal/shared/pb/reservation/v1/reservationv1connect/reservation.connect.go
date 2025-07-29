@@ -36,9 +36,6 @@ const (
 	// ReservationServiceGetReservationProcedure is the fully-qualified name of the ReservationService's
 	// GetReservation RPC.
 	ReservationServiceGetReservationProcedure = "/reservation.v1.ReservationService/GetReservation"
-	// ReservationServiceListAvailableRoomsProcedure is the fully-qualified name of the
-	// ReservationService's ListAvailableRooms RPC.
-	ReservationServiceListAvailableRoomsProcedure = "/reservation.v1.ReservationService/ListAvailableRooms"
 	// ReservationServiceListReservationsProcedure is the fully-qualified name of the
 	// ReservationService's ListReservations RPC.
 	ReservationServiceListReservationsProcedure = "/reservation.v1.ReservationService/ListReservations"
@@ -53,7 +50,6 @@ const (
 // ReservationServiceClient is a client for the reservation.v1.ReservationService service.
 type ReservationServiceClient interface {
 	GetReservation(context.Context, *connect.Request[v1.GetReservationRequest]) (*connect.Response[v1.GetReservationResponse], error)
-	ListAvailableRooms(context.Context, *connect.Request[v1.ListAvailableRoomsRequest]) (*connect.Response[v1.ListAvailableRoomsResponse], error)
 	ListReservations(context.Context, *connect.Request[v1.ListReservationsRequest]) (*connect.Response[v1.ListReservationsResponse], error)
 	CreateReservation(context.Context, *connect.Request[v1.CreateReservationRequest]) (*connect.Response[v1.CreateReservationResponse], error)
 	DeleteReservation(context.Context, *connect.Request[v1.DeleteReservationRequest]) (*connect.Response[v1.DeleteReservationResponse], error)
@@ -74,12 +70,6 @@ func NewReservationServiceClient(httpClient connect.HTTPClient, baseURL string, 
 			httpClient,
 			baseURL+ReservationServiceGetReservationProcedure,
 			connect.WithSchema(reservationServiceMethods.ByName("GetReservation")),
-			connect.WithClientOptions(opts...),
-		),
-		listAvailableRooms: connect.NewClient[v1.ListAvailableRoomsRequest, v1.ListAvailableRoomsResponse](
-			httpClient,
-			baseURL+ReservationServiceListAvailableRoomsProcedure,
-			connect.WithSchema(reservationServiceMethods.ByName("ListAvailableRooms")),
 			connect.WithClientOptions(opts...),
 		),
 		listReservations: connect.NewClient[v1.ListReservationsRequest, v1.ListReservationsResponse](
@@ -105,21 +95,15 @@ func NewReservationServiceClient(httpClient connect.HTTPClient, baseURL string, 
 
 // reservationServiceClient implements ReservationServiceClient.
 type reservationServiceClient struct {
-	getReservation     *connect.Client[v1.GetReservationRequest, v1.GetReservationResponse]
-	listAvailableRooms *connect.Client[v1.ListAvailableRoomsRequest, v1.ListAvailableRoomsResponse]
-	listReservations   *connect.Client[v1.ListReservationsRequest, v1.ListReservationsResponse]
-	createReservation  *connect.Client[v1.CreateReservationRequest, v1.CreateReservationResponse]
-	deleteReservation  *connect.Client[v1.DeleteReservationRequest, v1.DeleteReservationResponse]
+	getReservation    *connect.Client[v1.GetReservationRequest, v1.GetReservationResponse]
+	listReservations  *connect.Client[v1.ListReservationsRequest, v1.ListReservationsResponse]
+	createReservation *connect.Client[v1.CreateReservationRequest, v1.CreateReservationResponse]
+	deleteReservation *connect.Client[v1.DeleteReservationRequest, v1.DeleteReservationResponse]
 }
 
 // GetReservation calls reservation.v1.ReservationService.GetReservation.
 func (c *reservationServiceClient) GetReservation(ctx context.Context, req *connect.Request[v1.GetReservationRequest]) (*connect.Response[v1.GetReservationResponse], error) {
 	return c.getReservation.CallUnary(ctx, req)
-}
-
-// ListAvailableRooms calls reservation.v1.ReservationService.ListAvailableRooms.
-func (c *reservationServiceClient) ListAvailableRooms(ctx context.Context, req *connect.Request[v1.ListAvailableRoomsRequest]) (*connect.Response[v1.ListAvailableRoomsResponse], error) {
-	return c.listAvailableRooms.CallUnary(ctx, req)
 }
 
 // ListReservations calls reservation.v1.ReservationService.ListReservations.
@@ -140,7 +124,6 @@ func (c *reservationServiceClient) DeleteReservation(ctx context.Context, req *c
 // ReservationServiceHandler is an implementation of the reservation.v1.ReservationService service.
 type ReservationServiceHandler interface {
 	GetReservation(context.Context, *connect.Request[v1.GetReservationRequest]) (*connect.Response[v1.GetReservationResponse], error)
-	ListAvailableRooms(context.Context, *connect.Request[v1.ListAvailableRoomsRequest]) (*connect.Response[v1.ListAvailableRoomsResponse], error)
 	ListReservations(context.Context, *connect.Request[v1.ListReservationsRequest]) (*connect.Response[v1.ListReservationsResponse], error)
 	CreateReservation(context.Context, *connect.Request[v1.CreateReservationRequest]) (*connect.Response[v1.CreateReservationResponse], error)
 	DeleteReservation(context.Context, *connect.Request[v1.DeleteReservationRequest]) (*connect.Response[v1.DeleteReservationResponse], error)
@@ -157,12 +140,6 @@ func NewReservationServiceHandler(svc ReservationServiceHandler, opts ...connect
 		ReservationServiceGetReservationProcedure,
 		svc.GetReservation,
 		connect.WithSchema(reservationServiceMethods.ByName("GetReservation")),
-		connect.WithHandlerOptions(opts...),
-	)
-	reservationServiceListAvailableRoomsHandler := connect.NewUnaryHandler(
-		ReservationServiceListAvailableRoomsProcedure,
-		svc.ListAvailableRooms,
-		connect.WithSchema(reservationServiceMethods.ByName("ListAvailableRooms")),
 		connect.WithHandlerOptions(opts...),
 	)
 	reservationServiceListReservationsHandler := connect.NewUnaryHandler(
@@ -187,8 +164,6 @@ func NewReservationServiceHandler(svc ReservationServiceHandler, opts ...connect
 		switch r.URL.Path {
 		case ReservationServiceGetReservationProcedure:
 			reservationServiceGetReservationHandler.ServeHTTP(w, r)
-		case ReservationServiceListAvailableRoomsProcedure:
-			reservationServiceListAvailableRoomsHandler.ServeHTTP(w, r)
 		case ReservationServiceListReservationsProcedure:
 			reservationServiceListReservationsHandler.ServeHTTP(w, r)
 		case ReservationServiceCreateReservationProcedure:
@@ -206,10 +181,6 @@ type UnimplementedReservationServiceHandler struct{}
 
 func (UnimplementedReservationServiceHandler) GetReservation(context.Context, *connect.Request[v1.GetReservationRequest]) (*connect.Response[v1.GetReservationResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("reservation.v1.ReservationService.GetReservation is not implemented"))
-}
-
-func (UnimplementedReservationServiceHandler) ListAvailableRooms(context.Context, *connect.Request[v1.ListAvailableRoomsRequest]) (*connect.Response[v1.ListAvailableRoomsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("reservation.v1.ReservationService.ListAvailableRooms is not implemented"))
 }
 
 func (UnimplementedReservationServiceHandler) ListReservations(context.Context, *connect.Request[v1.ListReservationsRequest]) (*connect.Response[v1.ListReservationsResponse], error) {

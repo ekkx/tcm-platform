@@ -2,8 +2,10 @@
 // @generated from file reservation/v1/reservation.proto (package reservation.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
-import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
+import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type { CampusType } from "../../room/v1/room_pb";
+import { file_room_v1_room } from "../../room/v1/room_pb";
 import type { User } from "../../user/v1/user_pb";
 import { file_user_v1_user } from "../../user/v1/user_pb";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -14,59 +16,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file reservation/v1/reservation.proto.
  */
 export const file_reservation_v1_reservation: GenFile = /*@__PURE__*/
-  fileDesc("CiByZXNlcnZhdGlvbi92MS9yZXNlcnZhdGlvbi5wcm90bxIOcmVzZXJ2YXRpb24udjEizwEKBFJvb20SCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRItCgpwaWFub190eXBlGAMgASgOMhkucmVzZXJ2YXRpb24udjEuUGlhbm9UeXBlEhMKC3BpYW5vX2NvdW50GAQgASgFEhQKDGlzX2NsYXNzcm9vbRgFIAEoCBITCgtpc19iYXNlbWVudBgGIAEoCBIvCgtjYW1wdXNfdHlwZRgHIAEoDjIaLnJlc2VydmF0aW9uLnYxLkNhbXB1c1R5cGUSDQoFZmxvb3IYCCABKAUitwIKC1Jlc2VydmF0aW9uEgoKAmlkGAEgASgJEh0KEG9mZmljaWFsX3NpdGVfaWQYAiABKAlIAIgBARIbCgR1c2VyGAMgASgLMg0udXNlci52MS5Vc2VyEi8KC2NhbXB1c190eXBlGAQgASgOMhoucmVzZXJ2YXRpb24udjEuQ2FtcHVzVHlwZRIPCgdyb29tX2lkGAUgASgJEgwKBGRhdGUYBiABKAkSEQoJZnJvbV9ob3VyGAcgASgFEhMKC2Zyb21fbWludXRlGAggASgFEg8KB3RvX2hvdXIYCSABKAUSEQoJdG9fbWludXRlGAogASgFEi8KC2NyZWF0ZV90aW1lGAsgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEITChFfb2ZmaWNpYWxfc2l0ZV9pZCIvChVHZXRSZXNlcnZhdGlvblJlcXVlc3QSFgoOcmVzZXJ2YXRpb25faWQYASABKAkiSgoWR2V0UmVzZXJ2YXRpb25SZXNwb25zZRIwCgtyZXNlcnZhdGlvbhgBIAEoCzIbLnJlc2VydmF0aW9uLnYxLlJlc2VydmF0aW9uIqYBChlMaXN0QXZhaWxhYmxlUm9vbXNSZXF1ZXN0Ei8KC2NhbXB1c190eXBlGAEgASgOMhoucmVzZXJ2YXRpb24udjEuQ2FtcHVzVHlwZRIMCgRkYXRlGAIgASgJEhEKCWZyb21faG91chgDIAEoBRITCgtmcm9tX21pbnV0ZRgEIAEoBRIPCgd0b19ob3VyGAUgASgFEhEKCXRvX21pbnV0ZRgGIAEoBSJBChpMaXN0QXZhaWxhYmxlUm9vbXNSZXNwb25zZRIjCgVyb29tcxgBIAMoCzIULnJlc2VydmF0aW9uLnYxLlJvb20iGQoXTGlzdFJlc2VydmF0aW9uc1JlcXVlc3QiTQoYTGlzdFJlc2VydmF0aW9uc1Jlc3BvbnNlEjEKDHJlc2VydmF0aW9ucxgBIAMoCzIbLnJlc2VydmF0aW9uLnYxLlJlc2VydmF0aW9uIrYBChhDcmVhdGVSZXNlcnZhdGlvblJlcXVlc3QSLwoLY2FtcHVzX3R5cGUYASABKA4yGi5yZXNlcnZhdGlvbi52MS5DYW1wdXNUeXBlEgwKBGRhdGUYAiABKAkSEQoJZnJvbV9ob3VyGAMgASgFEhMKC2Zyb21fbWludXRlGAQgASgFEg8KB3RvX2hvdXIYBSABKAUSEQoJdG9fbWludXRlGAYgASgFEg8KB3Jvb21faWQYByABKAkiTQoZQ3JlYXRlUmVzZXJ2YXRpb25SZXNwb25zZRIwCgtyZXNlcnZhdGlvbhgBIAEoCzIbLnJlc2VydmF0aW9uLnYxLlJlc2VydmF0aW9uIjIKGERlbGV0ZVJlc2VydmF0aW9uUmVxdWVzdBIWCg5yZXNlcnZhdGlvbl9pZBgBIAEoCSIbChlEZWxldGVSZXNlcnZhdGlvblJlc3BvbnNlKmAKCkNhbXB1c1R5cGUSGwoXQ0FNUFVTX1RZUEVfVU5TUEVDSUZJRUQQABIaChZDQU1QVVNfVFlQRV9OQUtBTUVHVVJPEAESGQoVQ0FNUFVTX1RZUEVfSUtFQlVLVVJPEAIqagoJUGlhbm9UeXBlEhoKFlBJQU5PX1RZUEVfVU5TUEVDSUZJRUQQABIUChBQSUFOT19UWVBFX0dSQU5EEAESFgoSUElBTk9fVFlQRV9VUFJJR0hUEAISEwoPUElBTk9fVFlQRV9OT05FEAMynQQKElJlc2VydmF0aW9uU2VydmljZRJfCg5HZXRSZXNlcnZhdGlvbhIlLnJlc2VydmF0aW9uLnYxLkdldFJlc2VydmF0aW9uUmVxdWVzdBomLnJlc2VydmF0aW9uLnYxLkdldFJlc2VydmF0aW9uUmVzcG9uc2USawoSTGlzdEF2YWlsYWJsZVJvb21zEikucmVzZXJ2YXRpb24udjEuTGlzdEF2YWlsYWJsZVJvb21zUmVxdWVzdBoqLnJlc2VydmF0aW9uLnYxLkxpc3RBdmFpbGFibGVSb29tc1Jlc3BvbnNlEmUKEExpc3RSZXNlcnZhdGlvbnMSJy5yZXNlcnZhdGlvbi52MS5MaXN0UmVzZXJ2YXRpb25zUmVxdWVzdBooLnJlc2VydmF0aW9uLnYxLkxpc3RSZXNlcnZhdGlvbnNSZXNwb25zZRJoChFDcmVhdGVSZXNlcnZhdGlvbhIoLnJlc2VydmF0aW9uLnYxLkNyZWF0ZVJlc2VydmF0aW9uUmVxdWVzdBopLnJlc2VydmF0aW9uLnYxLkNyZWF0ZVJlc2VydmF0aW9uUmVzcG9uc2USaAoRRGVsZXRlUmVzZXJ2YXRpb24SKC5yZXNlcnZhdGlvbi52MS5EZWxldGVSZXNlcnZhdGlvblJlcXVlc3QaKS5yZXNlcnZhdGlvbi52MS5EZWxldGVSZXNlcnZhdGlvblJlc3BvbnNlQtIBChJjb20ucmVzZXJ2YXRpb24udjFCEFJlc2VydmF0aW9uUHJvdG9QAVpRZ2l0aHViLmNvbS9la2t4L3RjbXJzdi13ZWIvc2VydmVyL2ludGVybmFsL3NoYXJlZC9wYi9yZXNlcnZhdGlvbi92MTtyZXNlcnZhdGlvbnYxogIDUlhYqgIOUmVzZXJ2YXRpb24uVjHKAg5SZXNlcnZhdGlvblxWMeICGlJlc2VydmF0aW9uXFYxXEdQQk1ldGFkYXRh6gIPUmVzZXJ2YXRpb246OlYxYgZwcm90bzM", [file_user_v1_user, file_google_protobuf_timestamp]);
-
-/**
- * @generated from message reservation.v1.Room
- */
-export type Room = Message<"reservation.v1.Room"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-
-  /**
-   * @generated from field: string name = 2;
-   */
-  name: string;
-
-  /**
-   * @generated from field: reservation.v1.PianoType piano_type = 3;
-   */
-  pianoType: PianoType;
-
-  /**
-   * @generated from field: int32 piano_count = 4;
-   */
-  pianoCount: number;
-
-  /**
-   * @generated from field: bool is_classroom = 5;
-   */
-  isClassroom: boolean;
-
-  /**
-   * @generated from field: bool is_basement = 6;
-   */
-  isBasement: boolean;
-
-  /**
-   * @generated from field: reservation.v1.CampusType campus_type = 7;
-   */
-  campusType: CampusType;
-
-  /**
-   * @generated from field: int32 floor = 8;
-   */
-  floor: number;
-};
-
-/**
- * Describes the message reservation.v1.Room.
- * Use `create(RoomSchema)` to create a new message.
- */
-export const RoomSchema: GenMessage<Room> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 0);
+  fileDesc("CiByZXNlcnZhdGlvbi92MS9yZXNlcnZhdGlvbi5wcm90bxIOcmVzZXJ2YXRpb24udjEisAIKC1Jlc2VydmF0aW9uEgoKAmlkGAEgASgJEh0KEG9mZmljaWFsX3NpdGVfaWQYAiABKAlIAIgBARIbCgR1c2VyGAMgASgLMg0udXNlci52MS5Vc2VyEigKC2NhbXB1c190eXBlGAQgASgOMhMucm9vbS52MS5DYW1wdXNUeXBlEg8KB3Jvb21faWQYBSABKAkSDAoEZGF0ZRgGIAEoCRIRCglmcm9tX2hvdXIYByABKAUSEwoLZnJvbV9taW51dGUYCCABKAUSDwoHdG9faG91chgJIAEoBRIRCgl0b19taW51dGUYCiABKAUSLwoLY3JlYXRlX3RpbWUYCyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wQhMKEV9vZmZpY2lhbF9zaXRlX2lkIi8KFUdldFJlc2VydmF0aW9uUmVxdWVzdBIWCg5yZXNlcnZhdGlvbl9pZBgBIAEoCSJKChZHZXRSZXNlcnZhdGlvblJlc3BvbnNlEjAKC3Jlc2VydmF0aW9uGAEgASgLMhsucmVzZXJ2YXRpb24udjEuUmVzZXJ2YXRpb24iGQoXTGlzdFJlc2VydmF0aW9uc1JlcXVlc3QiTQoYTGlzdFJlc2VydmF0aW9uc1Jlc3BvbnNlEjEKDHJlc2VydmF0aW9ucxgBIAMoCzIbLnJlc2VydmF0aW9uLnYxLlJlc2VydmF0aW9uIq8BChhDcmVhdGVSZXNlcnZhdGlvblJlcXVlc3QSKAoLY2FtcHVzX3R5cGUYASABKA4yEy5yb29tLnYxLkNhbXB1c1R5cGUSDAoEZGF0ZRgCIAEoCRIRCglmcm9tX2hvdXIYAyABKAUSEwoLZnJvbV9taW51dGUYBCABKAUSDwoHdG9faG91chgFIAEoBRIRCgl0b19taW51dGUYBiABKAUSDwoHcm9vbV9pZBgHIAEoCSJNChlDcmVhdGVSZXNlcnZhdGlvblJlc3BvbnNlEjAKC3Jlc2VydmF0aW9uGAEgASgLMhsucmVzZXJ2YXRpb24udjEuUmVzZXJ2YXRpb24iMgoYRGVsZXRlUmVzZXJ2YXRpb25SZXF1ZXN0EhYKDnJlc2VydmF0aW9uX2lkGAEgASgJIhsKGURlbGV0ZVJlc2VydmF0aW9uUmVzcG9uc2UysAMKElJlc2VydmF0aW9uU2VydmljZRJfCg5HZXRSZXNlcnZhdGlvbhIlLnJlc2VydmF0aW9uLnYxLkdldFJlc2VydmF0aW9uUmVxdWVzdBomLnJlc2VydmF0aW9uLnYxLkdldFJlc2VydmF0aW9uUmVzcG9uc2USZQoQTGlzdFJlc2VydmF0aW9ucxInLnJlc2VydmF0aW9uLnYxLkxpc3RSZXNlcnZhdGlvbnNSZXF1ZXN0GigucmVzZXJ2YXRpb24udjEuTGlzdFJlc2VydmF0aW9uc1Jlc3BvbnNlEmgKEUNyZWF0ZVJlc2VydmF0aW9uEigucmVzZXJ2YXRpb24udjEuQ3JlYXRlUmVzZXJ2YXRpb25SZXF1ZXN0GikucmVzZXJ2YXRpb24udjEuQ3JlYXRlUmVzZXJ2YXRpb25SZXNwb25zZRJoChFEZWxldGVSZXNlcnZhdGlvbhIoLnJlc2VydmF0aW9uLnYxLkRlbGV0ZVJlc2VydmF0aW9uUmVxdWVzdBopLnJlc2VydmF0aW9uLnYxLkRlbGV0ZVJlc2VydmF0aW9uUmVzcG9uc2VC0gEKEmNvbS5yZXNlcnZhdGlvbi52MUIQUmVzZXJ2YXRpb25Qcm90b1ABWlFnaXRodWIuY29tL2Vra3gvdGNtcnN2LXdlYi9zZXJ2ZXIvaW50ZXJuYWwvc2hhcmVkL3BiL3Jlc2VydmF0aW9uL3YxO3Jlc2VydmF0aW9udjGiAgNSWFiqAg5SZXNlcnZhdGlvbi5WMcoCDlJlc2VydmF0aW9uXFYx4gIaUmVzZXJ2YXRpb25cVjFcR1BCTWV0YWRhdGHqAg9SZXNlcnZhdGlvbjo6VjFiBnByb3RvMw", [file_room_v1_room, file_user_v1_user, file_google_protobuf_timestamp]);
 
 /**
  * @generated from message reservation.v1.Reservation
@@ -88,7 +38,7 @@ export type Reservation = Message<"reservation.v1.Reservation"> & {
   user?: User;
 
   /**
-   * @generated from field: reservation.v1.CampusType campus_type = 4;
+   * @generated from field: room.v1.CampusType campus_type = 4;
    */
   campusType: CampusType;
 
@@ -133,7 +83,7 @@ export type Reservation = Message<"reservation.v1.Reservation"> & {
  * Use `create(ReservationSchema)` to create a new message.
  */
 export const ReservationSchema: GenMessage<Reservation> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 1);
+  messageDesc(file_reservation_v1_reservation, 0);
 
 /**
  * @generated from message reservation.v1.GetReservationRequest
@@ -150,7 +100,7 @@ export type GetReservationRequest = Message<"reservation.v1.GetReservationReques
  * Use `create(GetReservationRequestSchema)` to create a new message.
  */
 export const GetReservationRequestSchema: GenMessage<GetReservationRequest> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 2);
+  messageDesc(file_reservation_v1_reservation, 1);
 
 /**
  * @generated from message reservation.v1.GetReservationResponse
@@ -167,69 +117,10 @@ export type GetReservationResponse = Message<"reservation.v1.GetReservationRespo
  * Use `create(GetReservationResponseSchema)` to create a new message.
  */
 export const GetReservationResponseSchema: GenMessage<GetReservationResponse> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 3);
+  messageDesc(file_reservation_v1_reservation, 2);
 
 /**
- * @generated from message reservation.v1.ListAvailableRoomsRequest
- */
-export type ListAvailableRoomsRequest = Message<"reservation.v1.ListAvailableRoomsRequest"> & {
-  /**
-   * @generated from field: reservation.v1.CampusType campus_type = 1;
-   */
-  campusType: CampusType;
-
-  /**
-   * @generated from field: string date = 2;
-   */
-  date: string;
-
-  /**
-   * @generated from field: int32 from_hour = 3;
-   */
-  fromHour: number;
-
-  /**
-   * @generated from field: int32 from_minute = 4;
-   */
-  fromMinute: number;
-
-  /**
-   * @generated from field: int32 to_hour = 5;
-   */
-  toHour: number;
-
-  /**
-   * @generated from field: int32 to_minute = 6;
-   */
-  toMinute: number;
-};
-
-/**
- * Describes the message reservation.v1.ListAvailableRoomsRequest.
- * Use `create(ListAvailableRoomsRequestSchema)` to create a new message.
- */
-export const ListAvailableRoomsRequestSchema: GenMessage<ListAvailableRoomsRequest> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 4);
-
-/**
- * @generated from message reservation.v1.ListAvailableRoomsResponse
- */
-export type ListAvailableRoomsResponse = Message<"reservation.v1.ListAvailableRoomsResponse"> & {
-  /**
-   * @generated from field: repeated reservation.v1.Room rooms = 1;
-   */
-  rooms: Room[];
-};
-
-/**
- * Describes the message reservation.v1.ListAvailableRoomsResponse.
- * Use `create(ListAvailableRoomsResponseSchema)` to create a new message.
- */
-export const ListAvailableRoomsResponseSchema: GenMessage<ListAvailableRoomsResponse> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 5);
-
-/**
- * TODO: Add filtering options
+ * TODO: Add filtering options (e.g., by campus, date...)
  *
  * @generated from message reservation.v1.ListReservationsRequest
  */
@@ -241,7 +132,7 @@ export type ListReservationsRequest = Message<"reservation.v1.ListReservationsRe
  * Use `create(ListReservationsRequestSchema)` to create a new message.
  */
 export const ListReservationsRequestSchema: GenMessage<ListReservationsRequest> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 6);
+  messageDesc(file_reservation_v1_reservation, 3);
 
 /**
  * @generated from message reservation.v1.ListReservationsResponse
@@ -258,14 +149,14 @@ export type ListReservationsResponse = Message<"reservation.v1.ListReservationsR
  * Use `create(ListReservationsResponseSchema)` to create a new message.
  */
 export const ListReservationsResponseSchema: GenMessage<ListReservationsResponse> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 7);
+  messageDesc(file_reservation_v1_reservation, 4);
 
 /**
  * @generated from message reservation.v1.CreateReservationRequest
  */
 export type CreateReservationRequest = Message<"reservation.v1.CreateReservationRequest"> & {
   /**
-   * @generated from field: reservation.v1.CampusType campus_type = 1;
+   * @generated from field: room.v1.CampusType campus_type = 1;
    */
   campusType: CampusType;
 
@@ -305,7 +196,7 @@ export type CreateReservationRequest = Message<"reservation.v1.CreateReservation
  * Use `create(CreateReservationRequestSchema)` to create a new message.
  */
 export const CreateReservationRequestSchema: GenMessage<CreateReservationRequest> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 8);
+  messageDesc(file_reservation_v1_reservation, 5);
 
 /**
  * @generated from message reservation.v1.CreateReservationResponse
@@ -322,7 +213,7 @@ export type CreateReservationResponse = Message<"reservation.v1.CreateReservatio
  * Use `create(CreateReservationResponseSchema)` to create a new message.
  */
 export const CreateReservationResponseSchema: GenMessage<CreateReservationResponse> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 9);
+  messageDesc(file_reservation_v1_reservation, 6);
 
 /**
  * @generated from message reservation.v1.DeleteReservationRequest
@@ -339,7 +230,7 @@ export type DeleteReservationRequest = Message<"reservation.v1.DeleteReservation
  * Use `create(DeleteReservationRequestSchema)` to create a new message.
  */
 export const DeleteReservationRequestSchema: GenMessage<DeleteReservationRequest> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 10);
+  messageDesc(file_reservation_v1_reservation, 7);
 
 /**
  * @generated from message reservation.v1.DeleteReservationResponse
@@ -352,64 +243,7 @@ export type DeleteReservationResponse = Message<"reservation.v1.DeleteReservatio
  * Use `create(DeleteReservationResponseSchema)` to create a new message.
  */
 export const DeleteReservationResponseSchema: GenMessage<DeleteReservationResponse> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 11);
-
-/**
- * @generated from enum reservation.v1.CampusType
- */
-export enum CampusType {
-  /**
-   * @generated from enum value: CAMPUS_TYPE_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: CAMPUS_TYPE_NAKAMEGURO = 1;
-   */
-  NAKAMEGURO = 1,
-
-  /**
-   * @generated from enum value: CAMPUS_TYPE_IKEBUKURO = 2;
-   */
-  IKEBUKURO = 2,
-}
-
-/**
- * Describes the enum reservation.v1.CampusType.
- */
-export const CampusTypeSchema: GenEnum<CampusType> = /*@__PURE__*/
-  enumDesc(file_reservation_v1_reservation, 0);
-
-/**
- * @generated from enum reservation.v1.PianoType
- */
-export enum PianoType {
-  /**
-   * @generated from enum value: PIANO_TYPE_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: PIANO_TYPE_GRAND = 1;
-   */
-  GRAND = 1,
-
-  /**
-   * @generated from enum value: PIANO_TYPE_UPRIGHT = 2;
-   */
-  UPRIGHT = 2,
-
-  /**
-   * @generated from enum value: PIANO_TYPE_NONE = 3;
-   */
-  NONE = 3,
-}
-
-/**
- * Describes the enum reservation.v1.PianoType.
- */
-export const PianoTypeSchema: GenEnum<PianoType> = /*@__PURE__*/
-  enumDesc(file_reservation_v1_reservation, 1);
+  messageDesc(file_reservation_v1_reservation, 8);
 
 /**
  * @generated from service reservation.v1.ReservationService
@@ -422,14 +256,6 @@ export const ReservationService: GenService<{
     methodKind: "unary";
     input: typeof GetReservationRequestSchema;
     output: typeof GetReservationResponseSchema;
-  },
-  /**
-   * @generated from rpc reservation.v1.ReservationService.ListAvailableRooms
-   */
-  listAvailableRooms: {
-    methodKind: "unary";
-    input: typeof ListAvailableRoomsRequestSchema;
-    output: typeof ListAvailableRoomsResponseSchema;
   },
   /**
    * @generated from rpc reservation.v1.ReservationService.ListReservations

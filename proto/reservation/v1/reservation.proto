@@ -2,46 +2,22 @@ syntax = "proto3";
 
 package reservation.v1;
 
+import "room/v1/room.proto";
 import "user/v1/user.proto";
 import "google/protobuf/timestamp.proto";
 
 service ReservationService {
     rpc GetReservation(GetReservationRequest) returns (GetReservationResponse);
-    rpc ListAvailableRooms(ListAvailableRoomsRequest) returns (ListAvailableRoomsResponse);
     rpc ListReservations(ListReservationsRequest) returns (ListReservationsResponse);
     rpc CreateReservation(CreateReservationRequest) returns (CreateReservationResponse);
     rpc DeleteReservation(DeleteReservationRequest) returns (DeleteReservationResponse);
-}
-
-enum CampusType {
-    CAMPUS_TYPE_UNSPECIFIED = 0;
-    CAMPUS_TYPE_NAKAMEGURO = 1;
-    CAMPUS_TYPE_IKEBUKURO = 2;
-}
-
-enum PianoType {
-    PIANO_TYPE_UNSPECIFIED = 0;
-    PIANO_TYPE_GRAND = 1;
-    PIANO_TYPE_UPRIGHT = 2;
-    PIANO_TYPE_NONE = 3;
-}
-
-message Room {
-    string id = 1;
-    string name = 2;
-    PianoType piano_type = 3;
-    int32 piano_count = 4;
-    bool is_classroom = 5;
-    bool is_basement = 6;
-    CampusType campus_type = 7;
-    int32 floor = 8;
 }
 
 message Reservation {
     string id = 1;
     optional string official_site_id = 2;
     user.v1.User user = 3;
-    CampusType campus_type = 4;
+    room.v1.CampusType campus_type = 4;
     string room_id = 5;
     string date = 6;
     int32 from_hour = 7;
@@ -59,19 +35,6 @@ message GetReservationResponse {
     Reservation reservation = 1;
 }
 
-message ListAvailableRoomsRequest {
-    CampusType campus_type = 1;
-    string date = 2;
-    int32 from_hour = 3;
-    int32 from_minute = 4;
-    int32 to_hour = 5;
-    int32 to_minute = 6;
-}
-
-message ListAvailableRoomsResponse {
-    repeated Room rooms = 1;
-}
-
 message ListReservationsRequest {
     // TODO: Add filtering options (e.g., by campus, date...)
 }
@@ -81,7 +44,7 @@ message ListReservationsResponse {
 }
 
 message CreateReservationRequest {
-    CampusType campus_type = 1;
+    room.v1.CampusType campus_type = 1;
     string date = 2;
     int32 from_hour = 3;
     int32 from_minute = 4;

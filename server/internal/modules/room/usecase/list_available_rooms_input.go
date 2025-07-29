@@ -6,7 +6,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
 	"github.com/ekkx/tcmrsv-web/server/internal/shared/errs"
-	reservationv1 "github.com/ekkx/tcmrsv-web/server/internal/shared/pb/reservation/v1"
+	roomv1 "github.com/ekkx/tcmrsv-web/server/internal/shared/pb/room/v1"
 	"github.com/ekkx/tcmrsv-web/server/pkg/ymd"
 )
 
@@ -19,14 +19,14 @@ type ListAvailableRoomsInput struct {
 	ToMinute   int
 }
 
-func NewListAvailableRoomsInputFromRequest(ctx context.Context, req *connect.Request[reservationv1.ListAvailableRoomsRequest]) (*ListAvailableRoomsInput, error) {
+func NewListAvailableRoomsInputFromRequest(ctx context.Context, req *connect.Request[roomv1.ListAvailableRoomsRequest]) (*ListAvailableRoomsInput, error) {
 	var campusType enum.CampusType
 	switch req.Msg.CampusType {
-	case reservationv1.CampusType_CAMPUS_TYPE_IKEBUKURO:
+	case roomv1.CampusType_CAMPUS_TYPE_IKEBUKURO:
 		campusType = enum.CampusTypeIkebukuro
-	case reservationv1.CampusType_CAMPUS_TYPE_NAKAMEGURO:
+	case roomv1.CampusType_CAMPUS_TYPE_NAKAMEGURO:
 		campusType = enum.CampusTypeNakameguro
-	case reservationv1.CampusType_CAMPUS_TYPE_UNSPECIFIED:
+	case roomv1.CampusType_CAMPUS_TYPE_UNSPECIFIED:
 		campusType = enum.CampusTypeUnknown
 	}
 

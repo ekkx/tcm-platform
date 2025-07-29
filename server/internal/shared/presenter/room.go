@@ -3,37 +3,37 @@ package presenter
 import (
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/enum"
-	reservationv1 "github.com/ekkx/tcmrsv-web/server/internal/shared/pb/reservation/v1"
+	roomv1 "github.com/ekkx/tcmrsv-web/server/internal/shared/pb/room/v1"
 )
 
-func ToRoom(room *entity.Room) *reservationv1.Room {
+func ToRoom(room *entity.Room) *roomv1.Room {
 	if room == nil {
 		return nil
 	}
 
-	var pianoType reservationv1.PianoType
+	var pianoType roomv1.PianoType
 	switch room.PianoType {
 	case enum.PianoTypeGrand:
-		pianoType = reservationv1.PianoType_PIANO_TYPE_GRAND
+		pianoType = roomv1.PianoType_PIANO_TYPE_GRAND
 	case enum.PianoTypeUpright:
-		pianoType = reservationv1.PianoType_PIANO_TYPE_UPRIGHT
+		pianoType = roomv1.PianoType_PIANO_TYPE_UPRIGHT
 	case enum.PianoTypeNone:
-		pianoType = reservationv1.PianoType_PIANO_TYPE_NONE
+		pianoType = roomv1.PianoType_PIANO_TYPE_NONE
 	default:
-		pianoType = reservationv1.PianoType_PIANO_TYPE_UNSPECIFIED
+		pianoType = roomv1.PianoType_PIANO_TYPE_UNSPECIFIED
 	}
 
-	var campusType reservationv1.CampusType
+	var campusType roomv1.CampusType
 	switch room.CampusType {
 	case enum.CampusTypeIkebukuro:
-		campusType = reservationv1.CampusType_CAMPUS_TYPE_IKEBUKURO
+		campusType = roomv1.CampusType_CAMPUS_TYPE_IKEBUKURO
 	case enum.CampusTypeNakameguro:
-		campusType = reservationv1.CampusType_CAMPUS_TYPE_NAKAMEGURO
+		campusType = roomv1.CampusType_CAMPUS_TYPE_NAKAMEGURO
 	default:
-		campusType = reservationv1.CampusType_CAMPUS_TYPE_UNSPECIFIED
+		campusType = roomv1.CampusType_CAMPUS_TYPE_UNSPECIFIED
 	}
 
-	return &reservationv1.Room{
+	return &roomv1.Room{
 		Id:          room.ID,
 		Name:        room.Name,
 		PianoType:   pianoType,
@@ -45,11 +45,11 @@ func ToRoom(room *entity.Room) *reservationv1.Room {
 	}
 }
 
-func ToRoomList(rooms []*entity.Room) []*reservationv1.Room {
+func ToRoomList(rooms []*entity.Room) []*roomv1.Room {
 	if rooms == nil {
 		return nil
 	}
-	result := make([]*reservationv1.Room, len(rooms))
+	result := make([]*roomv1.Room, len(rooms))
 	for i, room := range rooms {
 		result[i] = ToRoom(room)
 	}
