@@ -24,6 +24,8 @@ export type User = Message<"user.v1.User"> & {
   id: string;
 
   /**
+   * TODO: maybe we should define custom_id for ux purposes
+   *
    * @generated from field: string display_name = 2;
    */
   displayName: string;

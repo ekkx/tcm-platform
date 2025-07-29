@@ -11,6 +11,7 @@ type UseCase interface {
 	GetUser(ctx context.Context, input *GetUserInput) (*GetUserOutput, error)
 	ListSlaveUsers(ctx context.Context, input *ListSlaveUsersInput) (*ListSlaveUsersOutput, error)
 	CreateSlaveUser(ctx context.Context, params *CreateSlaveUserInput) (*CreateSlaveUserOutput, error)
+	UpdateUser(ctx context.Context, input *UpdateUserInput) (*UpdateUserOutput, error)
 	DeleteUser(ctx context.Context, input *DeleteUserInput) (*DeleteUserOutput, error)
 }
 

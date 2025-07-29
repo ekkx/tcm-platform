@@ -8,7 +8,7 @@ import (
 )
 
 type UpdateUserByIDParams struct {
-	ID                   ulid.ULID
+	UserID               ulid.ULID
 	Password             *string
 	OfficialSitePassword *string
 	DisplayName          *string
@@ -16,7 +16,7 @@ type UpdateUserByIDParams struct {
 
 func (repo *RepositoryImpl) UpdateUserByID(ctx context.Context, params *UpdateUserByIDParams) error {
 	_, err := repo.querier.UpdateUserByID(ctx, database.UpdateUserByIDParams{
-		UserID:               params.ID,
+		UserID:               params.UserID,
 		Password:             params.Password,
 		OfficialSitePassword: params.OfficialSitePassword,
 		DisplayName:          params.DisplayName,

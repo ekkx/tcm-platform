@@ -109,7 +109,7 @@ func (uc *UseCaseImpl) handleMasterUserLogin(ctx context.Context, params *Author
 
 	// TODO: ログインできればパスワードをアップデートしてトークンを生成
 	uc.userRepo.UpdateUserByID(ctx, &repository.UpdateUserByIDParams{
-		ID:                   user.ID,
+		UserID:               user.ID,
 		Password:             &params.Password, // TODO: ハッシュ化する
 		OfficialSitePassword: &params.Password, // TODO: 再利用するため暗号
 	})
