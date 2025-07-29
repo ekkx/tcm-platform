@@ -19,6 +19,7 @@ type Querier interface {
 	ListReservationsByIDs(ctx context.Context, reservationIds []string) ([]Reservation, error)
 	ListSlaveUsersMeta(ctx context.Context, arg ListSlaveUsersMetaParams) ([]ListSlaveUsersMetaRow, error)
 	ListUnavailableRoomIDs(ctx context.Context, arg ListUnavailableRoomIDsParams) ([]string, error)
+	ListUserReservationIDs(ctx context.Context, arg ListUserReservationIDsParams) ([]ulid.ULID, error)
 	ListUsersByIDs(ctx context.Context, userIds []string) ([]User, error)
 	UpdateUserByID(ctx context.Context, arg UpdateUserByIDParams) (int32, error)
 }

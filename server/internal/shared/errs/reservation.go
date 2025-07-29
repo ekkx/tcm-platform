@@ -33,4 +33,9 @@ var (
 		Message:     "date must be today or future",
 		ConnectCode: connect.CodeInvalidArgument,
 	}
+	ErrReservationTooSoon = &Error{
+		Code:        "reservation_too_soon",
+		Message:     "reservation must be made at least 3 days in advance",
+		ConnectCode: connect.CodeInvalidArgument,
+	}
 )

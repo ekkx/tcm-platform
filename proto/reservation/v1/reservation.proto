@@ -73,7 +73,7 @@ message ListAvailableRoomsResponse {
 }
 
 message ListReservationsRequest {
-    // TODO: Add filtering options
+    // TODO: Add filtering options (e.g., by campus, date...)
 }
 
 message ListReservationsResponse {

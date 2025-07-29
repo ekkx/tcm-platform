@@ -12,6 +12,7 @@ import (
 type Service interface {
 	GetReservationByID(ctx context.Context, reservationID ulid.ULID) (*entity.Reservation, error)
 	ListReservationsByIDs(ctx context.Context, reservationIDs []ulid.ULID) ([]*entity.Reservation, error)
+	ListUserReservations(ctx context.Context, params *ListUserReservationsParams) ([]*entity.Reservation, error)
 }
 
 type ServiceImpl struct {

@@ -9,6 +9,7 @@ import (
 
 type UseCase interface {
 	ListAvailableRooms(ctx context.Context, input *ListAvailableRoomsInput) (*ListAvailableRoomsOutput, error)
+	ListReservations(ctx context.Context, input *ListReservationsInput) (*ListReservationsOutput, error)
 	CreateReservation(ctx context.Context, input *CreateReservationInput) (*CreateReservationOutput, error)
 }
 
