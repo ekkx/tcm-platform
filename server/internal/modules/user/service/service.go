@@ -12,6 +12,7 @@ type Service interface {
 	GetUserByID(ctx context.Context, userID ulid.ULID) (*entity.User, error)
 	GetUserByOfficialSiteID(ctx context.Context, officialSiteID string) (*entity.User, error)
 	ListUsersByIDs(ctx context.Context, userIDs []ulid.ULID) ([]*entity.User, error)
+	ListSlaveUsers(ctx context.Context, masterUserID ulid.ULID) ([]*entity.User, error)
 }
 
 type ServiceImpl struct {

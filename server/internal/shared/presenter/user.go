@@ -18,7 +18,7 @@ func ToUser(user *entity.User) *userv1.User {
 	}
 }
 
-func ToListUsers(users []*entity.User) []*userv1.User {
+func ToUserList(users []*entity.User) []*userv1.User {
 	if users == nil {
 		return nil
 	}

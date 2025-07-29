@@ -11,6 +11,7 @@ import (
 type Repository interface {
 	GetUserIDByOfficialSiteID(ctx context.Context, officialSiteID string) (*ulid.ULID, error)
 	ListSkeletonUsersByIDs(ctx context.Context, userIDs []ulid.ULID) ([]*entity.User, error)
+	ListSlaveUserIDs(ctx context.Context, masterUserID ulid.ULID) ([]ulid.ULID, error)
 	CreateUser(ctx context.Context, params *CreateUserParams) (*ulid.ULID, error)
 	UpdateUserByID(ctx context.Context, params *UpdateUserByIDParams) error
 	DeleteUserByID(ctx context.Context, userID ulid.ULID) error
