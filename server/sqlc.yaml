@@ -4,6 +4,7 @@ sql:
     schema: "./migrations"
     queries:
       - "./pkg/database/queries/reservations"
+      - "./pkg/database/queries/rooms"
       - "./pkg/database/queries/users"
     gen:
       go:

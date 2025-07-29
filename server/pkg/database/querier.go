@@ -13,6 +13,7 @@ import (
 type Querier interface {
 	CreateReservation(ctx context.Context, arg CreateReservationParams) (ulid.ULID, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (ulid.ULID, error)
+	DeleteReservationByID(ctx context.Context, reservationID ulid.ULID) (int32, error)
 	DeleteUserByID(ctx context.Context, userID ulid.ULID) (int32, error)
 	GetUserIDByOfficialSiteID(ctx context.Context, officialSiteID string) (ulid.ULID, error)
 	IsReservationConflicted(ctx context.Context, arg IsReservationConflictedParams) (bool, error)
