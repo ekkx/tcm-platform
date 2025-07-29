@@ -10,7 +10,6 @@ service UserService {
     rpc CreateSlaveUser(CreateSlaveUserRequest) returns (CreateSlaveUserResponse);
     rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
     rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
-    rpc DeleteSlaveUser(DeleteSlaveUserRequest) returns (DeleteSlaveUserResponse);
 }
 
 message User {
@@ -51,12 +50,8 @@ message UpdateUserResponse {
     User user = 1;
 }
 
-message DeleteUserRequest {}
-
-message DeleteUserResponse {}
-
-message DeleteSlaveUserRequest {
+message DeleteUserRequest {
     string user_id = 1;
 }
 
-message DeleteSlaveUserResponse {}
+message DeleteUserResponse {}

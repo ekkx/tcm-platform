@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file user/v1/user.proto.
  */
 export const file_user_v1_user: GenFile = /*@__PURE__*/
-  fileDesc("ChJ1c2VyL3YxL3VzZXIucHJvdG8SB3VzZXIudjEifQoEVXNlchIKCgJpZBgBIAEoCRIUCgxkaXNwbGF5X25hbWUYAiABKAkSIgoLbWFzdGVyX3VzZXIYAyABKAsyDS51c2VyLnYxLlVzZXISLwoLY3JlYXRlX3RpbWUYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIiEKDkdldFVzZXJSZXF1ZXN0Eg8KB3VzZXJfaWQYASABKAkiLgoPR2V0VXNlclJlc3BvbnNlEhsKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXIiFwoVTGlzdFNsYXZlVXNlcnNSZXF1ZXN0IjYKFkxpc3RTbGF2ZVVzZXJzUmVzcG9uc2USHAoFdXNlcnMYASADKAsyDS51c2VyLnYxLlVzZXIiQAoWQ3JlYXRlU2xhdmVVc2VyUmVxdWVzdBIUCgxkaXNwbGF5X25hbWUYASABKAkSEAoIcGFzc3dvcmQYAiABKAkiNgoXQ3JlYXRlU2xhdmVVc2VyUmVzcG9uc2USGwoEdXNlchgBIAEoCzINLnVzZXIudjEuVXNlciIpChFVcGRhdGVVc2VyUmVxdWVzdBIUCgxkaXNwbGF5X25hbWUYAiABKAkiMQoSVXBkYXRlVXNlclJlc3BvbnNlEhsKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXIiEwoRRGVsZXRlVXNlclJlcXVlc3QiFAoSRGVsZXRlVXNlclJlc3BvbnNlIikKFkRlbGV0ZVNsYXZlVXNlclJlcXVlc3QSDwoHdXNlcl9pZBgBIAEoCSIZChdEZWxldGVTbGF2ZVVzZXJSZXNwb25zZTLYAwoLVXNlclNlcnZpY2USPAoHR2V0VXNlchIXLnVzZXIudjEuR2V0VXNlclJlcXVlc3QaGC51c2VyLnYxLkdldFVzZXJSZXNwb25zZRJRCg5MaXN0U2xhdmVVc2VycxIeLnVzZXIudjEuTGlzdFNsYXZlVXNlcnNSZXF1ZXN0Gh8udXNlci52MS5MaXN0U2xhdmVVc2Vyc1Jlc3BvbnNlElQKD0NyZWF0ZVNsYXZlVXNlchIfLnVzZXIudjEuQ3JlYXRlU2xhdmVVc2VyUmVxdWVzdBogLnVzZXIudjEuQ3JlYXRlU2xhdmVVc2VyUmVzcG9uc2USRQoKVXBkYXRlVXNlchIaLnVzZXIudjEuVXBkYXRlVXNlclJlcXVlc3QaGy51c2VyLnYxLlVwZGF0ZVVzZXJSZXNwb25zZRJFCgpEZWxldGVVc2VyEhoudXNlci52MS5EZWxldGVVc2VyUmVxdWVzdBobLnVzZXIudjEuRGVsZXRlVXNlclJlc3BvbnNlElQKD0RlbGV0ZVNsYXZlVXNlchIfLnVzZXIudjEuRGVsZXRlU2xhdmVVc2VyUmVxdWVzdBogLnVzZXIudjEuRGVsZXRlU2xhdmVVc2VyUmVzcG9uc2VCmgEKC2NvbS51c2VyLnYxQglVc2VyUHJvdG9QAVpDZ2l0aHViLmNvbS9la2t4L3RjbXJzdi13ZWIvc2VydmVyL2ludGVybmFsL3NoYXJlZC9wYi91c2VyL3YxO3VzZXJ2MaICA1VYWKoCB1VzZXIuVjHKAgdVc2VyXFYx4gITVXNlclxWMVxHUEJNZXRhZGF0YeoCCFVzZXI6OlYxYgZwcm90bzM", [file_google_protobuf_timestamp]);
+  fileDesc("ChJ1c2VyL3YxL3VzZXIucHJvdG8SB3VzZXIudjEifQoEVXNlchIKCgJpZBgBIAEoCRIUCgxkaXNwbGF5X25hbWUYAiABKAkSIgoLbWFzdGVyX3VzZXIYAyABKAsyDS51c2VyLnYxLlVzZXISLwoLY3JlYXRlX3RpbWUYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIiEKDkdldFVzZXJSZXF1ZXN0Eg8KB3VzZXJfaWQYASABKAkiLgoPR2V0VXNlclJlc3BvbnNlEhsKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXIiFwoVTGlzdFNsYXZlVXNlcnNSZXF1ZXN0IjYKFkxpc3RTbGF2ZVVzZXJzUmVzcG9uc2USHAoFdXNlcnMYASADKAsyDS51c2VyLnYxLlVzZXIiQAoWQ3JlYXRlU2xhdmVVc2VyUmVxdWVzdBIUCgxkaXNwbGF5X25hbWUYASABKAkSEAoIcGFzc3dvcmQYAiABKAkiNgoXQ3JlYXRlU2xhdmVVc2VyUmVzcG9uc2USGwoEdXNlchgBIAEoCzINLnVzZXIudjEuVXNlciIpChFVcGRhdGVVc2VyUmVxdWVzdBIUCgxkaXNwbGF5X25hbWUYAiABKAkiMQoSVXBkYXRlVXNlclJlc3BvbnNlEhsKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXIiJAoRRGVsZXRlVXNlclJlcXVlc3QSDwoHdXNlcl9pZBgBIAEoCSIUChJEZWxldGVVc2VyUmVzcG9uc2UyggMKC1VzZXJTZXJ2aWNlEjwKB0dldFVzZXISFy51c2VyLnYxLkdldFVzZXJSZXF1ZXN0GhgudXNlci52MS5HZXRVc2VyUmVzcG9uc2USUQoOTGlzdFNsYXZlVXNlcnMSHi51c2VyLnYxLkxpc3RTbGF2ZVVzZXJzUmVxdWVzdBofLnVzZXIudjEuTGlzdFNsYXZlVXNlcnNSZXNwb25zZRJUCg9DcmVhdGVTbGF2ZVVzZXISHy51c2VyLnYxLkNyZWF0ZVNsYXZlVXNlclJlcXVlc3QaIC51c2VyLnYxLkNyZWF0ZVNsYXZlVXNlclJlc3BvbnNlEkUKClVwZGF0ZVVzZXISGi51c2VyLnYxLlVwZGF0ZVVzZXJSZXF1ZXN0GhsudXNlci52MS5VcGRhdGVVc2VyUmVzcG9uc2USRQoKRGVsZXRlVXNlchIaLnVzZXIudjEuRGVsZXRlVXNlclJlcXVlc3QaGy51c2VyLnYxLkRlbGV0ZVVzZXJSZXNwb25zZUKaAQoLY29tLnVzZXIudjFCCVVzZXJQcm90b1ABWkNnaXRodWIuY29tL2Vra3gvdGNtcnN2LXdlYi9zZXJ2ZXIvaW50ZXJuYWwvc2hhcmVkL3BiL3VzZXIvdjE7dXNlcnYxogIDVVhYqgIHVXNlci5WMcoCB1VzZXJcVjHiAhNVc2VyXFYxXEdQQk1ldGFkYXRh6gIIVXNlcjo6VjFiBnByb3RvMw", [file_google_protobuf_timestamp]);
 
 /**
  * @generated from message user.v1.User
@@ -187,6 +187,10 @@ export const UpdateUserResponseSchema: GenMessage<UpdateUserResponse> = /*@__PUR
  * @generated from message user.v1.DeleteUserRequest
  */
 export type DeleteUserRequest = Message<"user.v1.DeleteUserRequest"> & {
+  /**
+   * @generated from field: string user_id = 1;
+   */
+  userId: string;
 };
 
 /**
@@ -208,36 +212,6 @@ export type DeleteUserResponse = Message<"user.v1.DeleteUserResponse"> & {
  */
 export const DeleteUserResponseSchema: GenMessage<DeleteUserResponse> = /*@__PURE__*/
   messageDesc(file_user_v1_user, 10);
-
-/**
- * @generated from message user.v1.DeleteSlaveUserRequest
- */
-export type DeleteSlaveUserRequest = Message<"user.v1.DeleteSlaveUserRequest"> & {
-  /**
-   * @generated from field: string user_id = 1;
-   */
-  userId: string;
-};
-
-/**
- * Describes the message user.v1.DeleteSlaveUserRequest.
- * Use `create(DeleteSlaveUserRequestSchema)` to create a new message.
- */
-export const DeleteSlaveUserRequestSchema: GenMessage<DeleteSlaveUserRequest> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 11);
-
-/**
- * @generated from message user.v1.DeleteSlaveUserResponse
- */
-export type DeleteSlaveUserResponse = Message<"user.v1.DeleteSlaveUserResponse"> & {
-};
-
-/**
- * Describes the message user.v1.DeleteSlaveUserResponse.
- * Use `create(DeleteSlaveUserResponseSchema)` to create a new message.
- */
-export const DeleteSlaveUserResponseSchema: GenMessage<DeleteSlaveUserResponse> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 12);
 
 /**
  * @generated from service user.v1.UserService
@@ -282,14 +256,6 @@ export const UserService: GenService<{
     methodKind: "unary";
     input: typeof DeleteUserRequestSchema;
     output: typeof DeleteUserResponseSchema;
-  },
-  /**
-   * @generated from rpc user.v1.UserService.DeleteSlaveUser
-   */
-  deleteSlaveUser: {
-    methodKind: "unary";
-    input: typeof DeleteSlaveUserRequestSchema;
-    output: typeof DeleteSlaveUserResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_user_v1_user, 0);

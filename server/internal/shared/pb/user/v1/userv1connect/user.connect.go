@@ -45,9 +45,6 @@ const (
 	UserServiceUpdateUserProcedure = "/user.v1.UserService/UpdateUser"
 	// UserServiceDeleteUserProcedure is the fully-qualified name of the UserService's DeleteUser RPC.
 	UserServiceDeleteUserProcedure = "/user.v1.UserService/DeleteUser"
-	// UserServiceDeleteSlaveUserProcedure is the fully-qualified name of the UserService's
-	// DeleteSlaveUser RPC.
-	UserServiceDeleteSlaveUserProcedure = "/user.v1.UserService/DeleteSlaveUser"
 )
 
 // UserServiceClient is a client for the user.v1.UserService service.
@@ -57,7 +54,6 @@ type UserServiceClient interface {
 	CreateSlaveUser(context.Context, *connect.Request[v1.CreateSlaveUserRequest]) (*connect.Response[v1.CreateSlaveUserResponse], error)
 	UpdateUser(context.Context, *connect.Request[v1.UpdateUserRequest]) (*connect.Response[v1.UpdateUserResponse], error)
 	DeleteUser(context.Context, *connect.Request[v1.DeleteUserRequest]) (*connect.Response[v1.DeleteUserResponse], error)
-	DeleteSlaveUser(context.Context, *connect.Request[v1.DeleteSlaveUserRequest]) (*connect.Response[v1.DeleteSlaveUserResponse], error)
 }
 
 // NewUserServiceClient constructs a client for the user.v1.UserService service. By default, it uses
@@ -101,12 +97,6 @@ func NewUserServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(userServiceMethods.ByName("DeleteUser")),
 			connect.WithClientOptions(opts...),
 		),
-		deleteSlaveUser: connect.NewClient[v1.DeleteSlaveUserRequest, v1.DeleteSlaveUserResponse](
-			httpClient,
-			baseURL+UserServiceDeleteSlaveUserProcedure,
-			connect.WithSchema(userServiceMethods.ByName("DeleteSlaveUser")),
-			connect.WithClientOptions(opts...),
-		),
 	}
 }
 
@@ -117,7 +107,6 @@ type userServiceClient struct {
 	createSlaveUser *connect.Client[v1.CreateSlaveUserRequest, v1.CreateSlaveUserResponse]
 	updateUser      *connect.Client[v1.UpdateUserRequest, v1.UpdateUserResponse]
 	deleteUser      *connect.Client[v1.DeleteUserRequest, v1.DeleteUserResponse]
-	deleteSlaveUser *connect.Client[v1.DeleteSlaveUserRequest, v1.DeleteSlaveUserResponse]
 }
 
 // GetUser calls user.v1.UserService.GetUser.
@@ -145,11 +134,6 @@ func (c *userServiceClient) DeleteUser(ctx context.Context, req *connect.Request
 	return c.deleteUser.CallUnary(ctx, req)
 }
 
-// DeleteSlaveUser calls user.v1.UserService.DeleteSlaveUser.
-func (c *userServiceClient) DeleteSlaveUser(ctx context.Context, req *connect.Request[v1.DeleteSlaveUserRequest]) (*connect.Response[v1.DeleteSlaveUserResponse], error) {
-	return c.deleteSlaveUser.CallUnary(ctx, req)
-}
-
 // UserServiceHandler is an implementation of the user.v1.UserService service.
 type UserServiceHandler interface {
 	GetUser(context.Context, *connect.Request[v1.GetUserRequest]) (*connect.Response[v1.GetUserResponse], error)
@@ -157,7 +141,6 @@ type UserServiceHandler interface {
 	CreateSlaveUser(context.Context, *connect.Request[v1.CreateSlaveUserRequest]) (*connect.Response[v1.CreateSlaveUserResponse], error)
 	UpdateUser(context.Context, *connect.Request[v1.UpdateUserRequest]) (*connect.Response[v1.UpdateUserResponse], error)
 	DeleteUser(context.Context, *connect.Request[v1.DeleteUserRequest]) (*connect.Response[v1.DeleteUserResponse], error)
-	DeleteSlaveUser(context.Context, *connect.Request[v1.DeleteSlaveUserRequest]) (*connect.Response[v1.DeleteSlaveUserResponse], error)
 }
 
 // NewUserServiceHandler builds an HTTP handler from the service implementation. It returns the path
@@ -197,12 +180,6 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(userServiceMethods.ByName("DeleteUser")),
 		connect.WithHandlerOptions(opts...),
 	)
-	userServiceDeleteSlaveUserHandler := connect.NewUnaryHandler(
-		UserServiceDeleteSlaveUserProcedure,
-		svc.DeleteSlaveUser,
-		connect.WithSchema(userServiceMethods.ByName("DeleteSlaveUser")),
-		connect.WithHandlerOptions(opts...),
-	)
 	return "/user.v1.UserService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case UserServiceGetUserProcedure:
@@ -215,8 +192,6 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 			userServiceUpdateUserHandler.ServeHTTP(w, r)
 		case UserServiceDeleteUserProcedure:
 			userServiceDeleteUserHandler.ServeHTTP(w, r)
-		case UserServiceDeleteSlaveUserProcedure:
-			userServiceDeleteSlaveUserHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -244,8 +219,4 @@ func (UnimplementedUserServiceHandler) UpdateUser(context.Context, *connect.Requ
 
 func (UnimplementedUserServiceHandler) DeleteUser(context.Context, *connect.Request[v1.DeleteUserRequest]) (*connect.Response[v1.DeleteUserResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("user.v1.UserService.DeleteUser is not implemented"))
-}
-
-func (UnimplementedUserServiceHandler) DeleteSlaveUser(context.Context, *connect.Request[v1.DeleteSlaveUserRequest]) (*connect.Response[v1.DeleteSlaveUserResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("user.v1.UserService.DeleteSlaveUser is not implemented"))
 }

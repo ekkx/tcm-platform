@@ -9,6 +9,7 @@ import (
 
 type UseCase interface {
 	CreateSlaveUser(ctx context.Context, params *CreateSlaveUserInput) (*CreateSlaveUserOutput, error)
+	DeleteUser(ctx context.Context, input *DeleteUserInput) (*DeleteUserOutput, error)
 }
 
 type UseCaseImpl struct {

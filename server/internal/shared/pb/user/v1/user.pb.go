@@ -444,6 +444,7 @@ func (x *UpdateUserResponse) GetUser() *User {
 
 type DeleteUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -476,6 +477,13 @@ func (x *DeleteUserRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use DeleteUserRequest.ProtoReflect.Descriptor instead.
 func (*DeleteUserRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_user_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *DeleteUserRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
 }
 
 type DeleteUserResponse struct {
@@ -514,86 +522,6 @@ func (*DeleteUserResponse) Descriptor() ([]byte, []int) {
 	return file_user_v1_user_proto_rawDescGZIP(), []int{10}
 }
 
-type DeleteSlaveUserRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteSlaveUserRequest) Reset() {
-	*x = DeleteSlaveUserRequest{}
-	mi := &file_user_v1_user_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteSlaveUserRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteSlaveUserRequest) ProtoMessage() {}
-
-func (x *DeleteSlaveUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_user_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteSlaveUserRequest.ProtoReflect.Descriptor instead.
-func (*DeleteSlaveUserRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_user_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *DeleteSlaveUserRequest) GetUserId() string {
-	if x != nil {
-		return x.UserId
-	}
-	return ""
-}
-
-type DeleteSlaveUserResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteSlaveUserResponse) Reset() {
-	*x = DeleteSlaveUserResponse{}
-	mi := &file_user_v1_user_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteSlaveUserResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteSlaveUserResponse) ProtoMessage() {}
-
-func (x *DeleteSlaveUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_user_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteSlaveUserResponse.ProtoReflect.Descriptor instead.
-func (*DeleteSlaveUserResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_user_proto_rawDescGZIP(), []int{12}
-}
-
 var File_user_v1_user_proto protoreflect.FileDescriptor
 
 const file_user_v1_user_proto_rawDesc = "" +
@@ -621,12 +549,10 @@ const file_user_v1_user_proto_rawDesc = "" +
 	"\x11UpdateUserRequest\x12!\n" +
 	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\"7\n" +
 	"\x12UpdateUserResponse\x12!\n" +
-	"\x04user\x18\x01 \x01(\v2\r.user.v1.UserR\x04user\"\x13\n" +
-	"\x11DeleteUserRequest\"\x14\n" +
-	"\x12DeleteUserResponse\"1\n" +
-	"\x16DeleteSlaveUserRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\"\x19\n" +
-	"\x17DeleteSlaveUserResponse2\xd8\x03\n" +
+	"\x04user\x18\x01 \x01(\v2\r.user.v1.UserR\x04user\",\n" +
+	"\x11DeleteUserRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"\x14\n" +
+	"\x12DeleteUserResponse2\x82\x03\n" +
 	"\vUserService\x12<\n" +
 	"\aGetUser\x12\x17.user.v1.GetUserRequest\x1a\x18.user.v1.GetUserResponse\x12Q\n" +
 	"\x0eListSlaveUsers\x12\x1e.user.v1.ListSlaveUsersRequest\x1a\x1f.user.v1.ListSlaveUsersResponse\x12T\n" +
@@ -634,8 +560,7 @@ const file_user_v1_user_proto_rawDesc = "" +
 	"\n" +
 	"UpdateUser\x12\x1a.user.v1.UpdateUserRequest\x1a\x1b.user.v1.UpdateUserResponse\x12E\n" +
 	"\n" +
-	"DeleteUser\x12\x1a.user.v1.DeleteUserRequest\x1a\x1b.user.v1.DeleteUserResponse\x12T\n" +
-	"\x0fDeleteSlaveUser\x12\x1f.user.v1.DeleteSlaveUserRequest\x1a .user.v1.DeleteSlaveUserResponseB\x9a\x01\n" +
+	"DeleteUser\x12\x1a.user.v1.DeleteUserRequest\x1a\x1b.user.v1.DeleteUserResponseB\x9a\x01\n" +
 	"\vcom.user.v1B\tUserProtoP\x01ZCgithub.com/ekkx/tcmrsv-web/server/internal/shared/pb/user/v1;userv1\xa2\x02\x03UXX\xaa\x02\aUser.V1\xca\x02\aUser\\V1\xe2\x02\x13User\\V1\\GPBMetadata\xea\x02\bUser::V1b\x06proto3"
 
 var (
@@ -650,7 +575,7 @@ func file_user_v1_user_proto_rawDescGZIP() []byte {
 	return file_user_v1_user_proto_rawDescData
 }
 
-var file_user_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_user_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_user_v1_user_proto_goTypes = []any{
 	(*User)(nil),                    // 0: user.v1.User
 	(*GetUserRequest)(nil),          // 1: user.v1.GetUserRequest
@@ -663,13 +588,11 @@ var file_user_v1_user_proto_goTypes = []any{
 	(*UpdateUserResponse)(nil),      // 8: user.v1.UpdateUserResponse
 	(*DeleteUserRequest)(nil),       // 9: user.v1.DeleteUserRequest
 	(*DeleteUserResponse)(nil),      // 10: user.v1.DeleteUserResponse
-	(*DeleteSlaveUserRequest)(nil),  // 11: user.v1.DeleteSlaveUserRequest
-	(*DeleteSlaveUserResponse)(nil), // 12: user.v1.DeleteSlaveUserResponse
-	(*timestamppb.Timestamp)(nil),   // 13: google.protobuf.Timestamp
+	(*timestamppb.Timestamp)(nil),   // 11: google.protobuf.Timestamp
 }
 var file_user_v1_user_proto_depIdxs = []int32{
 	0,  // 0: user.v1.User.master_user:type_name -> user.v1.User
-	13, // 1: user.v1.User.create_time:type_name -> google.protobuf.Timestamp
+	11, // 1: user.v1.User.create_time:type_name -> google.protobuf.Timestamp
 	0,  // 2: user.v1.GetUserResponse.user:type_name -> user.v1.User
 	0,  // 3: user.v1.ListSlaveUsersResponse.users:type_name -> user.v1.User
 	0,  // 4: user.v1.CreateSlaveUserResponse.user:type_name -> user.v1.User
@@ -679,15 +602,13 @@ var file_user_v1_user_proto_depIdxs = []int32{
 	5,  // 8: user.v1.UserService.CreateSlaveUser:input_type -> user.v1.CreateSlaveUserRequest
 	7,  // 9: user.v1.UserService.UpdateUser:input_type -> user.v1.UpdateUserRequest
 	9,  // 10: user.v1.UserService.DeleteUser:input_type -> user.v1.DeleteUserRequest
-	11, // 11: user.v1.UserService.DeleteSlaveUser:input_type -> user.v1.DeleteSlaveUserRequest
-	2,  // 12: user.v1.UserService.GetUser:output_type -> user.v1.GetUserResponse
-	4,  // 13: user.v1.UserService.ListSlaveUsers:output_type -> user.v1.ListSlaveUsersResponse
-	6,  // 14: user.v1.UserService.CreateSlaveUser:output_type -> user.v1.CreateSlaveUserResponse
-	8,  // 15: user.v1.UserService.UpdateUser:output_type -> user.v1.UpdateUserResponse
-	10, // 16: user.v1.UserService.DeleteUser:output_type -> user.v1.DeleteUserResponse
-	12, // 17: user.v1.UserService.DeleteSlaveUser:output_type -> user.v1.DeleteSlaveUserResponse
-	12, // [12:18] is the sub-list for method output_type
-	6,  // [6:12] is the sub-list for method input_type
+	2,  // 11: user.v1.UserService.GetUser:output_type -> user.v1.GetUserResponse
+	4,  // 12: user.v1.UserService.ListSlaveUsers:output_type -> user.v1.ListSlaveUsersResponse
+	6,  // 13: user.v1.UserService.CreateSlaveUser:output_type -> user.v1.CreateSlaveUserResponse
+	8,  // 14: user.v1.UserService.UpdateUser:output_type -> user.v1.UpdateUserResponse
+	10, // 15: user.v1.UserService.DeleteUser:output_type -> user.v1.DeleteUserResponse
+	11, // [11:16] is the sub-list for method output_type
+	6,  // [6:11] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
 	6,  // [6:6] is the sub-list for extension extendee
 	0,  // [0:6] is the sub-list for field type_name
@@ -704,7 +625,7 @@ func file_user_v1_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_v1_user_proto_rawDesc), len(file_user_v1_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   13,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

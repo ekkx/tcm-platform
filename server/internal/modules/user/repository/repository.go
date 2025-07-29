@@ -13,6 +13,7 @@ type Repository interface {
 	ListSkeletonUsersByIDs(ctx context.Context, userIDs []ulid.ULID) ([]*entity.User, error)
 	CreateUser(ctx context.Context, params *CreateUserParams) (*ulid.ULID, error)
 	UpdateUserByID(ctx context.Context, params *UpdateUserByIDParams) error
+	DeleteUserByID(ctx context.Context, userID ulid.ULID) error
 }
 
 type RepositoryImpl struct {
