@@ -10,7 +10,7 @@ import {
   type NavigateOptions,
 } from "react-router";
 
-import { HeroUIProvider } from "@heroui/react";
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import type { Route } from "./+types/root";
 import "./app.css";
 
@@ -46,6 +46,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="dark text-foreground">
         <HeroUIProvider navigate={navigate} useHref={useHref}>
+          <ToastProvider />
           {children}
           <ScrollRestoration />
           <Scripts />

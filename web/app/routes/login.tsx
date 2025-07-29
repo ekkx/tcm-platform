@@ -1,5 +1,8 @@
-import { Button, Checkbox, Form, Input, Link } from "@heroui/react";
-import { useState } from "react";
+import { ConnectError } from "@connectrpc/connect";
+import { addToast, Button, Checkbox, Form, Input, Link } from "@heroui/react";
+import { useEffect, useState } from "react";
+import { authClient } from "~/api";
+import { Cookie } from "~/store/cookies";
 import type { Route } from "./+types/login";
 
 export function meta({}: Route.MetaArgs) {
@@ -12,26 +15,56 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const userId = formData.get("user-id");
-  const password = formData.get("password");
-  const remember = formData.get("remember");
-
-  if (!userId || !password) {
-    return {
-      error: "IDとパスワードを入力してください。",
-    };
-  }
-
-  // TODO: Implement authentication logic here
-}
-
 export default function Login() {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRememberChecked, setIsRememberChecked] = useState(true);
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    const accessToken = Cookie.accessToken();
+    const refreshToken = Cookie.refreshToken();
+
+    if (accessToken && refreshToken) {
+      window.location.href = "/home";
+    }
+  }, []);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const handleLogin = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await authClient.authorize({ userId, password });
+      if (response.auth) {
+        Cookie.setAccessToken(response.auth.accessToken ?? "");
+        Cookie.setRefreshToken(response.auth.refreshToken ?? "");
+        Cookie.setUserId(response.auth.user?.id ?? "");
+      } else {
+        return addToast({
+          title: "ログイン失敗",
+          description: "ユーザーIDまたはパスワードが正しくありません。",
+          color: "danger",
+        });
+      }
+    } catch (error) {
+      if (error instanceof ConnectError) {
+        console.error("ConnectError:", error.code, error.message);
+
+        return addToast({
+          title: "ログイン失敗",
+          description: "ユーザーIDまたはパスワードが正しくありません。",
+          color: "danger",
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+
+    window.location.href = "/home";
+  };
 
   return (
     <div className="grid place-items-center w-dvw h-dvh">
@@ -62,6 +95,8 @@ export default function Login() {
               label: "after:content-[''] opacity-60",
               input: "text-medium scale-[0.87] origin-left",
             }}
+            value={userId}
+            onValueChange={(value) => setUserId(value)}
           />
           <Input
             isRequired
@@ -112,9 +147,16 @@ export default function Login() {
               label: "after:content-[''] opacity-60",
               input: "text-medium scale-[0.87] origin-left",
             }}
+            value={password}
+            onValueChange={(value) => setPassword(value)}
           />
           <div className="flex w-full items-center justify-between px-1 py-2">
-            <Checkbox defaultSelected name="remember" size="sm">
+            <Checkbox
+              name="remember"
+              size="sm"
+              isSelected={isRememberChecked}
+              onChange={(event) => setIsRememberChecked(event.target.checked)}
+            >
               <span className="text-foreground-600">
                 このデバイスを記憶する
               </span>
@@ -123,8 +165,10 @@ export default function Login() {
           <Button
             className="w-full"
             color="primary"
-            type="submit"
+            type="button"
             isLoading={isLoading}
+            onPress={handleLogin}
+            isDisabled={!userId || !password}
           >
             ログイン
           </Button>

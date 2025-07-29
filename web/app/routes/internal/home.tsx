@@ -1,9 +1,8 @@
-import { createClient } from "@connectrpc/connect";
 import { Button } from "@heroui/react";
 import { useEffect } from "react";
-import { transport } from "~/api";
-import { UserService } from "~/api/user/v1/user_pb";
+import { reservationClient } from "~/api";
 import { ReservationList } from "~/components/reservation-list";
+import { Cookie } from "~/store/cookies";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
@@ -15,8 +14,14 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   useEffect(() => {
-    const userClient = createClient(UserService, transport);
-    userClient.getUser({ userId: "someting" });
+    reservationClient.listReservations(
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${Cookie.accessToken() ?? ""}`,
+        },
+      }
+    );
   }, []);
 
   return (
