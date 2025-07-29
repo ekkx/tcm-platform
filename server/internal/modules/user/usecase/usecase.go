@@ -8,6 +8,7 @@ import (
 )
 
 type UseCase interface {
+	GetUser(ctx context.Context, input *GetUserInput) (*GetUserOutput, error)
 	CreateSlaveUser(ctx context.Context, params *CreateSlaveUserInput) (*CreateSlaveUserOutput, error)
 	DeleteUser(ctx context.Context, input *DeleteUserInput) (*DeleteUserOutput, error)
 }

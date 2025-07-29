@@ -4,12 +4,20 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
+	"github.com/ekkx/tcmrsv-web/server/internal/modules/user/usecase"
 	userv1 "github.com/ekkx/tcmrsv-web/server/internal/shared/pb/user/v1"
 )
 
 func (h *HandlerImpl) GetUser(ctx context.Context, req *connect.Request[userv1.GetUserRequest]) (*connect.Response[userv1.GetUserResponse], error) {
-	res := connect.NewResponse(&userv1.GetUserResponse{
-		User: &userv1.User{},
-	})
-	return res, nil
+	input, err := usecase.NewGetUserInputFromRequest(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	output, err := h.useCase.GetUser(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return output.ToResponse(), nil
 }
