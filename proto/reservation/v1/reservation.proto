@@ -18,7 +18,7 @@ message Reservation {
     optional string official_site_id = 2;
     user.v1.User user = 3;
     room.v1.CampusType campus_type = 4;
-    string room_id = 5;
+    room.v1.Room room = 5;
     string date = 6;
     int32 from_hour = 7;
     int32 from_minute = 8;

@@ -13,7 +13,7 @@ type Reservation struct {
 	OfficialSiteID *string
 	User           User
 	CampusType     enum.CampusType
-	RoomID         string
+	Room           Room
 	Date           ymd.YMD
 	FromHour       int
 	FromMinute     int

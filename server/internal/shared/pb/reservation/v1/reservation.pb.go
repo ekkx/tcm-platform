@@ -30,7 +30,7 @@ type Reservation struct {
 	OfficialSiteId *string                `protobuf:"bytes,2,opt,name=official_site_id,json=officialSiteId,proto3,oneof" json:"official_site_id,omitempty"`
 	User           *v1.User               `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
 	CampusType     v11.CampusType         `protobuf:"varint,4,opt,name=campus_type,json=campusType,proto3,enum=room.v1.CampusType" json:"campus_type,omitempty"`
-	RoomId         string                 `protobuf:"bytes,5,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
+	Room           *v11.Room              `protobuf:"bytes,5,opt,name=room,proto3" json:"room,omitempty"`
 	Date           string                 `protobuf:"bytes,6,opt,name=date,proto3" json:"date,omitempty"`
 	FromHour       int32                  `protobuf:"varint,7,opt,name=from_hour,json=fromHour,proto3" json:"from_hour,omitempty"`
 	FromMinute     int32                  `protobuf:"varint,8,opt,name=from_minute,json=fromMinute,proto3" json:"from_minute,omitempty"`
@@ -99,11 +99,11 @@ func (x *Reservation) GetCampusType() v11.CampusType {
 	return v11.CampusType(0)
 }
 
-func (x *Reservation) GetRoomId() string {
+func (x *Reservation) GetRoom() *v11.Room {
 	if x != nil {
-		return x.RoomId
+		return x.Room
 	}
-	return ""
+	return nil
 }
 
 func (x *Reservation) GetDate() string {
@@ -536,14 +536,14 @@ var File_reservation_v1_reservation_proto protoreflect.FileDescriptor
 
 const file_reservation_v1_reservation_proto_rawDesc = "" +
 	"\n" +
-	" reservation/v1/reservation.proto\x12\x0ereservation.v1\x1a\x12room/v1/room.proto\x1a\x12user/v1/user.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x98\x03\n" +
+	" reservation/v1/reservation.proto\x12\x0ereservation.v1\x1a\x12room/v1/room.proto\x1a\x12user/v1/user.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa2\x03\n" +
 	"\vReservation\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12-\n" +
 	"\x10official_site_id\x18\x02 \x01(\tH\x00R\x0eofficialSiteId\x88\x01\x01\x12!\n" +
 	"\x04user\x18\x03 \x01(\v2\r.user.v1.UserR\x04user\x124\n" +
 	"\vcampus_type\x18\x04 \x01(\x0e2\x13.room.v1.CampusTypeR\n" +
-	"campusType\x12\x17\n" +
-	"\aroom_id\x18\x05 \x01(\tR\x06roomId\x12\x12\n" +
+	"campusType\x12!\n" +
+	"\x04room\x18\x05 \x01(\v2\r.room.v1.RoomR\x04room\x12\x12\n" +
 	"\x04date\x18\x06 \x01(\tR\x04date\x12\x1b\n" +
 	"\tfrom_hour\x18\a \x01(\x05R\bfromHour\x12\x1f\n" +
 	"\vfrom_minute\x18\b \x01(\x05R\n" +
@@ -608,29 +608,31 @@ var file_reservation_v1_reservation_proto_goTypes = []any{
 	(*DeleteReservationResponse)(nil), // 8: reservation.v1.DeleteReservationResponse
 	(*v1.User)(nil),                   // 9: user.v1.User
 	(v11.CampusType)(0),               // 10: room.v1.CampusType
-	(*timestamppb.Timestamp)(nil),     // 11: google.protobuf.Timestamp
+	(*v11.Room)(nil),                  // 11: room.v1.Room
+	(*timestamppb.Timestamp)(nil),     // 12: google.protobuf.Timestamp
 }
 var file_reservation_v1_reservation_proto_depIdxs = []int32{
 	9,  // 0: reservation.v1.Reservation.user:type_name -> user.v1.User
 	10, // 1: reservation.v1.Reservation.campus_type:type_name -> room.v1.CampusType
-	11, // 2: reservation.v1.Reservation.create_time:type_name -> google.protobuf.Timestamp
-	0,  // 3: reservation.v1.GetReservationResponse.reservation:type_name -> reservation.v1.Reservation
-	0,  // 4: reservation.v1.ListReservationsResponse.reservations:type_name -> reservation.v1.Reservation
-	10, // 5: reservation.v1.CreateReservationRequest.campus_type:type_name -> room.v1.CampusType
-	0,  // 6: reservation.v1.CreateReservationResponse.reservation:type_name -> reservation.v1.Reservation
-	1,  // 7: reservation.v1.ReservationService.GetReservation:input_type -> reservation.v1.GetReservationRequest
-	3,  // 8: reservation.v1.ReservationService.ListReservations:input_type -> reservation.v1.ListReservationsRequest
-	5,  // 9: reservation.v1.ReservationService.CreateReservation:input_type -> reservation.v1.CreateReservationRequest
-	7,  // 10: reservation.v1.ReservationService.DeleteReservation:input_type -> reservation.v1.DeleteReservationRequest
-	2,  // 11: reservation.v1.ReservationService.GetReservation:output_type -> reservation.v1.GetReservationResponse
-	4,  // 12: reservation.v1.ReservationService.ListReservations:output_type -> reservation.v1.ListReservationsResponse
-	6,  // 13: reservation.v1.ReservationService.CreateReservation:output_type -> reservation.v1.CreateReservationResponse
-	8,  // 14: reservation.v1.ReservationService.DeleteReservation:output_type -> reservation.v1.DeleteReservationResponse
-	11, // [11:15] is the sub-list for method output_type
-	7,  // [7:11] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	11, // 2: reservation.v1.Reservation.room:type_name -> room.v1.Room
+	12, // 3: reservation.v1.Reservation.create_time:type_name -> google.protobuf.Timestamp
+	0,  // 4: reservation.v1.GetReservationResponse.reservation:type_name -> reservation.v1.Reservation
+	0,  // 5: reservation.v1.ListReservationsResponse.reservations:type_name -> reservation.v1.Reservation
+	10, // 6: reservation.v1.CreateReservationRequest.campus_type:type_name -> room.v1.CampusType
+	0,  // 7: reservation.v1.CreateReservationResponse.reservation:type_name -> reservation.v1.Reservation
+	1,  // 8: reservation.v1.ReservationService.GetReservation:input_type -> reservation.v1.GetReservationRequest
+	3,  // 9: reservation.v1.ReservationService.ListReservations:input_type -> reservation.v1.ListReservationsRequest
+	5,  // 10: reservation.v1.ReservationService.CreateReservation:input_type -> reservation.v1.CreateReservationRequest
+	7,  // 11: reservation.v1.ReservationService.DeleteReservation:input_type -> reservation.v1.DeleteReservationRequest
+	2,  // 12: reservation.v1.ReservationService.GetReservation:output_type -> reservation.v1.GetReservationResponse
+	4,  // 13: reservation.v1.ReservationService.ListReservations:output_type -> reservation.v1.ListReservationsResponse
+	6,  // 14: reservation.v1.ReservationService.CreateReservation:output_type -> reservation.v1.CreateReservationResponse
+	8,  // 15: reservation.v1.ReservationService.DeleteReservation:output_type -> reservation.v1.DeleteReservationResponse
+	12, // [12:16] is the sub-list for method output_type
+	8,  // [8:12] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_reservation_v1_reservation_proto_init() }

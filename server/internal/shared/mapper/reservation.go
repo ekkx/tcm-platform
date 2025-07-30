@@ -22,7 +22,7 @@ func ToReservation(rsv *database.Reservation) *entity.Reservation {
 		OfficialSiteID: rsv.OfficialSiteID,
 		User:           entity.User{ID: rsv.UserID},
 		CampusType:     campusType,
-		RoomID:         rsv.RoomID,
+		Room:           entity.Room{ID: rsv.RoomID},
 		Date:           rsv.Date,
 		FromHour:       int(rsv.FromHour),
 		FromMinute:     int(rsv.FromMinute),

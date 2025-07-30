@@ -3,7 +3,9 @@ package service
 import (
 	"context"
 
+	"github.com/ekkx/tcmrsv"
 	"github.com/ekkx/tcmrsv-web/server/internal/domain/entity"
+	"github.com/ekkx/tcmrsv-web/server/internal/shared/mapper"
 	"github.com/ekkx/tcmrsv-web/server/pkg/ulid"
 )
 
@@ -33,6 +35,8 @@ func (svc *ServiceImpl) ListReservationsByIDs(ctx context.Context, reservationID
 		return nil, err
 	}
 
+	rooms := tcmrsv.New().GetRooms()
+
 	completeRsvs := make([]*entity.Reservation, 0, len(skeletonRsvs))
 	for _, rsv := range skeletonRsvs {
 		completeRsv := rsv
@@ -42,6 +46,12 @@ func (svc *ServiceImpl) ListReservationsByIDs(ctx context.Context, reservationID
 			}
 			if user.ID == rsv.User.ID {
 				completeRsv.User = *user
+				break
+			}
+		}
+		for _, room := range rooms {
+			if room.ID == rsv.Room.ID {
+				completeRsv.Room = *mapper.ToRoom(&room)
 				break
 			}
 		}

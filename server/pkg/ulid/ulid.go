@@ -4,6 +4,8 @@ import (
 	"crypto/rand"
 	"database/sql/driver"
 	"fmt"
+	"io"
+	"sync"
 	"time"
 
 	oklogulid "github.com/oklog/ulid/v2"
@@ -13,10 +15,16 @@ type ULID struct {
 	id oklogulid.ULID
 }
 
-var entropy = oklogulid.Monotonic(rand.Reader, 0)
+var entropyPool = sync.Pool{
+	New: func() any {
+		return oklogulid.Monotonic(rand.Reader, 0)
+	},
+}
 
 func New() ULID {
-	id := oklogulid.MustNew(oklogulid.Timestamp(time.Now()), entropy)
+	e := entropyPool.Get().(io.Reader)
+	defer entropyPool.Put(e)
+	id := oklogulid.MustNew(oklogulid.Timestamp(time.Now()), e)
 	return ULID{id: id}
 }
 
