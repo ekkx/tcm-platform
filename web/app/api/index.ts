@@ -1,12 +1,14 @@
 import { createClient } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
-import { AuthService } from "./auth/v1/auth_pb";
-import { ReservationService } from "./reservation/v1/reservation_pb";
-import { RoomService } from "./room/v1/room_pb";
-import { UserService } from "./user/v1/user_pb";
+import { authInterceptor } from "./interceptors/auth";
+import { AuthService } from "./pb/auth/v1/auth_pb";
+import { ReservationService } from "./pb/reservation/v1/reservation_pb";
+import { RoomService } from "./pb/room/v1/room_pb";
+import { UserService } from "./pb/user/v1/user_pb";
 
 const transport = createConnectTransport({
   baseUrl: "http://localhost:50051",
+  interceptors: [authInterceptor],
   // useBinaryFormat: true,
 });
 

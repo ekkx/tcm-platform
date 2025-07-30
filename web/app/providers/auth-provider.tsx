@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import { userClient } from "~/api";
-import { type User } from "~/api/user/v1/user_pb";
+import { type User } from "~/api/pb/user/v1/user_pb";
 import { Cookie } from "~/store/cookies";
 
 const AuthContext = createContext<User | null>(null);
@@ -26,13 +26,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           },
         }
       );
-      if (response.user) {
-        setUser(response.user);
-        console.log("User authenticated:", response.user?.displayName);
-      } else {
+
+      if (!response.user) {
         window.location.href = "/login";
         return;
       }
+
+      setUser(response.user);
     } catch (error) {
       if (error instanceof Error) {
         window.location.href = "/login";
