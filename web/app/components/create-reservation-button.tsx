@@ -1,14 +1,39 @@
 import {
+  addToast,
   Button,
   Drawer,
   DrawerBody,
   DrawerContent,
   useDisclosure,
 } from "@heroui/react";
+import type { Reservation } from "~/api/pb/reservation/v1/reservation_pb";
+import { CampusType } from "~/api/pb/room/v1/room_pb";
 import { ReservationForm } from "./reservation-form";
 
 export function CreateReservationButton() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const onReservationCreated = (
+    reservation: Reservation,
+    onClose: () => void
+  ) => {
+    const campusName =
+      reservation.campusType === CampusType.NAKAMEGURO ? "中目黒" : "池袋";
+    addToast({
+      title: "予約が完了しました",
+      description: `【${campusName}キャンパス】${reservation.date}`,
+      color: "success",
+    });
+    onClose();
+  };
+
+  const onReservationFailed = (error: Error) => {
+    addToast({
+      title: "予約に失敗しました",
+      description: error.message,
+      color: "danger",
+    });
+  };
 
   return (
     <>
@@ -41,7 +66,7 @@ export function CreateReservationButton() {
         size="xl"
         classNames={{
           closeButton:
-            "top-4 right-4 scale-125 border-[0.5px] border-default-300",
+            "top-4 right-4 scale-125 border-[0.5px] border-default-300 z-50 bg-default-100",
         }}
       >
         <DrawerContent>
@@ -54,7 +79,12 @@ export function CreateReservationButton() {
                     希望の日時と部屋を選択して予約してください。
                   </p>
                 </div>
-                <ReservationForm />
+                <ReservationForm
+                  onReservationCreated={(reservation) =>
+                    onReservationCreated(reservation, onClose)
+                  }
+                  onReservationFailed={onReservationFailed}
+                />
               </DrawerBody>
             </>
           )}
