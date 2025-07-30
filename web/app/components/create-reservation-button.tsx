@@ -75,8 +75,8 @@ export function CreateReservationButton() {
         <DrawerContent>
           {(onClose) => (
             <>
-              <DrawerBody className="gap-8 py-8">
-                <div className="grid gap-1">
+              <DrawerBody className="gap-8 p-0 pt-8">
+                <div className="grid gap-1 px-6">
                   <h3 className="text-xl font-bold">新規予約</h3>
                   <p className="text-xs text-foreground-400">
                     希望の日時と部屋を選択して予約してください。

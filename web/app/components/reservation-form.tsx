@@ -1,5 +1,6 @@
 import {
   Button,
+  Card,
   DatePicker,
   Select,
   SelectItem,
@@ -190,7 +191,7 @@ export function ReservationForm({
 
   return (
     <div className="flex flex-col gap-6 w-full h-full">
-      <div className="grid gap-3">
+      <div className="grid gap-3 px-6">
         <h4 className="text-sm text-default-700 opacity-60">キャンパス</h4>
         <Select
           isRequired
@@ -206,7 +207,7 @@ export function ReservationForm({
           <SelectItem key="ikebukuro">池袋キャンパス</SelectItem>
         </Select>
       </div>
-      <div className="grid gap-3">
+      <div className="grid gap-3 px-6">
         <h4 className="text-sm text-default-700 opacity-60">予約日</h4>
         <I18nProvider locale="ja">
           <DatePicker
@@ -222,7 +223,7 @@ export function ReservationForm({
           />
         </I18nProvider>
       </div>
-      <div className="grid gap-3">
+      <div className="grid gap-3 px-6">
         <h4 className="text-sm text-default-700 opacity-60">開始時刻</h4>
         <Select
           isRequired
@@ -239,7 +240,7 @@ export function ReservationForm({
           })}
         </Select>
       </div>
-      <div className="grid">
+      <div className="grid px-6">
         <h4 className="text-sm text-default-700 opacity-60">利用時間</h4>
         <Slider
           showSteps
@@ -291,7 +292,7 @@ export function ReservationForm({
           onChangeEnd={handleSelectTimeRange}
         />
       </div>
-      <div className="grid gap-3">
+      <div className="grid gap-3 px-6 pb-24">
         <h4 className="text-sm text-default-700 opacity-60">練習室</h4>
         <div>
           {sliderValue === 0 ? (
@@ -334,17 +335,18 @@ export function ReservationForm({
           )}
         </div>
       </div>
-      <Button
-        fullWidth
-        color="primary"
-        className="mt-auto flex-shrink-0"
-        isDisabled={!canCreateReservation()}
-        isLoading={isReservating}
-        onPress={handleCreateReservation}
-      >
-        予約する
-      </Button>
-      <span className="h-2 flex-shrink-0" />
+      <Card className="absolute w-full left-0 bottom-0 p-4 rounded-t-none rounded-r-none bg-content1/20 backdrop-blur-xl">
+        <Button
+          fullWidth
+          color="primary"
+          className="mt-auto flex-shrink-0"
+          isDisabled={!canCreateReservation()}
+          isLoading={isReservating}
+          onPress={handleCreateReservation}
+        >
+          予約する
+        </Button>
+      </Card>
     </div>
   );
 }

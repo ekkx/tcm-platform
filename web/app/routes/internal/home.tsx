@@ -12,11 +12,14 @@ export default function Home() {
     | Reservation
     | undefined;
   const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [isFetchingReservations, setIsFetchingReservations] = useState(true);
 
   useEffect(() => {
     (async () => {
+      setIsFetchingReservations(true);
       const response = await reservationClient.listReservations({});
       setReservations(response.reservations);
+      setIsFetchingReservations(false);
     })();
   }, []);
 
@@ -100,8 +103,12 @@ export default function Home() {
           </Chip>
         </div> */}
       </div>
-      {reservations.length === 0 ? (
+      {isFetchingReservations ? (
         <SkeletonReservationList />
+      ) : reservations.length === 0 ? (
+        <div className="grid place-items-center h-36">
+          <p className="text-sm text-default-400">予約はありません</p>
+        </div>
       ) : (
         <ReservationList
           reservations={reservations}
