@@ -1,11 +1,16 @@
 import { Button } from "@heroui/react";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 import { reservationClient } from "~/api";
 import type { Reservation } from "~/api/pb/reservation/v1/reservation_pb";
 import { ReservationList } from "~/components/reservation-list";
 import { SkeletonReservationList } from "~/components/skeleton-reservation-list";
 
 export default function Home() {
+  const location = useLocation();
+  const newReservation = location.state?.newReservation as
+    | Reservation
+    | undefined;
   const [reservations, setReservations] = useState<Reservation[]>([]);
 
   useEffect(() => {
@@ -14,6 +19,15 @@ export default function Home() {
       setReservations(response.reservations);
     })();
   }, []);
+
+  useEffect(() => {
+    if (newReservation) {
+      setReservations((prev) => {
+        const exists = prev.some((r) => r.id === newReservation.id);
+        return exists ? prev : [...prev, newReservation];
+      });
+    }
+  }, [newReservation]);
 
   const handleDeleteReservation = (reservationId: string) => {
     setReservations((prev) => prev.filter((r) => r.id !== reservationId));

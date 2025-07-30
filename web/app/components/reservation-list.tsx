@@ -3,7 +3,7 @@ import { ReservationListItem } from "./reservation-list-item";
 
 // "2025-08" → "2025年8月"
 const getYearMonthLabel = (yearMonth: string) => {
-  const [year, month] = yearMonth.split("-");
+  const [_, month] = yearMonth.split("-");
   // return `${year}年${parseInt(month, 10)}月`;
   return `${parseInt(month, 10)}月`;
 };
@@ -38,13 +38,23 @@ export function ReservationList({
             {getYearMonthLabel(yearMonth)}
           </h4>
           <div className="flex flex-col gap-2">
-            {grouped[yearMonth].map((reservation) => (
-              <ReservationListItem
-                key={reservation.id}
-                reservation={reservation}
-                onDelete={onDelete}
-              />
-            ))}
+            {grouped[yearMonth]
+              .slice()
+              .sort((a, b) => {
+                const getTime = (r: Reservation) => {
+                  const hour = String(r.fromHour).padStart(2, "0");
+                  const minute = String(r.fromMinute ?? 0).padStart(2, "0");
+                  return new Date(`${r.date}T${hour}:${minute}`).getTime();
+                };
+                return getTime(a) - getTime(b);
+              })
+              .map((reservation) => (
+                <ReservationListItem
+                  key={reservation.id}
+                  reservation={reservation}
+                  onDelete={onDelete}
+                />
+              ))}
           </div>
         </div>
       ))}

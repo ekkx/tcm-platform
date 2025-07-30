@@ -6,12 +6,14 @@ import {
   DrawerContent,
   useDisclosure,
 } from "@heroui/react";
+import { useNavigate } from "react-router";
 import type { Reservation } from "~/api/pb/reservation/v1/reservation_pb";
 import { CampusType } from "~/api/pb/room/v1/room_pb";
 import { ReservationForm } from "./reservation-form";
 
 export function CreateReservationButton() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const navigate = useNavigate();
 
   const onReservationCreated = (
     reservation: Reservation,
@@ -25,6 +27,7 @@ export function CreateReservationButton() {
       color: "success",
     });
     onClose();
+    navigate("/home", { state: { newReservation: reservation } });
   };
 
   const onReservationFailed = (error: Error) => {
