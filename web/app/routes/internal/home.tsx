@@ -1,8 +1,9 @@
 import { Button } from "@heroui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { reservationClient } from "~/api";
+import type { Reservation } from "~/api/pb/reservation/v1/reservation_pb";
 import { ReservationList } from "~/components/reservation-list";
-import { Cookie } from "~/store/cookies";
+import { SkeletonReservationList } from "~/components/skeleton-reservation-list";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
@@ -13,15 +14,13 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+
   useEffect(() => {
-    reservationClient.listReservations(
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${Cookie.accessToken() ?? ""}`,
-        },
-      }
-    );
+    (async () => {
+      const response = await reservationClient.listReservations({});
+      setReservations(response.reservations);
+    })();
   }, []);
 
   return (
@@ -91,7 +90,11 @@ export default function Home() {
           </Chip>
         </div> */}
       </div>
-      <ReservationList />
+      {reservations.length === 0 ? (
+        <SkeletonReservationList />
+      ) : (
+        <ReservationList reservations={reservations} />
+      )}
     </div>
   );
 }

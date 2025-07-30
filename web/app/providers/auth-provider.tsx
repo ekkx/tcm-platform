@@ -28,14 +28,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       );
 
       if (!response.user) {
-        window.location.href = "/login";
+        window.location.href = "/";
         return;
       }
 
       setUser(response.user);
     } catch (error) {
       if (error instanceof Error) {
-        window.location.href = "/login";
+        window.location.href = "/";
         return;
       }
     }

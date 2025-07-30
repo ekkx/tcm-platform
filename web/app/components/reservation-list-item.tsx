@@ -1,15 +1,65 @@
-import { Button, Card, CardBody, Divider } from "@heroui/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  Divider,
+  Modal,
+  ModalBody,
+  ModalContent,
+  useDisclosure,
+} from "@heroui/react";
+import { useEffect, useState } from "react";
+import type { Reservation } from "~/api/pb/reservation/v1/reservation_pb";
+import { CampusType } from "~/api/pb/room/v1/room_pb";
 
-export function ReservationListItem() {
+export function ReservationListItem({
+  reservation,
+}: {
+  reservation: Reservation;
+}) {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [campusName, setCampusName] = useState<string>("");
+  const [timeRange, setTimeRange] = useState<string>("");
+  const [day, setDay] = useState<number>(0);
+  const [weekday, setWeekday] = useState<string>("");
+
+  useEffect(() => {
+    switch (reservation.campusType) {
+      case CampusType.IKEBUKURO:
+        setCampusName("池袋");
+        break;
+      case CampusType.NAKAMEGURO:
+        setCampusName("中目黒・代官山");
+        break;
+      default:
+        setCampusName("不明なキャンパス");
+        break;
+    }
+
+    const date = new Date(`${reservation.date}T00:00:00+09:00`);
+    const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
+    setDay(date.getDate());
+    setWeekday(daysOfWeek[date.getDay()]);
+
+    const startTime = formatTime(reservation.fromHour, reservation.fromMinute);
+    const endTime = formatTime(reservation.toHour, reservation.toMinute);
+    setTimeRange(`${startTime} ~ ${endTime}`);
+  }, []);
+
+  const formatTime = (hour: number, minute: number) => {
+    const paddedMinute = String(minute).padStart(2, "0");
+    return `${hour}:${paddedMinute}`;
+  };
+
   return (
     <Card>
       <CardBody className="flex flex-row items-center">
-        <div className="flex flex-col items-center pl-3 pr-4">
-          <span className="text-xs">水</span>
-          <span className="text-2xl">28</span>
+        <div className="flex flex-col items-center min-w-12">
+          <span className="text-xs">{weekday}</span>
+          <span className="text-2xl">{day}</span>
         </div>
-        <Divider orientation="vertical" className="h-11" />
-        <div className="mr-auto pl-4">
+        <Divider orientation="vertical" className="h-11 ml-2" />
+        <div className="mr-auto pl-3">
           <ul className="text-xs text-[10px] opacity-60">
             <li className="flex items-center gap-1.5">
               <svg
@@ -41,7 +91,7 @@ export function ReservationListItem() {
                   mask="url(#solarClockCircleBold0)"
                 />
               </svg>
-              12:30 ~ 16:30
+              {timeRange}
             </li>
             <li className="flex items-center gap-1.5">
               <svg
@@ -58,7 +108,7 @@ export function ReservationListItem() {
                   clip-rule="evenodd"
                 />
               </svg>
-              中目黒・代官山
+              {campusName}
             </li>
             <li className="flex items-center gap-1.5">
               <svg
@@ -75,11 +125,53 @@ export function ReservationListItem() {
                   clip-rule="evenodd"
                 />
               </svg>
-              P 445（G）
+              {reservation.room?.name}
             </li>
           </ul>
         </div>
-        <Button size="sm">削除</Button>
+        <Button size="sm" onPress={onOpen}>
+          削除
+        </Button>
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          placement="center"
+          size="xs"
+          closeButton={<></>}
+        >
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalBody className="p-0 gap-0">
+                  <div className="grid gap-4 px-3 py-6 text-center">
+                    <p className="text-xl font-bold">予約を削除しますか？</p>
+                    <p className="text-xs">
+                      この予約を削除してもよろしいですか？
+                    </p>
+                  </div>
+                  <Divider />
+                  <div className="flex justify-center gap-6 py-3">
+                    <Button
+                      className="w-32 font-bold"
+                      variant="flat"
+                      onPress={onClose}
+                    >
+                      キャンセル
+                    </Button>
+                    <Button
+                      className="w-32 font-bold"
+                      color="danger"
+                      variant="flat"
+                      // isLoading={isDeleting}
+                    >
+                      削除
+                    </Button>
+                  </div>
+                </ModalBody>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
       </CardBody>
     </Card>
   );
