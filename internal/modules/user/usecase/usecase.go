@@ -1,0 +1,31 @@
+package usecase
+
+import (
+	"context"
+
+	"github.com/ekkx/tcmrsv-web/internal/modules/user/repository"
+	"github.com/ekkx/tcmrsv-web/internal/modules/user/service"
+)
+
+type UseCase interface {
+	GetUser(ctx context.Context, input *GetUserInput) (*GetUserOutput, error)
+	ListSlaveUsers(ctx context.Context, input *ListSlaveUsersInput) (*ListSlaveUsersOutput, error)
+	CreateSlaveUser(ctx context.Context, params *CreateSlaveUserInput) (*CreateSlaveUserOutput, error)
+	UpdateUser(ctx context.Context, input *UpdateUserInput) (*UpdateUserOutput, error)
+	DeleteUser(ctx context.Context, input *DeleteUserInput) (*DeleteUserOutput, error)
+}
+
+type UseCaseImpl struct {
+	userRepo    repository.Repository
+	userService service.Service
+}
+
+func New(
+	userRepo repository.Repository,
+	userService service.Service,
+) UseCase {
+	return &UseCaseImpl{
+		userRepo:    userRepo,
+		userService: userService,
+	}
+}

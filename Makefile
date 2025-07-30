@@ -10,7 +10,7 @@ help: Makefile
 
 #? dev-up: 開発環境用サーバーを起動
 dev-up:
-	cd server && air
+	air
 .PHONY: dev-up
 
 #? proto: Protocol Buffers を生成
@@ -25,15 +25,15 @@ grpcui:
 
 #? sqlc: SQL クエリを Go コードに変換
 sqlc:
-	cd server && sqlc generate
+	sqlc generate
 .PHONY: sqlc
 
 #? migrate-up: データベースの構造をマイグレート
 migrate-up:
-	cd server && migrate -source file://migrations -database postgres://tcmrsv:tcmrsv@tcmrsv-db:5432/tcmrsv_db?sslmode=disable up
+	migrate -source file://migrations -database postgres://tcmrsv:tcmrsv@tcmrsv-db:5432/tcmrsv_db?sslmode=disable up
 .PHONY: migrate-up
 
 #? migrate-down: データベースの構造を初期化
 migrate-down:
-	cd server && migrate -source file://migrations -database postgres://tcmrsv:tcmrsv@tcmrsv-db:5432/tcmrsv_db?sslmode=disable down -all
+	migrate -source file://migrations -database postgres://tcmrsv:tcmrsv@tcmrsv-db:5432/tcmrsv_db?sslmode=disable down -all
 .PHONY: migrate-down

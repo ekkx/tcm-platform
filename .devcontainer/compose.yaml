@@ -19,7 +19,7 @@ services:
     volumes:
       - ..:/tcmrsv-api:cached
     env_file:
-      - ../server/.env.development
+      - ../.env.development
     command: sleep infinity
     depends_on:
       - tcmrsv-db
