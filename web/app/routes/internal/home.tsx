@@ -4,14 +4,6 @@ import { reservationClient } from "~/api";
 import type { Reservation } from "~/api/pb/reservation/v1/reservation_pb";
 import { ReservationList } from "~/components/reservation-list";
 import { SkeletonReservationList } from "~/components/skeleton-reservation-list";
-import type { Route } from "./+types/home";
-
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
-  ];
-}
 
 export default function Home() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
@@ -22,6 +14,10 @@ export default function Home() {
       setReservations(response.reservations);
     })();
   }, []);
+
+  const handleDeleteReservation = (reservationId: string) => {
+    setReservations((prev) => prev.filter((r) => r.id !== reservationId));
+  };
 
   return (
     <div className="grid gap-6">
@@ -93,7 +89,10 @@ export default function Home() {
       {reservations.length === 0 ? (
         <SkeletonReservationList />
       ) : (
-        <ReservationList reservations={reservations} />
+        <ReservationList
+          reservations={reservations}
+          onDelete={handleDeleteReservation}
+        />
       )}
     </div>
   );

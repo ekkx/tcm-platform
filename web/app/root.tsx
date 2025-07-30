@@ -46,7 +46,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="dark text-foreground">
         <HeroUIProvider navigate={navigate} useHref={useHref}>
-          <ToastProvider />
+          <ToastProvider toastOffset={100} />
           {children}
           <ScrollRestoration />
           <Scripts />

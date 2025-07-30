@@ -1,4 +1,5 @@
 import {
+  addToast,
   Button,
   Card,
   CardBody,
@@ -9,19 +10,23 @@ import {
   useDisclosure,
 } from "@heroui/react";
 import { useEffect, useState } from "react";
+import { reservationClient } from "~/api";
 import type { Reservation } from "~/api/pb/reservation/v1/reservation_pb";
 import { CampusType } from "~/api/pb/room/v1/room_pb";
 
 export function ReservationListItem({
   reservation,
+  onDelete,
 }: {
   reservation: Reservation;
+  onDelete?: (reservationId: string) => void;
 }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [campusName, setCampusName] = useState<string>("");
   const [timeRange, setTimeRange] = useState<string>("");
   const [day, setDay] = useState<number>(0);
   const [weekday, setWeekday] = useState<string>("");
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   useEffect(() => {
     switch (reservation.campusType) {
@@ -49,6 +54,30 @@ export function ReservationListItem({
   const formatTime = (hour: number, minute: number) => {
     const paddedMinute = String(minute).padStart(2, "0");
     return `${hour}:${paddedMinute}`;
+  };
+
+  const handleDelete = async (onClose: () => void) => {
+    setIsDeleting(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await reservationClient.deleteReservation({
+        reservationId: reservation.id,
+      });
+      addToast({
+        title: "予約を削除しました",
+        color: "success",
+      });
+      onDelete?.(reservation.id);
+    } catch (error) {
+      addToast({
+        title: "予約の削除に失敗しました",
+        description: "もう一度お試しください。",
+        color: "danger",
+      });
+    } finally {
+      setIsDeleting(false);
+      onClose();
+    }
   };
 
   return (
@@ -162,7 +191,8 @@ export function ReservationListItem({
                       className="w-32 font-bold"
                       color="danger"
                       variant="flat"
-                      // isLoading={isDeleting}
+                      isLoading={isDeleting}
+                      onPress={() => handleDelete(onClose)}
                     >
                       削除
                     </Button>
