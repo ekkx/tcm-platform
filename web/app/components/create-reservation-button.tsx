@@ -68,8 +68,7 @@ export function CreateReservationButton() {
         onOpenChange={onOpenChange}
         size="xl"
         classNames={{
-          closeButton:
-            "top-4 right-4 scale-125 border-[0.5px] border-default-300 z-50 bg-default-100",
+          closeButton: "top-4 right-4 scale-125 z-50 bg-default-100",
         }}
       >
         <DrawerContent>
