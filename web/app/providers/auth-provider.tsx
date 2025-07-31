@@ -1,3 +1,4 @@
+import { Code, ConnectError } from "@connectrpc/connect";
 import {
   createContext,
   useCallback,
@@ -33,11 +34,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       setUser(response.user);
-    } catch (error) {
-      if (error instanceof Error) {
-        window.location.href = "/";
-        return;
+    } catch (err) {
+      if (
+        !(err instanceof ConnectError) ||
+        err.code !== Code.Unauthenticated ||
+        err.message !== "[unauthenticated] expired token"
+      ) {
+        // トークンの再発行に関するエラーじゃなさそうなら、無限リロードを避けるためクッキーを削除
+        Cookie.destroy();
       }
+      window.location.href = "/";
+      return;
     }
   }, []);
 
