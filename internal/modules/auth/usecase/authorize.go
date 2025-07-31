@@ -68,7 +68,12 @@ func (uc *UseCaseImpl) authorizeByOfficialSite(ctx context.Context, params *Auth
 			return nil, err
 		}
 
-		return uc.issueTokens(user)
+		auth, err := uc.issueTokens(user)
+		if err != nil {
+			return nil, err
+		}
+
+		return NewAuthorizeOutput(*auth), nil
 	}
 
 	if user.IsMaster() {
@@ -93,7 +98,12 @@ func (uc *UseCaseImpl) authorizeByULID(ctx context.Context, params *AuthorizeInp
 
 	slog.Debug("slave user login successful", slog.String("user_id", user.ID.String()))
 
-	return uc.issueTokens(user)
+	auth, err := uc.issueTokens(user)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewAuthorizeOutput(*auth), nil
 }
 
 func (uc *UseCaseImpl) handleMasterUserLogin(ctx context.Context, params *AuthorizeInput, user *entity.User) (*AuthorizeOutput, error) {
@@ -116,10 +126,15 @@ func (uc *UseCaseImpl) handleMasterUserLogin(ctx context.Context, params *Author
 
 	slog.Debug("master user password updated", slog.String("user_id", user.ID.String()), slog.String("official_site_id", *user.OfficialSiteID))
 
-	return uc.issueTokens(user)
+	auth, err := uc.issueTokens(user)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewAuthorizeOutput(*auth), nil
 }
 
-func (uc *UseCaseImpl) issueTokens(user *entity.User) (*AuthorizeOutput, error) {
+func (uc *UseCaseImpl) issueTokens(user *entity.User) (*entity.Auth, error) {
 	accessToken, err := uc.jwtManager.GenerateAccessToken(user.ID)
 	if err != nil {
 		return nil, err
@@ -128,9 +143,9 @@ func (uc *UseCaseImpl) issueTokens(user *entity.User) (*AuthorizeOutput, error) 
 	if err != nil {
 		return nil, err
 	}
-	return NewAuthorizeOutput(entity.Auth{
+	return &entity.Auth{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		User:         *user,
-	}), nil
+	}, nil
 }

@@ -10,6 +10,7 @@ import (
 
 type UseCase interface {
 	Authorize(ctx context.Context, params *AuthorizeInput) (*AuthorizeOutput, error)
+	Reauthorize(ctx context.Context, input *ReauthorizeInput) (*ReauthorizeOutput, error)
 }
 
 type UseCaseImpl struct {

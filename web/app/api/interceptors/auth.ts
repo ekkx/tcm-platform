@@ -1,5 +1,4 @@
-import { Code, type Interceptor } from "@connectrpc/connect";
-import { ConnectError } from "@connectrpc/connect";
+import { Code, ConnectError, type Interceptor } from "@connectrpc/connect";
 import { Cookie } from "~/store/cookies";
 import { authClient } from "..";
 import { AuthService } from "../pb/auth/v1/auth_pb";
@@ -22,7 +21,7 @@ export const authInterceptor: Interceptor = (next) => async (req) => {
     if (
       err instanceof ConnectError &&
       err.code === Code.Unauthenticated &&
-      err.message === "expired token"
+      err.message === "[unauthenticated] expired token"
     ) {
       console.warn("Token expired, attempting to refresh...");
 
