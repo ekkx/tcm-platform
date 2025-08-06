@@ -7,8 +7,8 @@ github.com/caarlos0/env/v11 v11.3.1/go.mod h1:qupehSf/Y0TUTsxKywqRt/vJjN5nz6vaui
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/ekkx/tcmrsv v0.0.0-20250607182637-29186764b01f h1:aq9DZRmW4/JQuVQ2KoUKXPB7TBTC//tPstTn5cFfX6Y=
-github.com/ekkx/tcmrsv v0.0.0-20250607182637-29186764b01f/go.mod h1:M5HOxUGzAcGkMDNLceu5zg3we9SyLIWZZIWz8/gGKOk=
+github.com/ekkx/tcmrsv v0.0.0-20250806032128-d0715e47cd83 h1:DQHpraVAMVnrXOEwOhL5YZEsu9lji1GlV6mNeRqxRV8=
+github.com/ekkx/tcmrsv v0.0.0-20250806032128-d0715e47cd83/go.mod h1:M5HOxUGzAcGkMDNLceu5zg3we9SyLIWZZIWz8/gGKOk=
 github.com/golang-jwt/jwt/v5 v5.2.2 h1:Rl4B7itRWVtYIHFrSNd7vhTiz9UpLdi6gZhZ3wEeDy8=
 github.com/golang-jwt/jwt/v5 v5.2.2/go.mod h1:pqrtFR0X4osieyHYxtmOUWsAWrfe1Q5UVIyoH402zdk=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=

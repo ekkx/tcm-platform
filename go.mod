@@ -5,7 +5,7 @@ go 1.24
 require (
 	connectrpc.com/connect v1.18.1
 	github.com/caarlos0/env/v11 v11.3.1
-	github.com/ekkx/tcmrsv v0.0.0-20250607182637-29186764b01f
+	github.com/ekkx/tcmrsv v0.0.0-20250806032128-d0715e47cd83
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/jackc/pgx/v5 v5.7.4
 	github.com/oklog/ulid/v2 v2.1.1
