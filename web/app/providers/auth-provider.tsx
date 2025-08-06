@@ -5,12 +5,19 @@ import {
   useContext,
   useEffect,
   useState,
+  type Dispatch,
+  type SetStateAction,
 } from "react";
 import { userClient } from "~/api";
 import { type User } from "~/api/pb/user/v1/user_pb";
 import { Cookie } from "~/store/cookies";
 
-const AuthContext = createContext<User | null>(null);
+type AuthContextValue = {
+  user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
+};
+
+const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -52,9 +59,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     authenticate();
   }, [authenticate]);
 
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 }
