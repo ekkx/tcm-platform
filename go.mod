@@ -14,6 +14,8 @@ require (
 	google.golang.org/protobuf v1.36.5
 )
 
+require github.com/robfig/cron/v3 v3.0.1 // indirect
+
 require (
 	connectrpc.com/grpcreflect v1.3.0
 	github.com/google/go-cmp v0.6.0 // indirect

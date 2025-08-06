@@ -13,11 +13,12 @@ const (
 )
 
 type Config struct {
-	Env      Env `env:"ENVIRONMENT"`
-	Server   ServerConfig
-	Database DatabaseConfig
-	Auth     AuthConfig
-	Log      LoggingConfig
+	Env       Env `env:"ENVIRONMENT"`
+	Server    ServerConfig
+	Database  DatabaseConfig
+	Auth      AuthConfig
+	Log       LoggingConfig
+	Scheduler SchedulerConfig
 }
 
 func New() (*Config, error) {
@@ -36,6 +37,9 @@ func New() (*Config, error) {
 		return nil, err
 	}
 	if err := env.Parse(&cfg.Log); err != nil {
+		return nil, err
+	}
+	if err := env.Parse(&cfg.Scheduler); err != nil {
 		return nil, err
 	}
 
