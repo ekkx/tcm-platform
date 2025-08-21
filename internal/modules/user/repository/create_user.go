@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/pkg/database"
-	"github.com/ekkx/tcmrsv-web/pkg/ulid"
+	"github.com/ekkx/tcm-platform/internal/gen/sqlc"
+	"github.com/ekkx/tcm-platform/internal/platform/ulid"
 )
 
 type CreateUserParams struct {
@@ -25,7 +25,7 @@ func (repo *RepositoryImpl) CreateUser(ctx context.Context, params *CreateUserPa
 		params.DisplayName = "未設定" // デフォルトの表示名を設定
 	}
 
-	id, err := repo.querier.CreateUser(ctx, database.CreateUserParams{
+	id, err := repo.querier.CreateUser(ctx, sqlc.CreateUserParams{
 		ID:                   params.ID,
 		Password:             params.Password,
 		OfficialSiteID:       params.OfficialSiteID,

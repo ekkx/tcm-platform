@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/shared/gateway"
-	"github.com/ekkx/tcmrsv-web/pkg/jwt"
+	"github.com/ekkx/tcm-platform/internal/app/gateway"
+	"github.com/ekkx/tcm-platform/internal/platform/jwt"
 )
 
 type UseCase interface {

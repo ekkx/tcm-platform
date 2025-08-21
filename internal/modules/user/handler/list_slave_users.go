@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/modules/user/usecase"
-	userv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/user/v1"
+	userv1 "github.com/ekkx/tcm-platform/internal/gen/pb/user/v1"
+	"github.com/ekkx/tcm-platform/internal/modules/user/usecase"
 )
 
 func (h *HandlerImpl) ListSlaveUsers(ctx context.Context, req *connect.Request[userv1.ListSlaveUsersRequest]) (*connect.Response[userv1.ListSlaveUsersResponse], error) {

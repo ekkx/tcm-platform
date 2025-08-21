@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/ekkx/tcmrsv-web/pkg/ulid"
+	"github.com/ekkx/tcm-platform/internal/platform/ulid"
 	"github.com/jackc/pgx/v5"
 )
 

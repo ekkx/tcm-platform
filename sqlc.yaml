@@ -3,13 +3,13 @@ sql:
   - engine: "postgresql"
     schema: "./migrations"
     queries:
-      - "./pkg/database/queries/reservations"
-      - "./pkg/database/queries/rooms"
-      - "./pkg/database/queries/users"
+      - "./internal/modules/reservation/sql"
+      - "./internal/modules/room/sql"
+      - "./internal/modules/user/sql"
     gen:
       go:
-        package: "database"
-        out: "./pkg/database"
+        package: "sqlc"
+        out: "./internal/gen/sqlc"
         sql_package: "pgx/v5"
         emit_json_tags: true
         emit_interface: true
@@ -18,21 +18,21 @@ sql:
         overrides:
           - db_type: ulid
             go_type:
-              import: github.com/ekkx/tcmrsv-web/pkg/ulid
+              import: github.com/ekkx/tcm-platform/internal/platform/ulid
               type: ULID
           - db_type: ulid
             go_type:
-              import: github.com/ekkx/tcmrsv-web/pkg/ulid
+              import: github.com/ekkx/tcm-platform/internal/platform/ulid
               type: ULID
               pointer: true
             nullable: true
           - db_type: date
             go_type:
-              import: github.com/ekkx/tcmrsv-web/pkg/ymd
+              import: github.com/ekkx/tcm-platform/internal/platform/ymd
               type: YMD
           - db_type: date
             go_type:
-              import: github.com/ekkx/tcmrsv-web/pkg/ymd
+              import: github.com/ekkx/tcm-platform/internal/platform/ymd
               type: YMD
               pointer: true
             nullable: true

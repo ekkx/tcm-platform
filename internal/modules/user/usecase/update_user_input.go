@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/shared/ctxhelper"
-	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
-	userv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/user/v1"
-	"github.com/ekkx/tcmrsv-web/pkg/actor"
+	userv1 "github.com/ekkx/tcm-platform/internal/gen/pb/user/v1"
+	"github.com/ekkx/tcm-platform/internal/platform/actor"
+	"github.com/ekkx/tcm-platform/internal/platform/ctxhelper"
+	"github.com/ekkx/tcm-platform/internal/platform/errs"
 )
 
 type UpdateUserInput struct {

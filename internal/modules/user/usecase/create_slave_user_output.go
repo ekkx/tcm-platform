@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/shared/assemble"
-	userv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/user/v1"
-	"github.com/ekkx/tcmrsv-web/internal/shared/presenter"
+	"github.com/ekkx/tcm-platform/internal/app/assemble"
+	"github.com/ekkx/tcm-platform/internal/app/presenter"
+	userv1 "github.com/ekkx/tcm-platform/internal/gen/pb/user/v1"
 )
 
 type CreateSlaveUserOutput struct {

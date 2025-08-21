@@ -3,9 +3,9 @@ package usecase
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/modules/reservation/repository"
-	"github.com/ekkx/tcmrsv-web/internal/shared/assemble"
-	"github.com/ekkx/tcmrsv-web/internal/shared/gateway"
+	"github.com/ekkx/tcm-platform/internal/app/assemble"
+	"github.com/ekkx/tcm-platform/internal/app/gateway"
+	"github.com/ekkx/tcm-platform/internal/modules/reservation/repository"
 )
 
 type UseCase interface {

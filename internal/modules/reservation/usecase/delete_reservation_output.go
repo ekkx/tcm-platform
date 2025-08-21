@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"connectrpc.com/connect"
-	reservationv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/reservation/v1"
+	reservationv1 "github.com/ekkx/tcm-platform/internal/gen/pb/reservation/v1"
 )
 
 type DeleteReservationOutput struct {

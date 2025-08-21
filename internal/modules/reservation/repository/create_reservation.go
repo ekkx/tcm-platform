@@ -3,17 +3,17 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/domain/enum"
-	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
-	"github.com/ekkx/tcmrsv-web/pkg/database"
-	"github.com/ekkx/tcmrsv-web/pkg/ulid"
-	"github.com/ekkx/tcmrsv-web/pkg/ymd"
+	"github.com/ekkx/tcm-platform/internal/domain/valueobject"
+	"github.com/ekkx/tcm-platform/internal/gen/sqlc"
+	"github.com/ekkx/tcm-platform/internal/platform/errs"
+	"github.com/ekkx/tcm-platform/internal/platform/ulid"
+	"github.com/ekkx/tcm-platform/internal/platform/ymd"
 )
 
 type CreateReservationParams struct {
 	ID         ulid.ULID
 	UserID     ulid.ULID
-	CampusType enum.CampusType
+	CampusType valueobject.CampusType
 	RoomID     string
 	Date       ymd.YMD
 	FromHour   int
@@ -27,17 +27,17 @@ func (repo *RepositoryImpl) CreateReservation(ctx context.Context, params *Creat
 		params.ID = ulid.New()
 	}
 
-	var campusType database.CampusType
+	var campusType sqlc.CampusType
 	switch params.CampusType {
-	case enum.CampusTypeIkebukuro:
-		campusType = database.CampusTypeIkebukuro
-	case enum.CampusTypeNakameguro:
-		campusType = database.CampusTypeNakameguro
+	case valueobject.CampusTypeIkebukuro:
+		campusType = sqlc.CampusTypeIkebukuro
+	case valueobject.CampusTypeNakameguro:
+		campusType = sqlc.CampusTypeNakameguro
 	default:
 		return nil, errs.ErrInvalidCampusType
 	}
 
-	id, err := repo.querier.CreateReservation(ctx, database.CreateReservationParams{
+	id, err := repo.querier.CreateReservation(ctx, sqlc.CreateReservationParams{
 		ID:         params.ID,
 		UserID:     params.UserID,
 		CampusType: campusType,

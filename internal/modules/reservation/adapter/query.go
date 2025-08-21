@@ -3,10 +3,10 @@ package adapter
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/domain/entity"
-	"github.com/ekkx/tcmrsv-web/internal/modules/reservation/repository"
-	"github.com/ekkx/tcmrsv-web/internal/shared/gateway"
-	"github.com/ekkx/tcmrsv-web/pkg/ulid"
+	"github.com/ekkx/tcm-platform/internal/app/gateway"
+	"github.com/ekkx/tcm-platform/internal/domain/entity"
+	"github.com/ekkx/tcm-platform/internal/modules/reservation/repository"
+	"github.com/ekkx/tcm-platform/internal/platform/ulid"
 )
 
 type QueryAdapter struct {

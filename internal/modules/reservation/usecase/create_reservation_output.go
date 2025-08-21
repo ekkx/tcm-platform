@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/shared/assemble"
-	reservationv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/reservation/v1"
-	"github.com/ekkx/tcmrsv-web/internal/shared/presenter"
+	"github.com/ekkx/tcm-platform/internal/app/assemble"
+	"github.com/ekkx/tcm-platform/internal/app/presenter"
+	reservationv1 "github.com/ekkx/tcm-platform/internal/gen/pb/reservation/v1"
 )
 
 type CreateReservationOutput struct {

@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
-	"github.com/ekkx/tcmrsv-web/pkg/ulid"
+	"github.com/ekkx/tcm-platform/internal/platform/errs"
+	"github.com/ekkx/tcm-platform/internal/platform/ulid"
 	"github.com/jackc/pgx/v5"
 )
 

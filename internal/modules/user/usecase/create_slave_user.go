@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
+	"github.com/ekkx/tcm-platform/internal/modules/user/repository"
+	"github.com/ekkx/tcm-platform/internal/platform/errs"
 )
 
 func (uc *UseCaseImpl) CreateSlaveUser(ctx context.Context, params *CreateSlaveUserInput) (*CreateSlaveUserOutput, error) {

@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"connectrpc.com/connect"
-	userv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/user/v1"
+	userv1 "github.com/ekkx/tcm-platform/internal/gen/pb/user/v1"
 )
 
 type DeleteUserOutput struct {

@@ -3,14 +3,14 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/domain/enum"
-	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
-	"github.com/ekkx/tcmrsv-web/pkg/database"
-	"github.com/ekkx/tcmrsv-web/pkg/ymd"
+	"github.com/ekkx/tcm-platform/internal/domain/valueobject"
+	"github.com/ekkx/tcm-platform/internal/gen/sqlc"
+	"github.com/ekkx/tcm-platform/internal/platform/errs"
+	"github.com/ekkx/tcm-platform/internal/platform/ymd"
 )
 
 type ListUnavailableRoomIDsParams struct {
-	CampusType enum.CampusType
+	CampusType valueobject.CampusType
 	Date       ymd.YMD
 	FromHour   int
 	FromMinute int
@@ -19,17 +19,17 @@ type ListUnavailableRoomIDsParams struct {
 }
 
 func (repo *RepositoryImpl) ListUnavailableRoomIDs(ctx context.Context, params *ListUnavailableRoomIDsParams) ([]string, error) {
-	var campusType database.CampusType
+	var campusType sqlc.CampusType
 	switch params.CampusType {
-	case enum.CampusTypeIkebukuro:
-		campusType = database.CampusTypeIkebukuro
-	case enum.CampusTypeNakameguro:
-		campusType = database.CampusTypeNakameguro
+	case valueobject.CampusTypeIkebukuro:
+		campusType = sqlc.CampusTypeIkebukuro
+	case valueobject.CampusTypeNakameguro:
+		campusType = sqlc.CampusTypeNakameguro
 	default:
 		return nil, errs.ErrInvalidCampusType
 	}
 
-	roomIDs, err := repo.querier.ListUnavailableRoomIDs(ctx, database.ListUnavailableRoomIDsParams{
+	roomIDs, err := repo.querier.ListUnavailableRoomIDs(ctx, sqlc.ListUnavailableRoomIDsParams{
 		CampusType: campusType,
 		Date:       params.Date,
 		FromHour:   int32(params.FromHour),

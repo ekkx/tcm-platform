@@ -4,12 +4,12 @@ import (
 	"context"
 	"slices"
 
+	"github.com/ekkx/tcm-platform/internal/domain/entity"
+	"github.com/ekkx/tcm-platform/internal/domain/valueobject"
+	"github.com/ekkx/tcm-platform/internal/modules/room/mapper"
+	"github.com/ekkx/tcm-platform/internal/modules/room/repository"
+	"github.com/ekkx/tcm-platform/internal/platform/errs"
 	"github.com/ekkx/tcmrsv"
-	"github.com/ekkx/tcmrsv-web/internal/domain/entity"
-	"github.com/ekkx/tcmrsv-web/internal/domain/enum"
-	"github.com/ekkx/tcmrsv-web/internal/modules/room/repository"
-	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
-	"github.com/ekkx/tcmrsv-web/internal/shared/mapper"
 )
 
 func (uc *UseCaseImpl) ListAvailableRooms(ctx context.Context, input *ListAvailableRoomsInput) (*ListAvailableRoomsOutput, error) {
@@ -31,9 +31,9 @@ func (uc *UseCaseImpl) ListAvailableRooms(ctx context.Context, input *ListAvaila
 
 	var tcmCampus tcmrsv.Campus
 	switch input.CampusType {
-	case enum.CampusTypeIkebukuro:
+	case valueobject.CampusTypeIkebukuro:
 		tcmCampus = tcmrsv.CampusIkebukuro
-	case enum.CampusTypeNakameguro:
+	case valueobject.CampusTypeNakameguro:
 		tcmCampus = tcmrsv.CampusNakameguro
 	default:
 		return nil, errs.ErrInvalidCampusType

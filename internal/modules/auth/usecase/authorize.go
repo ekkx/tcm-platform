@@ -4,11 +4,11 @@ import (
 	"context"
 	"log/slog"
 
+	"github.com/ekkx/tcm-platform/internal/app/gateway"
+	"github.com/ekkx/tcm-platform/internal/domain/entity"
+	"github.com/ekkx/tcm-platform/internal/platform/errs"
+	"github.com/ekkx/tcm-platform/internal/platform/ulid"
 	"github.com/ekkx/tcmrsv"
-	"github.com/ekkx/tcmrsv-web/internal/domain/entity"
-	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
-	"github.com/ekkx/tcmrsv-web/internal/shared/gateway"
-	"github.com/ekkx/tcmrsv-web/pkg/ulid"
 )
 
 func (uc *UseCaseImpl) Authorize(ctx context.Context, params *AuthorizeInput) (*AuthorizeOutput, error) {

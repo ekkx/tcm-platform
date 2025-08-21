@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/modules/room/usecase"
-	roomv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/room/v1"
+	roomv1 "github.com/ekkx/tcm-platform/internal/gen/pb/room/v1"
+	"github.com/ekkx/tcm-platform/internal/modules/room/usecase"
 )
 
 func (h *HandlerImpl) ListAvailableRooms(ctx context.Context, req *connect.Request[roomv1.ListAvailableRoomsRequest]) (*connect.Response[roomv1.ListAvailableRoomsResponse], error) {

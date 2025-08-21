@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/modules/reservation/repository"
-	"github.com/ekkx/tcmrsv-web/pkg/ymd"
+	"github.com/ekkx/tcm-platform/internal/modules/reservation/repository"
+	"github.com/ekkx/tcm-platform/internal/platform/ymd"
 )
 
 func (uc *UseCaseImpl) ListReservations(ctx context.Context, input *ListReservationsInput) (*ListReservationsOutput, error) {

@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/ekkx/tcmrsv-web/internal/modules/auth/usecase"
-	"github.com/ekkx/tcmrsv-web/internal/shared/pb/auth/v1/authv1connect"
+	"github.com/ekkx/tcm-platform/internal/gen/pb/auth/v1/authv1connect"
+	"github.com/ekkx/tcm-platform/internal/modules/auth/usecase"
 )
 
 type HandlerImpl struct {

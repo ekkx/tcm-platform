@@ -3,13 +3,13 @@ managed:
   enabled: true
   override:
     - file_option: go_package_prefix
-      value: github.com/ekkx/tcmrsv-web/internal/shared/pb
+      value: github.com/ekkx/tcm-platform/internal/gen/pb
 plugins:
   - remote: buf.build/protocolbuffers/go
-    out: ../internal/shared/pb
+    out: ../internal/gen/pb
     opt: paths=source_relative
   - remote: buf.build/connectrpc/go:v1.18.1
-    out: ../internal/shared/pb
+    out: ../internal/gen/pb
     opt: paths=source_relative
   - remote: buf.build/bufbuild/es:v2.5.2
     out: ../web/app/api/pb

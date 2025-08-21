@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/pkg/database"
+	"github.com/ekkx/tcm-platform/internal/gen/sqlc"
 )
 
 type Repository interface {
@@ -11,10 +11,10 @@ type Repository interface {
 }
 
 type RepositoryImpl struct {
-	querier database.Querier
+	querier sqlc.Querier
 }
 
-func New(querier database.Querier) Repository {
+func New(querier sqlc.Querier) Repository {
 	return &RepositoryImpl{
 		querier: querier,
 	}

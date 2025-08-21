@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	authv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/auth/v1"
+	authv1 "github.com/ekkx/tcm-platform/internal/gen/pb/auth/v1"
 )
 
 type ReauthorizeInput struct {

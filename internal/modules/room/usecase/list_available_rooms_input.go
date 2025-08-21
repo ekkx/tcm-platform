@@ -4,14 +4,14 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/domain/enum"
-	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
-	roomv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/room/v1"
-	"github.com/ekkx/tcmrsv-web/pkg/ymd"
+	"github.com/ekkx/tcm-platform/internal/domain/valueobject"
+	roomv1 "github.com/ekkx/tcm-platform/internal/gen/pb/room/v1"
+	"github.com/ekkx/tcm-platform/internal/platform/errs"
+	"github.com/ekkx/tcm-platform/internal/platform/ymd"
 )
 
 type ListAvailableRoomsInput struct {
-	CampusType enum.CampusType
+	CampusType valueobject.CampusType
 	Date       ymd.YMD
 	FromHour   int
 	FromMinute int
@@ -20,14 +20,14 @@ type ListAvailableRoomsInput struct {
 }
 
 func NewListAvailableRoomsInputFromRequest(ctx context.Context, req *connect.Request[roomv1.ListAvailableRoomsRequest]) (*ListAvailableRoomsInput, error) {
-	var campusType enum.CampusType
+	var campusType valueobject.CampusType
 	switch req.Msg.CampusType {
 	case roomv1.CampusType_CAMPUS_TYPE_IKEBUKURO:
-		campusType = enum.CampusTypeIkebukuro
+		campusType = valueobject.CampusTypeIkebukuro
 	case roomv1.CampusType_CAMPUS_TYPE_NAKAMEGURO:
-		campusType = enum.CampusTypeNakameguro
+		campusType = valueobject.CampusTypeNakameguro
 	case roomv1.CampusType_CAMPUS_TYPE_UNSPECIFIED:
-		campusType = enum.CampusTypeUnknown
+		campusType = valueobject.CampusTypeUnknown
 	}
 
 	var date ymd.YMD

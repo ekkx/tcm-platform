@@ -3,9 +3,9 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/pkg/database"
-	"github.com/ekkx/tcmrsv-web/pkg/ulid"
-	"github.com/ekkx/tcmrsv-web/pkg/ymd"
+	"github.com/ekkx/tcm-platform/internal/gen/sqlc"
+	"github.com/ekkx/tcm-platform/internal/platform/ulid"
+	"github.com/ekkx/tcm-platform/internal/platform/ymd"
 )
 
 type ListUserReservationIDsParams struct {
@@ -18,7 +18,7 @@ func (repo *RepositoryImpl) ListUserReservationIDs(ctx context.Context, params *
 		return nil, nil
 	}
 
-	ids, err := repo.querier.ListUserReservationIDs(ctx, database.ListUserReservationIDsParams{
+	ids, err := repo.querier.ListUserReservationIDs(ctx, sqlc.ListUserReservationIDsParams{
 		UserID: params.UserID,
 		Date:   params.Date,
 	})

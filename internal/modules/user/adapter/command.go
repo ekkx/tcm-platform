@@ -3,9 +3,9 @@ package adapter
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/internal/shared/gateway"
-	"github.com/ekkx/tcmrsv-web/pkg/ulid"
+	"github.com/ekkx/tcm-platform/internal/app/gateway"
+	"github.com/ekkx/tcm-platform/internal/modules/user/repository"
+	"github.com/ekkx/tcm-platform/internal/platform/ulid"
 )
 
 type CommandAdapter struct {

@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/pkg/database"
-	"github.com/ekkx/tcmrsv-web/pkg/ulid"
+	"github.com/ekkx/tcm-platform/internal/gen/sqlc"
+	"github.com/ekkx/tcm-platform/internal/platform/ulid"
 )
 
 type UpdateUserByIDParams struct {
@@ -15,7 +15,7 @@ type UpdateUserByIDParams struct {
 }
 
 func (repo *RepositoryImpl) UpdateUserByID(ctx context.Context, params *UpdateUserByIDParams) error {
-	_, err := repo.querier.UpdateUserByID(ctx, database.UpdateUserByIDParams{
+	_, err := repo.querier.UpdateUserByID(ctx, sqlc.UpdateUserByIDParams{
 		UserID:               params.UserID,
 		Password:             params.Password,
 		OfficialSitePassword: params.OfficialSitePassword,

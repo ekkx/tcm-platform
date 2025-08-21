@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/modules/room/repository"
+	"github.com/ekkx/tcm-platform/internal/modules/room/repository"
 )
 
 type UseCase interface {

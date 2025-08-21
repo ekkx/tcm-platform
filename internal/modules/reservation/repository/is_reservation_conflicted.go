@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/pkg/database"
-	"github.com/ekkx/tcmrsv-web/pkg/ymd"
+	"github.com/ekkx/tcm-platform/internal/gen/sqlc"
+	"github.com/ekkx/tcm-platform/internal/platform/ymd"
 )
 
 type IsReservationConflictedParams struct {
@@ -22,7 +22,7 @@ func (repo *RepositoryImpl) IsReservationConflicted(ctx context.Context, params 
 	toHour := int32(params.ToHour)
 	toMinute := int32(params.ToMinute)
 
-	isConflicted, err := repo.querier.IsReservationConflicted(ctx, database.IsReservationConflictedParams{
+	isConflicted, err := repo.querier.IsReservationConflicted(ctx, sqlc.IsReservationConflictedParams{
 		RoomID:     params.RoomID,
 		Date:       params.Date,
 		FromHour:   &fromHour,

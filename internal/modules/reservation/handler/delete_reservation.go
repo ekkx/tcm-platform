@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/modules/reservation/usecase"
-	reservationv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/reservation/v1"
+	reservationv1 "github.com/ekkx/tcm-platform/internal/gen/pb/reservation/v1"
+	"github.com/ekkx/tcm-platform/internal/modules/reservation/usecase"
 )
 
 func (h *HandlerImpl) DeleteReservation(ctx context.Context, req *connect.Request[reservationv1.DeleteReservationRequest]) (*connect.Response[reservationv1.DeleteReservationResponse], error) {

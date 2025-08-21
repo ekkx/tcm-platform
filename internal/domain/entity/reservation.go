@@ -3,16 +3,16 @@ package entity
 import (
 	"time"
 
-	"github.com/ekkx/tcmrsv-web/internal/domain/enum"
-	"github.com/ekkx/tcmrsv-web/pkg/ulid"
-	"github.com/ekkx/tcmrsv-web/pkg/ymd"
+	"github.com/ekkx/tcm-platform/internal/domain/valueobject"
+	"github.com/ekkx/tcm-platform/internal/platform/ulid"
+	"github.com/ekkx/tcm-platform/internal/platform/ymd"
 )
 
 type Reservation struct {
 	ID             ulid.ULID
 	OfficialSiteID *string
 	UserID         ulid.ULID
-	CampusType     enum.CampusType
+	CampusType     valueobject.CampusType
 	RoomID         string
 	Date           ymd.YMD
 	FromHour       int

@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/internal/shared/assemble"
+	"github.com/ekkx/tcm-platform/internal/app/assemble"
+	"github.com/ekkx/tcm-platform/internal/modules/user/repository"
 )
 
 type UseCase interface {

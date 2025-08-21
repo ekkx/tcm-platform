@@ -19,10 +19,10 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/ekkx/tcmrsv-web/internal/config"
-	// rsvrepo "github.com/ekkx/tcmrsv-web/internal/modules/reservation/repository"
-	// userrepo "github.com/ekkx/tcmrsv-web/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/internal/shared/logger"
+	"github.com/ekkx/tcm-platform/internal/config"
+	// rsvrepo "github.com/ekkx/tcm-platform/internal/modules/reservation/repository"
+	// userrepo "github.com/ekkx/tcm-platform/internal/modules/user/repository"
+	"github.com/ekkx/tcm-platform/internal/platform/logger"
 	"github.com/robfig/cron/v3"
 )
 
@@ -79,7 +79,7 @@ func Run(cfg *config.Config) error {
 	}
 	defer pool.Close()
 
-	// querier := database.New(pool)
+	// querier := sqlc.New(pool)
 	// rsvRepo := rsvrepo.New(querier)
 	// userRepo := userrepo.New(querier)
 

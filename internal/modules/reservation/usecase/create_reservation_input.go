@@ -4,18 +4,18 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/domain/enum"
-	"github.com/ekkx/tcmrsv-web/internal/shared/ctxhelper"
-	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
-	reservationv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/reservation/v1"
-	roomv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/room/v1"
-	"github.com/ekkx/tcmrsv-web/pkg/actor"
-	"github.com/ekkx/tcmrsv-web/pkg/ymd"
+	"github.com/ekkx/tcm-platform/internal/domain/valueobject"
+	reservationv1 "github.com/ekkx/tcm-platform/internal/gen/pb/reservation/v1"
+	roomv1 "github.com/ekkx/tcm-platform/internal/gen/pb/room/v1"
+	"github.com/ekkx/tcm-platform/internal/platform/actor"
+	"github.com/ekkx/tcm-platform/internal/platform/ctxhelper"
+	"github.com/ekkx/tcm-platform/internal/platform/errs"
+	"github.com/ekkx/tcm-platform/internal/platform/ymd"
 )
 
 type CreateReservationInput struct {
 	Actor      actor.Actor
-	CampusType enum.CampusType
+	CampusType valueobject.CampusType
 	Date       ymd.YMD
 	FromHour   int
 	FromMinute int
@@ -34,14 +34,14 @@ func NewCreateReservationInputFromRequest(ctx context.Context, req *connect.Requ
 	st.Actor = *actor
 
 	// TODO: ここら辺共通化できる
-	var campusType enum.CampusType
+	var campusType valueobject.CampusType
 	switch req.Msg.CampusType {
 	case roomv1.CampusType_CAMPUS_TYPE_IKEBUKURO:
-		campusType = enum.CampusTypeIkebukuro
+		campusType = valueobject.CampusTypeIkebukuro
 	case roomv1.CampusType_CAMPUS_TYPE_NAKAMEGURO:
-		campusType = enum.CampusTypeNakameguro
+		campusType = valueobject.CampusTypeNakameguro
 	case roomv1.CampusType_CAMPUS_TYPE_UNSPECIFIED:
-		campusType = enum.CampusTypeUnknown
+		campusType = valueobject.CampusTypeUnknown
 	}
 
 	var date ymd.YMD

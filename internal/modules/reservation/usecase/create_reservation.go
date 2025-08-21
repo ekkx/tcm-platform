@@ -3,9 +3,9 @@ package usecase
 import (
 	"context"
 
+	"github.com/ekkx/tcm-platform/internal/modules/reservation/repository"
+	"github.com/ekkx/tcm-platform/internal/platform/errs"
 	"github.com/ekkx/tcmrsv"
-	"github.com/ekkx/tcmrsv-web/internal/modules/reservation/repository"
-	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
 )
 
 func (uc *UseCaseImpl) CreateReservation(ctx context.Context, input *CreateReservationInput) (*CreateReservationOutput, error) {

@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/modules/auth/usecase"
-	authv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/auth/v1"
+	authv1 "github.com/ekkx/tcm-platform/internal/gen/pb/auth/v1"
+	"github.com/ekkx/tcm-platform/internal/modules/auth/usecase"
 )
 
 func (h *HandlerImpl) Authorize(ctx context.Context, req *connect.Request[authv1.AuthorizeRequest]) (*connect.Response[authv1.AuthorizeResponse], error) {

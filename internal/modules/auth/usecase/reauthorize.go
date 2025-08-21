@@ -3,9 +3,9 @@ package usecase
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
-	"github.com/ekkx/tcmrsv-web/pkg/jwt"
-	"github.com/ekkx/tcmrsv-web/pkg/ulid"
+	"github.com/ekkx/tcm-platform/internal/platform/errs"
+	"github.com/ekkx/tcm-platform/internal/platform/jwt"
+	"github.com/ekkx/tcm-platform/internal/platform/ulid"
 )
 
 func (uc *UseCaseImpl) Reauthorize(ctx context.Context, input *ReauthorizeInput) (*ReauthorizeOutput, error) {

@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/domain/entity"
-	roomv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/room/v1"
-	"github.com/ekkx/tcmrsv-web/internal/shared/presenter"
+	"github.com/ekkx/tcm-platform/internal/app/presenter"
+	"github.com/ekkx/tcm-platform/internal/domain/entity"
+	roomv1 "github.com/ekkx/tcm-platform/internal/gen/pb/room/v1"
 )
 
 type ListAvailableRoomsOutput struct {

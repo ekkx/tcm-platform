@@ -3,7 +3,7 @@ package entity
 import (
 	"time"
 
-	"github.com/ekkx/tcmrsv-web/pkg/ulid"
+	"github.com/ekkx/tcm-platform/internal/platform/ulid"
 )
 
 type User struct {

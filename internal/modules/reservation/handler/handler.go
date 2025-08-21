@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/ekkx/tcmrsv-web/internal/modules/reservation/usecase"
-	"github.com/ekkx/tcmrsv-web/internal/shared/pb/reservation/v1/reservationv1connect"
+	"github.com/ekkx/tcm-platform/internal/gen/pb/reservation/v1/reservationv1connect"
+	"github.com/ekkx/tcm-platform/internal/modules/reservation/usecase"
 )
 
 type HandlerImpl struct {

@@ -7,9 +7,9 @@ import (
 	"net/http"
 
 	"connectrpc.com/grpcreflect"
-	"github.com/ekkx/tcmrsv-web/internal/config"
-	"github.com/ekkx/tcmrsv-web/internal/shared/logger"
-	"github.com/ekkx/tcmrsv-web/pkg/jwt"
+	"github.com/ekkx/tcm-platform/internal/config"
+	"github.com/ekkx/tcm-platform/internal/platform/jwt"
+	"github.com/ekkx/tcm-platform/internal/platform/logger"
 	"github.com/rs/cors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"

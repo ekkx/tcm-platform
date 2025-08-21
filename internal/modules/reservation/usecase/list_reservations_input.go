@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/shared/ctxhelper"
-	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
-	reservationv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/reservation/v1"
-	"github.com/ekkx/tcmrsv-web/pkg/actor"
+	reservationv1 "github.com/ekkx/tcm-platform/internal/gen/pb/reservation/v1"
+	"github.com/ekkx/tcm-platform/internal/platform/actor"
+	"github.com/ekkx/tcm-platform/internal/platform/ctxhelper"
+	"github.com/ekkx/tcm-platform/internal/platform/errs"
 )
 
 type ListReservationsInput struct {

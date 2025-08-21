@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
+	"github.com/ekkx/tcm-platform/internal/platform/errs"
 )
 
 func (uc *UseCaseImpl) GetUser(ctx context.Context, input *GetUserInput) (*GetUserOutput, error) {

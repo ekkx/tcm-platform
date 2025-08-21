@@ -1,4 +1,4 @@
-module github.com/ekkx/tcmrsv-web
+module github.com/ekkx/tcm-platform
 
 go 1.24
 
