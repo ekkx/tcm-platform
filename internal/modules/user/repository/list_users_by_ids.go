@@ -9,9 +9,9 @@ import (
 	"github.com/ekkx/tcmrsv-web/pkg/ulid"
 )
 
-func (repo *RepositoryImpl) ListSkeletonUsersByIDs(ctx context.Context, userIDs []ulid.ULID) ([]*entity.User, error) {
+func (repo *RepositoryImpl) ListUsersByIDs(ctx context.Context, userIDs []ulid.ULID) ([]*entity.User, error) {
 	if len(userIDs) == 0 {
-		return nil, nil
+		return []*entity.User{}, nil
 	}
 
 	dbUsers, err := repo.querier.ListUsersByIDs(ctx, util.ToULIDStrings(userIDs))

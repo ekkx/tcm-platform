@@ -11,17 +11,17 @@ type User struct {
 	Password             string
 	OfficialSiteID       *string
 	OfficialSitePassword *string
-	MasterUser           *User
+	MasterUserID         *ulid.ULID
 	DisplayName          string
 	CreateTime           time.Time
 }
 
 func (u *User) IsMaster() bool {
-	return u.MasterUser == nil
+	return u.MasterUserID == nil
 }
 
 func (u *User) IsSlave() bool {
-	return u.MasterUser != nil
+	return u.MasterUserID != nil
 }
 
 func (u *User) CheckPassword(password string) bool {

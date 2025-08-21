@@ -3,10 +3,10 @@ package enum
 type PianoType int
 
 const (
-	PianoTypeUnknown PianoType = 0
-	PianoTypeGrand   PianoType = 1
-	PianoTypeUpright PianoType = 2
-	PianoTypeNone    PianoType = 3
+	PianoTypeUnknown PianoType = iota
+	PianoTypeGrand
+	PianoTypeUpright
+	PianoTypeNone
 )
 
 func (pt PianoType) IsValid() bool {

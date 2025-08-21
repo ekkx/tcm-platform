@@ -25,10 +25,10 @@ func (uc *UseCaseImpl) CreateSlaveUser(ctx context.Context, params *CreateSlaveU
 		return nil, err
 	}
 
-	user, err := uc.userService.GetUserByID(ctx, *userID)
+	v, err := uc.userAsm.Build(ctx, *userID)
 	if err != nil {
 		return nil, err
 	}
 
-	return NewCreateSlaveUserOutput(*user), nil
+	return NewCreateSlaveUserOutput(*v), nil
 }

@@ -1,4 +1,4 @@
-package service
+package repository
 
 import (
 	"context"
@@ -7,8 +7,8 @@ import (
 	"github.com/ekkx/tcmrsv-web/pkg/ulid"
 )
 
-func (svc *ServiceImpl) GetReservationByID(ctx context.Context, id ulid.ULID) (*entity.Reservation, error) {
-	reservations, err := svc.ListReservationsByIDs(ctx, []ulid.ULID{id})
+func (repo *RepositoryImpl) GetReservationByID(ctx context.Context, reservationID ulid.ULID) (*entity.Reservation, error) {
+	reservations, err := repo.ListReservationsByIDs(ctx, []ulid.ULID{reservationID})
 	if err != nil {
 		return nil, err
 	}

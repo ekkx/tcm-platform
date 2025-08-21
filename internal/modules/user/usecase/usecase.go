@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/ekkx/tcmrsv-web/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/internal/modules/user/service"
+	"github.com/ekkx/tcmrsv-web/internal/shared/assemble"
 )
 
 type UseCase interface {
@@ -16,16 +16,16 @@ type UseCase interface {
 }
 
 type UseCaseImpl struct {
-	userRepo    repository.Repository
-	userService service.Service
+	userRepo repository.Repository
+	userAsm  assemble.UserAssembler
 }
 
 func New(
 	userRepo repository.Repository,
-	userService service.Service,
+	userAsm assemble.UserAssembler,
 ) UseCase {
 	return &UseCaseImpl{
-		userRepo:    userRepo,
-		userService: userService,
+		userRepo: userRepo,
+		userAsm:  userAsm,
 	}
 }

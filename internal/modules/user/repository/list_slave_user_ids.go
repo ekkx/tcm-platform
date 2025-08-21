@@ -12,9 +12,5 @@ func (repo *RepositoryImpl) ListSlaveUserIDs(ctx context.Context, masterUserID u
 		return nil, err
 	}
 
-	if len(ids) == 0 {
-		return nil, nil
-	}
-
 	return ids, nil
 }

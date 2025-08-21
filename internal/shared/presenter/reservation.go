@@ -1,21 +1,21 @@
 package presenter
 
 import (
-	"github.com/ekkx/tcmrsv-web/internal/domain/entity"
 	"github.com/ekkx/tcmrsv-web/internal/domain/enum"
+	"github.com/ekkx/tcmrsv-web/internal/shared/assemble"
 	reservationv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/reservation/v1"
 	roomv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/room/v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func ToReservation(rsv *entity.Reservation) *reservationv1.Reservation {
-	if rsv == nil {
+func ToReservation(v *assemble.ReservationView) *reservationv1.Reservation {
+	if v == nil {
 		return nil
 	}
 
 	// TODO: 共通化できる
 	var campusType roomv1.CampusType
-	switch rsv.CampusType {
+	switch v.Reservation.CampusType {
 	case enum.CampusTypeIkebukuro:
 		campusType = roomv1.CampusType_CAMPUS_TYPE_IKEBUKURO
 	case enum.CampusTypeNakameguro:
@@ -25,26 +25,26 @@ func ToReservation(rsv *entity.Reservation) *reservationv1.Reservation {
 	}
 
 	return &reservationv1.Reservation{
-		Id:             rsv.ID.String(),
-		OfficialSiteId: rsv.OfficialSiteID,
-		User:           ToUser(&rsv.User),
+		Id:             v.Reservation.ID.String(),
+		OfficialSiteId: v.Reservation.OfficialSiteID,
+		User:           ToUser(&v.UserView),
 		CampusType:     campusType,
-		Room:           ToRoom(&rsv.Room),
-		Date:           rsv.Date.String(),
-		FromHour:       int32(rsv.FromHour),
-		FromMinute:     int32(rsv.FromMinute),
-		ToHour:         int32(rsv.ToHour),
-		ToMinute:       int32(rsv.ToMinute),
-		CreateTime:     timestamppb.New(rsv.CreateTime),
+		Room:           ToRoom(&v.Room),
+		Date:           v.Reservation.Date.String(),
+		FromHour:       int32(v.Reservation.FromHour),
+		FromMinute:     int32(v.Reservation.FromMinute),
+		ToHour:         int32(v.Reservation.ToHour),
+		ToMinute:       int32(v.Reservation.ToMinute),
+		CreateTime:     timestamppb.New(v.Reservation.CreateTime),
 	}
 }
 
-func ToReservationList(reservations []*entity.Reservation) []*reservationv1.Reservation {
-	if reservations == nil {
+func ToReservationList(v []*assemble.ReservationView) []*reservationv1.Reservation {
+	if v == nil {
 		return nil
 	}
-	result := make([]*reservationv1.Reservation, len(reservations))
-	for i, rsv := range reservations {
+	result := make([]*reservationv1.Reservation, len(v))
+	for i, rsv := range v {
 		result[i] = ToReservation(rsv)
 	}
 	return result

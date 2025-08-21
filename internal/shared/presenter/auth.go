@@ -12,6 +12,6 @@ func ToAuth(auth *entity.Auth) *authv1.Auth {
 	return &authv1.Auth{
 		AccessToken:  auth.AccessToken,
 		RefreshToken: auth.RefreshToken,
-		User:         ToUser(&auth.User),
+		UserId:       auth.UserID.String(),
 	}
 }

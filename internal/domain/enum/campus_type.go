@@ -3,9 +3,9 @@ package enum
 type CampusType int
 
 const (
-	CampusTypeUnknown    CampusType = 0
-	CampusTypeNakameguro CampusType = 1
-	CampusTypeIkebukuro  CampusType = 2
+	CampusTypeUnknown CampusType = iota
+	CampusTypeNakameguro
+	CampusTypeIkebukuro
 )
 
 func (ct CampusType) IsValid() bool {

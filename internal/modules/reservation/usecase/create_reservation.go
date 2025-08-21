@@ -50,7 +50,7 @@ func (uc *UseCaseImpl) CreateReservation(ctx context.Context, input *CreateReser
 		return nil, err
 	}
 
-	reservation, err := uc.reservationService.GetReservationByID(ctx, *reservationID)
+	reservation, err := uc.reservationAsm.Build(ctx, *reservationID)
 	if err != nil {
 		return nil, err
 	}

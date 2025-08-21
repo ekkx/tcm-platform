@@ -11,7 +11,7 @@ func (uc *UseCaseImpl) DeleteReservation(ctx context.Context, input *DeleteReser
 		return nil, err
 	}
 
-	rsv, err := uc.reservationService.GetReservationByID(ctx, input.ReservationID)
+	rsv, err := uc.reservationRepo.GetReservationByID(ctx, input.ReservationID)
 	if err != nil {
 		return nil, err
 	}
@@ -20,9 +20,18 @@ func (uc *UseCaseImpl) DeleteReservation(ctx context.Context, input *DeleteReser
 		return nil, errs.ErrReservationNotFound
 	}
 
+	user, err := uc.userQuery.GetUserByID(ctx, rsv.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		return nil, errs.ErrUserNotFound.WithMessage("user associated with the reservation not found")
+	}
+
 	// 予約を取ったユーザー本人、またはそのユーザーのマスターユーザーのみ削除可能
-	if rsv.User.ID != input.Actor.ID {
-		if rsv.User.MasterUser == nil || rsv.User.MasterUser.ID != input.Actor.ID {
+	if user.ID != input.Actor.ID {
+		if user.MasterUserID == nil || *user.MasterUserID != input.Actor.ID {
 			return nil, errs.ErrPermissionDenied.WithMessage("you can only delete your own reservations")
 		}
 	}

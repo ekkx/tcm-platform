@@ -2,18 +2,18 @@ package usecase
 
 import (
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/domain/entity"
+	"github.com/ekkx/tcmrsv-web/internal/shared/assemble"
 	reservationv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/reservation/v1"
 	"github.com/ekkx/tcmrsv-web/internal/shared/presenter"
 )
 
 type GetReservationOutput struct {
-	Reservation entity.Reservation
+	Reservation assemble.ReservationView
 }
 
-func NewGetReservationOutput(reservation entity.Reservation) *GetReservationOutput {
+func NewGetReservationOutput(v assemble.ReservationView) *GetReservationOutput {
 	return &GetReservationOutput{
-		Reservation: reservation,
+		Reservation: v,
 	}
 }
 

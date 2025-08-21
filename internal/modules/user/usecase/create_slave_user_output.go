@@ -2,16 +2,16 @@ package usecase
 
 import (
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/domain/entity"
+	"github.com/ekkx/tcmrsv-web/internal/shared/assemble"
 	userv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/user/v1"
 	"github.com/ekkx/tcmrsv-web/internal/shared/presenter"
 )
 
 type CreateSlaveUserOutput struct {
-	entity.User
+	User assemble.UserView
 }
 
-func NewCreateSlaveUserOutput(user entity.User) *CreateSlaveUserOutput {
+func NewCreateSlaveUserOutput(user assemble.UserView) *CreateSlaveUserOutput {
 	return &CreateSlaveUserOutput{
 		User: user,
 	}

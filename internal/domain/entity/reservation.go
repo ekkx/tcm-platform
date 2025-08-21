@@ -11,9 +11,9 @@ import (
 type Reservation struct {
 	ID             ulid.ULID
 	OfficialSiteID *string
-	User           User
+	UserID         ulid.ULID
 	CampusType     enum.CampusType
-	Room           Room
+	RoomID         string
 	Date           ymd.YMD
 	FromHour       int
 	FromMinute     int

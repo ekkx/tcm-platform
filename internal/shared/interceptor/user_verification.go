@@ -4,8 +4,9 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
+	"github.com/ekkx/tcmrsv-web/internal/domain/entity"
+	"github.com/ekkx/tcmrsv-web/internal/modules/user/adapter"
 	"github.com/ekkx/tcmrsv-web/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/internal/modules/user/service"
 	"github.com/ekkx/tcmrsv-web/internal/shared/ctxhelper"
 	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
 	"github.com/ekkx/tcmrsv-web/pkg/actor"
@@ -22,9 +23,9 @@ func UserVerificationInterceptor(dbPool *pgxpool.Pool) connect.UnaryInterceptorF
 				return next(ctx, req)
 			}
 
-			userService := service.New(repository.New(database.New(dbPool)))
+			userQuery := adapter.NewQueryAdapter(repository.New(database.New(dbPool)))
 
-			user, err := userService.GetUserByID(ctx, ctxActor.ID)
+			user, err := userQuery.GetUserByID(ctx, ctxActor.ID)
 			if err != nil {
 				return nil, err
 			}
@@ -33,8 +34,16 @@ func UserVerificationInterceptor(dbPool *pgxpool.Pool) connect.UnaryInterceptorF
 				return nil, errs.ErrRequestUserNotFound
 			}
 
+			var masterUser *entity.User
+			if user.MasterUserID != nil {
+				masterUser, err = userQuery.GetUserByID(ctx, *user.MasterUserID)
+				if err != nil {
+					return nil, err
+				}
+			}
+
 			// アクターにそれぞれの役割と公式サイトの認証情報を設定
-			if user.IsMaster() {
+			if masterUser == nil {
 				ctxActor.WithRole(actor.RoleMaster)
 				ctxActor.WithOfficialSiteAuth(&actor.OfficialSiteAuth{
 					UserID:   *user.OfficialSiteID,
@@ -43,8 +52,8 @@ func UserVerificationInterceptor(dbPool *pgxpool.Pool) connect.UnaryInterceptorF
 			} else {
 				ctxActor.WithRole(actor.RoleSlave)
 				ctxActor.WithOfficialSiteAuth(&actor.OfficialSiteAuth{
-					UserID:   *user.MasterUser.OfficialSiteID,
-					Password: *user.MasterUser.OfficialSitePassword, // TODO: 復号化
+					UserID:   *masterUser.OfficialSiteID,
+					Password: *masterUser.OfficialSitePassword, // TODO: 復号化
 				})
 			}
 

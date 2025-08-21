@@ -2,16 +2,16 @@ package usecase
 
 import (
 	"connectrpc.com/connect"
-	"github.com/ekkx/tcmrsv-web/internal/domain/entity"
+	"github.com/ekkx/tcmrsv-web/internal/shared/assemble"
 	userv1 "github.com/ekkx/tcmrsv-web/internal/shared/pb/user/v1"
 	"github.com/ekkx/tcmrsv-web/internal/shared/presenter"
 )
 
 type UpdateUserOutput struct {
-	User entity.User
+	User assemble.UserView
 }
 
-func NewUpdateUserOutput(user entity.User) *UpdateUserOutput {
+func NewUpdateUserOutput(user assemble.UserView) *UpdateUserOutput {
 	return &UpdateUserOutput{
 		User: user,
 	}

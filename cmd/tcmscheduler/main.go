@@ -14,11 +14,14 @@ tcmscheduler は、東京音楽大学の公式サイトへの予約を自動化�
 package main
 
 import (
+	"context"
 	"log"
 	"log/slog"
 	"time"
 
 	"github.com/ekkx/tcmrsv-web/internal/config"
+	// rsvrepo "github.com/ekkx/tcmrsv-web/internal/modules/reservation/repository"
+	// userrepo "github.com/ekkx/tcmrsv-web/internal/modules/user/repository"
 	"github.com/ekkx/tcmrsv-web/internal/shared/logger"
 	"github.com/robfig/cron/v3"
 )
@@ -48,9 +51,8 @@ func main() {
 
 	logger.Init(cfg)
 
-	slog.Info("TCMScheduler started")
-
-	slog.Debug("Configuration loaded", slog.String("cron_expression", cfg.Scheduler.CronExpression))
+	slog.Info("tcm-scheduler started successfully")
+	slog.Info("configuration loaded", slog.String("cron_expression", cfg.Scheduler.CronExpression))
 
 	c := cron.New(
 		cron.WithLocation(jst()),
@@ -58,7 +60,7 @@ func main() {
 	)
 
 	c.AddFunc(cfg.Scheduler.CronExpression, func() {
-		if err := RunBatch(); err != nil {
+		if err := Run(cfg); err != nil {
 			slog.Error("batch error: %v", err.Error(), err)
 		}
 	})
@@ -67,7 +69,19 @@ func main() {
 	select {}
 }
 
-func RunBatch() error {
+func Run(cfg *config.Config) error {
 	slog.Info("Running batch job...")
+
+	ctx := context.Background()
+	pool, err := cfg.Database.Open(ctx)
+	if err != nil {
+		return err
+	}
+	defer pool.Close()
+
+	// querier := database.New(pool)
+	// rsvRepo := rsvrepo.New(querier)
+	// userRepo := userrepo.New(querier)
+
 	return nil
 }

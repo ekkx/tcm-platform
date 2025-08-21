@@ -20,9 +20,9 @@ func ToReservation(rsv *database.Reservation) *entity.Reservation {
 	return &entity.Reservation{
 		ID:             rsv.ID,
 		OfficialSiteID: rsv.OfficialSiteID,
-		User:           entity.User{ID: rsv.UserID},
+		UserID:         rsv.UserID,
 		CampusType:     campusType,
-		Room:           entity.Room{ID: rsv.RoomID},
+		RoomID:         rsv.RoomID,
 		Date:           rsv.Date,
 		FromHour:       int(rsv.FromHour),
 		FromMinute:     int(rsv.FromMinute),

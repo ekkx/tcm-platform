@@ -19,7 +19,7 @@ func (uc *UseCaseImpl) UpdateUser(ctx context.Context, input *UpdateUserInput) (
 		return nil, err
 	}
 
-	user, err := uc.userService.GetUserByID(ctx, input.Actor.ID)
+	user, err := uc.userAsm.Build(ctx, input.Actor.ID)
 	if err != nil {
 		return nil, err
 	}

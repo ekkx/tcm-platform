@@ -6,8 +6,8 @@ import (
 
 	"github.com/ekkx/tcmrsv"
 	"github.com/ekkx/tcmrsv-web/internal/domain/entity"
-	"github.com/ekkx/tcmrsv-web/internal/modules/user/repository"
 	"github.com/ekkx/tcmrsv-web/internal/shared/errs"
+	"github.com/ekkx/tcmrsv-web/internal/shared/gateway"
 	"github.com/ekkx/tcmrsv-web/pkg/ulid"
 )
 
@@ -31,7 +31,7 @@ func (uc *UseCaseImpl) authorizeByOfficialSite(ctx context.Context, params *Auth
 	// マスターユーザーの可能性がある場合は、データベースからユーザーを検索
 	// 存在していれば、念の為公式サイトにログインしてトークンを生成（公式サイト側のパスワードが変更された可能性があるため）
 	// 存在していなければ、公式サイトにログインして新規作成+トークンを生成
-	user, err := uc.userService.GetUserByOfficialSiteID(ctx, params.UserID)
+	user, err := uc.userQuery.GetUserByOfficialSiteID(ctx, params.UserID)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (uc *UseCaseImpl) authorizeByOfficialSite(ctx context.Context, params *Auth
 		slog.Debug("official site login successful, creating new master user", slog.String("user_id", params.UserID))
 
 		// ログインできればマスターアカウントを新規作成+トークンを生成
-		userID, err := uc.userRepo.CreateUser(ctx, &repository.CreateUserParams{
+		userID, err := uc.userCmd.CreateUser(ctx, &gateway.CreateUserCommand{
 			Password:             params.Password, // TODO: ハッシュ化する
 			OfficialSiteID:       &params.UserID,
 			OfficialSitePassword: &params.Password, // TODO: 再利用するため暗号化する
@@ -63,12 +63,12 @@ func (uc *UseCaseImpl) authorizeByOfficialSite(ctx context.Context, params *Auth
 
 		slog.Debug("new master user created", slog.String("user_id", userID.String()))
 
-		user, err := uc.userService.GetUserByID(ctx, *userID)
+		user, err := uc.userQuery.GetUserByID(ctx, *userID)
 		if err != nil {
 			return nil, err
 		}
 
-		auth, err := uc.issueTokens(user)
+		auth, err := uc.issueTokens(user.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -84,7 +84,7 @@ func (uc *UseCaseImpl) authorizeByOfficialSite(ctx context.Context, params *Auth
 }
 
 func (uc *UseCaseImpl) authorizeByULID(ctx context.Context, params *AuthorizeInput, id ulid.ULID) (*AuthorizeOutput, error) {
-	user, err := uc.userService.GetUserByID(ctx, id)
+	user, err := uc.userQuery.GetUserByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func (uc *UseCaseImpl) authorizeByULID(ctx context.Context, params *AuthorizeInp
 
 	slog.Debug("slave user login successful", slog.String("user_id", user.ID.String()))
 
-	auth, err := uc.issueTokens(user)
+	auth, err := uc.issueTokens(user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +118,7 @@ func (uc *UseCaseImpl) handleMasterUserLogin(ctx context.Context, params *Author
 	slog.Debug("master user login successful", slog.String("user_id", user.ID.String()))
 
 	// TODO: ログインできればパスワードをアップデートしてトークンを生成
-	uc.userRepo.UpdateUserByID(ctx, &repository.UpdateUserByIDParams{
+	uc.userCmd.UpdateUserByID(ctx, &gateway.UpdateUserCommand{
 		UserID:               user.ID,
 		Password:             &params.Password, // TODO: ハッシュ化する
 		OfficialSitePassword: &params.Password, // TODO: 再利用するため暗号
@@ -126,7 +126,7 @@ func (uc *UseCaseImpl) handleMasterUserLogin(ctx context.Context, params *Author
 
 	slog.Debug("master user password updated", slog.String("user_id", user.ID.String()), slog.String("official_site_id", *user.OfficialSiteID))
 
-	auth, err := uc.issueTokens(user)
+	auth, err := uc.issueTokens(user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -134,18 +134,18 @@ func (uc *UseCaseImpl) handleMasterUserLogin(ctx context.Context, params *Author
 	return NewAuthorizeOutput(*auth), nil
 }
 
-func (uc *UseCaseImpl) issueTokens(user *entity.User) (*entity.Auth, error) {
-	accessToken, err := uc.jwtManager.GenerateAccessToken(user.ID)
+func (uc *UseCaseImpl) issueTokens(userID ulid.ULID) (*entity.Auth, error) {
+	accessToken, err := uc.jwtManager.GenerateAccessToken(userID)
 	if err != nil {
 		return nil, err
 	}
-	refreshToken, err := uc.jwtManager.GenerateRefreshToken(user.ID)
+	refreshToken, err := uc.jwtManager.GenerateRefreshToken(userID)
 	if err != nil {
 		return nil, err
 	}
 	return &entity.Auth{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
-		User:         *user,
+		UserID:       userID,
 	}, nil
 }

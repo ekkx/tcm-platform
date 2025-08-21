@@ -4,7 +4,8 @@ import (
 	"context"
 
 	"github.com/ekkx/tcmrsv-web/internal/modules/reservation/repository"
-	"github.com/ekkx/tcmrsv-web/internal/modules/reservation/service"
+	"github.com/ekkx/tcmrsv-web/internal/shared/assemble"
+	"github.com/ekkx/tcmrsv-web/internal/shared/gateway"
 )
 
 type UseCase interface {
@@ -15,16 +16,19 @@ type UseCase interface {
 }
 
 type UseCaseImpl struct {
-	reservationRepo    repository.Repository
-	reservationService service.Service
+	reservationRepo repository.Repository
+	reservationAsm  assemble.ReservationAssembler
+	userQuery       gateway.UserQuery
 }
 
 func New(
 	reservationRepo repository.Repository,
-	reservationService service.Service,
+	reservationAsm assemble.ReservationAssembler,
+	userQuery gateway.UserQuery,
 ) UseCase {
 	return &UseCaseImpl{
-		reservationRepo:    reservationRepo,
-		reservationService: reservationService,
+		reservationRepo: reservationRepo,
+		reservationAsm:  reservationAsm,
+		userQuery:       userQuery,
 	}
 }

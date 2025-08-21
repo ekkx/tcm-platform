@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package auth.v1;
 
-import "user/v1/user.proto";
-
 service AuthService {
     rpc Authorize(AuthorizeRequest) returns (AuthorizeResponse);
     rpc Reauthorize(ReauthorizeRequest) returns (ReauthorizeResponse);
@@ -13,7 +11,7 @@ service AuthService {
 message Auth {
     string access_token = 1;
     string refresh_token = 2;
-    user.v1.User user = 3;
+    string user_id = 3;
 }
 
 message AuthorizeRequest {

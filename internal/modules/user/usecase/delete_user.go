@@ -11,7 +11,7 @@ func (uc *UseCaseImpl) DeleteUser(ctx context.Context, input *DeleteUserInput) (
 		return nil, err
 	}
 
-	user, err := uc.userService.GetUserByID(ctx, input.UserID)
+	user, err := uc.userRepo.GetUserByID(ctx, input.UserID)
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +22,7 @@ func (uc *UseCaseImpl) DeleteUser(ctx context.Context, input *DeleteUserInput) (
 
 	// ユーザー本人、またはそのユーザーのマスターユーザーのみ削除可能
 	if user.ID != input.Actor.ID {
-		if user.MasterUser == nil || user.MasterUser.ID != input.Actor.ID {
+		if user.MasterUserID == nil || *user.MasterUserID != input.Actor.ID {
 			return nil, errs.ErrPermissionDenied.WithMessage("you can only delete your own account or that of your master user")
 		}
 	}

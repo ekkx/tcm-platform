@@ -1,4 +1,4 @@
-package service
+package repository
 
 import (
 	"context"
@@ -7,8 +7,8 @@ import (
 	"github.com/ekkx/tcmrsv-web/pkg/ulid"
 )
 
-func (svc *ServiceImpl) GetUserByID(ctx context.Context, userID ulid.ULID) (*entity.User, error) {
-	users, err := svc.ListUsersByIDs(ctx, []ulid.ULID{userID})
+func (repo *RepositoryImpl) GetUserByID(ctx context.Context, userID ulid.ULID) (*entity.User, error) {
+	users, err := repo.ListUsersByIDs(ctx, []ulid.ULID{userID})
 	if err != nil {
 		return nil, err
 	}

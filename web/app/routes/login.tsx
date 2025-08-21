@@ -41,7 +41,7 @@ export default function Login() {
       if (response.auth) {
         Cookie.setAccessToken(response.auth.accessToken ?? "");
         Cookie.setRefreshToken(response.auth.refreshToken ?? "");
-        Cookie.setUserId(response.auth.user?.id ?? "");
+        Cookie.setUserId(response.auth.userId ?? "");
       } else {
         return addToast({
           title: "ログイン失敗",

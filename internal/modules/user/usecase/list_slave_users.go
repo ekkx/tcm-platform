@@ -15,10 +15,15 @@ func (uc *UseCaseImpl) ListSlaveUsers(ctx context.Context, input *ListSlaveUsers
 		return nil, errs.ErrPermissionDenied.WithMessage("only master users can list slave users")
 	}
 
-	users, err := uc.userService.ListSlaveUsers(ctx, input.Actor.ID)
+	slaveUserIDs, err := uc.userRepo.ListSlaveUserIDs(ctx, input.Actor.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	return NewListSlaveUsersOutput(users), nil
+	v, err := uc.userAsm.BuildList(ctx, slaveUserIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewListSlaveUsersOutput(v), nil
 }

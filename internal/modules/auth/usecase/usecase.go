@@ -3,8 +3,7 @@ package usecase
 import (
 	"context"
 
-	"github.com/ekkx/tcmrsv-web/internal/modules/user/repository"
-	"github.com/ekkx/tcmrsv-web/internal/modules/user/service"
+	"github.com/ekkx/tcmrsv-web/internal/shared/gateway"
 	"github.com/ekkx/tcmrsv-web/pkg/jwt"
 )
 
@@ -14,19 +13,19 @@ type UseCase interface {
 }
 
 type UseCaseImpl struct {
-	jwtManager  *jwt.JWTManager
-	userRepo    repository.Repository
-	userService service.Service
+	jwtManager *jwt.JWTManager
+	userQuery  gateway.UserQuery
+	userCmd    gateway.UserCommand
 }
 
 func New(
 	jwtManager *jwt.JWTManager,
-	userRepo repository.Repository,
-	userService service.Service,
+	userQuery gateway.UserQuery,
+	userCmd gateway.UserCommand,
 ) UseCase {
 	return &UseCaseImpl{
-		jwtManager:  jwtManager,
-		userRepo:    userRepo,
-		userService: userService,
+		jwtManager: jwtManager,
+		userQuery:  userQuery,
+		userCmd:    userCmd,
 	}
 }

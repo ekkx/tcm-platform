@@ -33,7 +33,7 @@ func (uc *UseCaseImpl) Reauthorize(ctx context.Context, input *ReauthorizeInput)
 		return nil, errs.ErrInternal.WithCause(err)
 	}
 
-	user, err := uc.userService.GetUserByID(ctx, userID)
+	user, err := uc.userQuery.GetUserByID(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (uc *UseCaseImpl) Reauthorize(ctx context.Context, input *ReauthorizeInput)
 		return nil, errs.ErrUserNotFound
 	}
 
-	auth, err := uc.issueTokens(user)
+	auth, err := uc.issueTokens(user.ID)
 	if err != nil {
 		return nil, err
 	}

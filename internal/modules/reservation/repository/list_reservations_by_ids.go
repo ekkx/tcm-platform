@@ -9,7 +9,7 @@ import (
 	"github.com/ekkx/tcmrsv-web/pkg/ulid"
 )
 
-func (repo *RepositoryImpl) ListSkeletonReservationsByIDs(ctx context.Context, reservationIDs []ulid.ULID) ([]*entity.Reservation, error) {
+func (repo *RepositoryImpl) ListReservationsByIDs(ctx context.Context, reservationIDs []ulid.ULID) ([]*entity.Reservation, error) {
 	if len(reservationIDs) == 0 {
 		return nil, nil
 	}

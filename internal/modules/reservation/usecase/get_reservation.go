@@ -11,21 +11,21 @@ func (uc *UseCaseImpl) GetReservation(ctx context.Context, input *GetReservation
 		return nil, err
 	}
 
-	rsv, err := uc.reservationService.GetReservationByID(ctx, input.ReservationID)
+	v, err := uc.reservationAsm.Build(ctx, input.ReservationID)
 	if err != nil {
 		return nil, err
 	}
 
-	if rsv == nil {
+	if v == nil {
 		return nil, errs.ErrReservationNotFound
 	}
 
 	// 予約を取ったユーザー本人、またはそのユーザーのマスターユーザーのみ閲覧可能
-	if rsv.User.ID != input.Actor.ID {
-		if rsv.User.MasterUser == nil || rsv.User.MasterUser.ID != input.Actor.ID {
+	if v.UserView.User.ID != input.Actor.ID {
+		if v.UserView.MasterUser == nil || v.UserView.MasterUser.ID != input.Actor.ID {
 			return nil, errs.ErrPermissionDenied.WithMessage("you can only view your own reservations")
 		}
 	}
 
-	return NewGetReservationOutput(*rsv), nil
+	return NewGetReservationOutput(*v), nil
 }

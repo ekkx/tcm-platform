@@ -9,8 +9,9 @@ import (
 )
 
 type Repository interface {
+	GetReservationByID(ctx context.Context, reservationID ulid.ULID) (*entity.Reservation, error)
 	IsReservationConflicted(ctx context.Context, params *IsReservationConflictedParams) (bool, error)
-	ListSkeletonReservationsByIDs(ctx context.Context, reservationIDs []ulid.ULID) ([]*entity.Reservation, error)
+	ListReservationsByIDs(ctx context.Context, reservationIDs []ulid.ULID) ([]*entity.Reservation, error)
 	ListUserReservationIDs(ctx context.Context, params *ListUserReservationIDsParams) ([]ulid.ULID, error)
 	CreateReservation(ctx context.Context, params *CreateReservationParams) (*ulid.ULID, error)
 	DeleteReservationByID(ctx context.Context, reservationID ulid.ULID) error
