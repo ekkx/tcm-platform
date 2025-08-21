@@ -7,15 +7,14 @@
 package reservationv1
 
 import (
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	v11 "github.com/ekkx/tcm-platform/internal/gen/pb/room/v1"
 	v1 "github.com/ekkx/tcm-platform/internal/gen/pb/user/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -581,8 +580,8 @@ const file_reservation_v1_reservation_proto_rawDesc = "" +
 	"\x0eGetReservation\x12%.reservation.v1.GetReservationRequest\x1a&.reservation.v1.GetReservationResponse\x12e\n" +
 	"\x10ListReservations\x12'.reservation.v1.ListReservationsRequest\x1a(.reservation.v1.ListReservationsResponse\x12h\n" +
 	"\x11CreateReservation\x12(.reservation.v1.CreateReservationRequest\x1a).reservation.v1.CreateReservationResponse\x12h\n" +
-	"\x11DeleteReservation\x12(.reservation.v1.DeleteReservationRequest\x1a).reservation.v1.DeleteReservationResponseB\xcb\x01\n" +
-	"\x12com.reservation.v1B\x10ReservationProtoP\x01ZJgithub.com/ekkx/tcm-platform/internal/gen/pb/reservation/v1;reservationv1\xa2\x02\x03RXX\xaa\x02\x0eReservation.V1\xca\x02\x0eReservation\\V1\xe2\x02\x1aReservation\\V1\\GPBMetadata\xea\x02\x0fReservation::V1b\x06proto3"
+	"\x11DeleteReservation\x12(.reservation.v1.DeleteReservationRequest\x1a).reservation.v1.DeleteReservationResponseB\xca\x01\n" +
+	"\x12com.reservation.v1B\x10ReservationProtoP\x01ZIgithub.com/ekkx/tcm-platform/internal/gen/pb/reservation/v1;reservationv1\xa2\x02\x03RXX\xaa\x02\x0eReservation.V1\xca\x02\x0eReservation\\V1\xe2\x02\x1aReservation\\V1\\GPBMetadata\xea\x02\x0fReservation::V1b\x06proto3"
 
 var (
 	file_reservation_v1_reservation_proto_rawDescOnce sync.Once

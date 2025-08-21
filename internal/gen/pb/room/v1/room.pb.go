@@ -7,12 +7,11 @@
 package roomv1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -391,8 +390,8 @@ const file_room_v1_room_proto_rawDesc = "" +
 	"\x12PIANO_TYPE_UPRIGHT\x10\x02\x12\x13\n" +
 	"\x0fPIANO_TYPE_NONE\x10\x032l\n" +
 	"\vRoomService\x12]\n" +
-	"\x12ListAvailableRooms\x12\".room.v1.ListAvailableRoomsRequest\x1a#.room.v1.ListAvailableRoomsResponseB\x93\x01\n" +
-	"\vcom.room.v1B\tRoomProtoP\x01Z<github.com/ekkx/tcm-platform/internal/gen/pb/room/v1;roomv1\xa2\x02\x03RXX\xaa\x02\aRoom.V1\xca\x02\aRoom\\V1\xe2\x02\x13Room\\V1\\GPBMetadata\xea\x02\bRoom::V1b\x06proto3"
+	"\x12ListAvailableRooms\x12\".room.v1.ListAvailableRoomsRequest\x1a#.room.v1.ListAvailableRoomsResponseB\x92\x01\n" +
+	"\vcom.room.v1B\tRoomProtoP\x01Z;github.com/ekkx/tcm-platform/internal/gen/pb/room/v1;roomv1\xa2\x02\x03RXX\xaa\x02\aRoom.V1\xca\x02\aRoom\\V1\xe2\x02\x13Room\\V1\\GPBMetadata\xea\x02\bRoom::V1b\x06proto3"
 
 var (
 	file_room_v1_room_proto_rawDescOnce sync.Once

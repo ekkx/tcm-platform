@@ -7,12 +7,11 @@
 package authv1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -379,8 +378,8 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\vAuthService\x12B\n" +
 	"\tAuthorize\x12\x19.auth.v1.AuthorizeRequest\x1a\x1a.auth.v1.AuthorizeResponse\x12H\n" +
 	"\vReauthorize\x12\x1b.auth.v1.ReauthorizeRequest\x1a\x1c.auth.v1.ReauthorizeResponse\x12Q\n" +
-	"\x0eUpdatePassword\x12\x1e.auth.v1.UpdatePasswordRequest\x1a\x1f.auth.v1.UpdatePasswordResponseB\x93\x01\n" +
-	"\vcom.auth.v1B\tAuthProtoP\x01Z<github.com/ekkx/tcm-platform/internal/gen/pb/auth/v1;authv1\xa2\x02\x03AXX\xaa\x02\aAuth.V1\xca\x02\aAuth\\V1\xe2\x02\x13Auth\\V1\\GPBMetadata\xea\x02\bAuth::V1b\x06proto3"
+	"\x0eUpdatePassword\x12\x1e.auth.v1.UpdatePasswordRequest\x1a\x1f.auth.v1.UpdatePasswordResponseB\x92\x01\n" +
+	"\vcom.auth.v1B\tAuthProtoP\x01Z;github.com/ekkx/tcm-platform/internal/gen/pb/auth/v1;authv1\xa2\x02\x03AXX\xaa\x02\aAuth.V1\xca\x02\aAuth\\V1\xe2\x02\x13Auth\\V1\\GPBMetadata\xea\x02\bAuth::V1b\x06proto3"
 
 var (
 	file_auth_v1_auth_proto_rawDescOnce sync.Once

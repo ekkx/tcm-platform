@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/ekkx/tcm-platform/cmd/api/server"
+	"github.com/ekkx/tcm-platform/internal/app/server"
 )
 
 func main() {

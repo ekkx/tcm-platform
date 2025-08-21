@@ -3,8 +3,6 @@ package server
 import (
 	"net/http"
 
-	"connectrpc.com/connect"
-	"github.com/ekkx/tcm-platform/internal/app/server/interceptor"
 	"github.com/ekkx/tcm-platform/internal/config"
 	"github.com/ekkx/tcm-platform/internal/gen/pb/auth/v1/authv1connect"
 	"github.com/ekkx/tcm-platform/internal/gen/pb/reservation/v1/reservationv1connect"
@@ -18,23 +16,22 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type ServiceDefinition struct {
+type Service struct {
 	Name            string
 	RegisterHandler func(mux *http.ServeMux)
 }
 
-func getServiceDefinitions(cfg *config.Config, dbPool *pgxpool.Pool, jwtManager *jwt.JWTManager) []ServiceDefinition {
-	return []ServiceDefinition{
+func initServices(cfg *config.Config, dbPool *pgxpool.Pool, jwtManager *jwt.JWTManager) []Service {
+	base := BaseHandlerOptions(cfg)
+	authed := AuthedHandlerOptions(cfg, jwtManager, dbPool)
+
+	return []Service{
 		{
 			Name: authv1connect.AuthServiceName,
 			RegisterHandler: func(mux *http.ServeMux) {
 				mux.Handle(authv1connect.NewAuthServiceHandler(
 					auth.InitModule(dbPool, jwtManager),
-					connect.WithInterceptors(
-						interceptor.NewConfigInterceptor(cfg),
-						interceptor.ErrorInterceptor(cfg.Env),
-						interceptor.NewLoggingInterceptor(),
-					),
+					base...,
 				))
 			},
 		},
@@ -43,13 +40,7 @@ func getServiceDefinitions(cfg *config.Config, dbPool *pgxpool.Pool, jwtManager 
 			RegisterHandler: func(mux *http.ServeMux) {
 				mux.Handle(reservationv1connect.NewReservationServiceHandler(
 					reservation.InitModule(dbPool),
-					connect.WithInterceptors(
-						interceptor.NewConfigInterceptor(cfg),
-						interceptor.ErrorInterceptor(cfg.Env),
-						interceptor.NewLoggingInterceptor(),
-						interceptor.AuthInterceptor(jwtManager),
-						interceptor.UserVerificationInterceptor(dbPool),
-					),
+					authed...,
 				))
 			},
 		},
@@ -58,13 +49,7 @@ func getServiceDefinitions(cfg *config.Config, dbPool *pgxpool.Pool, jwtManager 
 			RegisterHandler: func(mux *http.ServeMux) {
 				mux.Handle(roomv1connect.NewRoomServiceHandler(
 					room.InitModule(dbPool),
-					connect.WithInterceptors(
-						interceptor.NewConfigInterceptor(cfg),
-						interceptor.ErrorInterceptor(cfg.Env),
-						interceptor.NewLoggingInterceptor(),
-						interceptor.AuthInterceptor(jwtManager),
-						interceptor.UserVerificationInterceptor(dbPool),
-					),
+					authed...,
 				))
 			},
 		},
@@ -73,13 +58,7 @@ func getServiceDefinitions(cfg *config.Config, dbPool *pgxpool.Pool, jwtManager 
 			RegisterHandler: func(mux *http.ServeMux) {
 				mux.Handle(userv1connect.NewUserServiceHandler(
 					user.InitModule(dbPool),
-					connect.WithInterceptors(
-						interceptor.NewConfigInterceptor(cfg),
-						interceptor.ErrorInterceptor(cfg.Env),
-						interceptor.NewLoggingInterceptor(),
-						interceptor.AuthInterceptor(jwtManager),
-						interceptor.UserVerificationInterceptor(dbPool),
-					),
+					authed...,
 				))
 			},
 		},
