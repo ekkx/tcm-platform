@@ -41,6 +41,7 @@ export default function Home() {
       <div className="grid gap-4 px-4 pt-6">
         <div className="flex gap-2">
           <Button
+            isDisabled
             fullWidth
             radius="full"
             size="lg"
@@ -64,6 +65,7 @@ export default function Home() {
             予約を検索する
           </Button>
           <Button
+            isDisabled
             isIconOnly
             size="lg"
             radius="full"

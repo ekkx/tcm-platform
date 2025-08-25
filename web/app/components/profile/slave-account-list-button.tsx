@@ -16,6 +16,7 @@ export function SlaveAccountListButton() {
   return (
     <>
       <Button
+        isDisabled
         disableRipple
         onPress={onOpen}
         className="px-0 gap-3 justify-start bg-transparent"
