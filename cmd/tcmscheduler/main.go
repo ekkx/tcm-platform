@@ -14,14 +14,13 @@ tcmscheduler は、東京音楽大学の公式サイトへの予約を自動化�
 package main
 
 import (
-	"context"
+	"flag"
 	"log"
 	"log/slog"
 	"time"
 
 	"github.com/ekkx/tcm-platform/internal/config"
-	// rsvrepo "github.com/ekkx/tcm-platform/internal/modules/reservation/repository"
-	// userrepo "github.com/ekkx/tcm-platform/internal/modules/user/repository"
+
 	"github.com/ekkx/tcm-platform/internal/platform/logger"
 	"github.com/robfig/cron/v3"
 )
@@ -35,6 +34,9 @@ func jst() *time.Location {
 }
 
 func main() {
+	runOnce := flag.Bool("once", false, "run immediately once instead of scheduling")
+	flag.Parse()
+
 	// This is the entry point for the TCMScheduler application.
 	// The main function will initialize the application and start the scheduler.
 
@@ -54,6 +56,14 @@ func main() {
 	slog.Info("tcm-scheduler started successfully")
 	slog.Info("configuration loaded", slog.String("cron_expression", cfg.Scheduler.CronExpression))
 
+	if *runOnce {
+		slog.Info("running once immediately (manual trigger)")
+		if err := Run(cfg); err != nil {
+			log.Fatalf("failed to run job: %v", err)
+		}
+		return
+	}
+
 	c := cron.New(
 		cron.WithLocation(jst()),
 		cron.WithSeconds(),
@@ -67,21 +77,4 @@ func main() {
 
 	c.Start()
 	select {}
-}
-
-func Run(cfg *config.Config) error {
-	slog.Info("Running batch job...")
-
-	ctx := context.Background()
-	pool, err := cfg.Database.Open(ctx)
-	if err != nil {
-		return err
-	}
-	defer pool.Close()
-
-	// querier := sqlc.New(pool)
-	// rsvRepo := rsvrepo.New(querier)
-	// userRepo := userrepo.New(querier)
-
-	return nil
 }

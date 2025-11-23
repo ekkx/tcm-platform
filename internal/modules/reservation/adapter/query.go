@@ -7,6 +7,7 @@ import (
 	"github.com/ekkx/tcm-platform/internal/domain/entity"
 	"github.com/ekkx/tcm-platform/internal/modules/reservation/repository"
 	"github.com/ekkx/tcm-platform/internal/platform/ulid"
+	"github.com/ekkx/tcm-platform/internal/platform/ymd"
 )
 
 type QueryAdapter struct {
@@ -25,4 +26,11 @@ func (q *QueryAdapter) GetReservationByID(ctx context.Context, reservationID uli
 
 func (q *QueryAdapter) ListReservationsByIDs(ctx context.Context, reservationIDs []ulid.ULID) ([]*entity.Reservation, error) {
 	return q.reservationRepo.ListReservationsByIDs(ctx, reservationIDs)
+}
+
+func (q *QueryAdapter) ListReservationIDsByDate(ctx context.Context, date ymd.YMD) ([]ulid.ULID, error) {
+	if date.IsZero() || !date.IsValid() {
+		return nil, nil
+	}
+	return q.reservationRepo.ListReservationIDsByDate(ctx, date)
 }

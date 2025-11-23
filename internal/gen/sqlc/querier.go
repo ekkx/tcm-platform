@@ -8,6 +8,7 @@ import (
 	"context"
 
 	"github.com/ekkx/tcm-platform/internal/platform/ulid"
+	"github.com/ekkx/tcm-platform/internal/platform/ymd"
 )
 
 type Querier interface {
@@ -17,6 +18,7 @@ type Querier interface {
 	DeleteUserByID(ctx context.Context, userID ulid.ULID) (int32, error)
 	GetUserIDByOfficialSiteID(ctx context.Context, officialSiteID string) (ulid.ULID, error)
 	IsReservationConflicted(ctx context.Context, arg IsReservationConflictedParams) (bool, error)
+	ListReservationIDsByDate(ctx context.Context, date ymd.YMD) ([]ulid.ULID, error)
 	ListReservationsByIDs(ctx context.Context, reservationIds []string) ([]Reservation, error)
 	ListSlaveUserIDs(ctx context.Context, masterUserID ulid.ULID) ([]ulid.ULID, error)
 	ListUnavailableRoomIDs(ctx context.Context, arg ListUnavailableRoomIDsParams) ([]string, error)
