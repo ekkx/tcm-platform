@@ -6,9 +6,12 @@ import (
 	"sync"
 
 	"github.com/ekkx/tcm-platform/internal/app/assemble"
+	"github.com/ekkx/tcm-platform/internal/app/gateway"
 	"github.com/ekkx/tcm-platform/internal/config"
 	"github.com/ekkx/tcm-platform/internal/domain/entity"
+	"github.com/ekkx/tcm-platform/internal/domain/valueobject"
 	"github.com/ekkx/tcm-platform/internal/gen/sqlc"
+	"github.com/ekkx/tcm-platform/internal/platform/tcmutil"
 	"github.com/ekkx/tcm-platform/internal/platform/ulid"
 	"github.com/ekkx/tcm-platform/internal/platform/ymd"
 
@@ -16,21 +19,23 @@ import (
 	rsvrepo "github.com/ekkx/tcm-platform/internal/modules/reservation/repository"
 	userad "github.com/ekkx/tcm-platform/internal/modules/user/adapter"
 	userrepo "github.com/ekkx/tcm-platform/internal/modules/user/repository"
+
+	"github.com/ekkx/tcmrsv"
 )
 
 type ReservationResult struct {
-	RetryCount     int
+	ReservationID  ulid.ULID
 	OfficialSiteID string
-	Reservation    assemble.ReservationView
+	Success        bool
+	Error          error
 }
 
 type Group struct {
 	MasterUser   entity.User
 	Reservations []*assemble.ReservationView
-	Results      []ReservationResult
 }
 
-func Run(cfg *config.Config) error {
+func Run(cfg *config.Config, overrideDate *ymd.YMD) error {
 	slog.Info("tcm-scheduler job started")
 
 	ctx := context.Background()
@@ -46,13 +51,23 @@ func Run(cfg *config.Config) error {
 	rsvRepo := rsvrepo.New(querier)
 	userQuery := userad.NewQueryAdapter(userRepo)
 	reservationQuery := rsvad.NewQueryAdapter(rsvRepo)
+	reservationCmd := rsvad.NewCommandAdapter(rsvRepo)
 	userAsm := assemble.NewUserAssembler(userQuery)
 	rsvAsm := assemble.NewReservationAssembler(reservationQuery, userAsm)
 
-	// 二日後の予約を取得する
-	rsvIDs, err := reservationQuery.ListReservationIDsByDate(ctx, ymd.Today().AddDays(2))
+	// 対象日を決定する（overrideDate があればそれを使い、なければ二日後）
+	targetDate := ymd.Today().AddDays(2)
+	if overrideDate != nil {
+		targetDate = *overrideDate
+	}
+	rsvIDs, err := reservationQuery.ListPendingReservationIDsByDate(ctx, targetDate)
 	if err != nil {
 		return err
+	}
+
+	if len(rsvIDs) == 0 {
+		slog.Info("no pending reservations to process", slog.String("date", targetDate.String()))
+		return nil
 	}
 
 	// 予約を扱いやすく組み立てる
@@ -61,52 +76,135 @@ func Run(cfg *config.Config) error {
 		return err
 	}
 
-	// 予約したユーザーのマスターユーザーごとに予約をグループ化（map masterUserID  reservations）
-	rsvGroupsByMasterUser := make(map[ulid.ULID][]Group)
+	// 予約したユーザーのマスターユーザーごとに予約をグループ化
+	groupMap := make(map[ulid.ULID]*Group)
 	for _, rsvView := range rsvListView {
-		// マスターユーザーを抽出する
 		masterUser := rsvView.UserView.MasterUser
 		if masterUser == nil {
 			masterUser = &rsvView.UserView.User
 		}
-		// マスターユーザーごとに予約をグループ化する
-		slog.Debug("adding reservation to user group", slog.String("user_id", masterUser.ID.String()), slog.String("reservation_id", rsvView.Reservation.ID.String()))
-		rsvGroupsByMasterUser[masterUser.ID] = append(rsvGroupsByMasterUser[masterUser.ID], Group{
-			MasterUser:   *masterUser,
-			Reservations: []*assemble.ReservationView{rsvView},
-		})
-	}
 
-	// 予約がない場合は終了
-	if len(rsvGroupsByMasterUser) == 0 {
-		slog.Info("no reservations to process")
-		return nil
-	}
-
-	slog.Debug("grouped reservations", slog.Int("user_groups_count", len(rsvGroupsByMasterUser)))
-
-	// await reservation processing results and retry if failed
-	var wg sync.WaitGroup
-	for _, groups := range rsvGroupsByMasterUser {
-		slog.Info("processsing user group", slog.String("master_user_id", groups[0].MasterUser.ID.String()), slog.Int("groups_count", len(groups)))
-
-		for _, group := range groups {
-			slog.Info("processing reservation group", slog.String("master_user_id", group.MasterUser.ID.String()), slog.Int("reservations_count", len(group.Reservations)))
-			wg.Add(1)
-			go func(group Group) {
-				defer wg.Done()
-				processReservations(group.MasterUser, group.Reservations)
-			}(group)
+		g, ok := groupMap[masterUser.ID]
+		if !ok {
+			g = &Group{MasterUser: *masterUser}
+			groupMap[masterUser.ID] = g
 		}
+		g.Reservations = append(g.Reservations, rsvView)
+	}
+
+	slog.Info("processing reservations",
+		slog.String("date", targetDate.String()),
+		slog.Int("total_reservations", len(rsvListView)),
+		slog.Int("user_groups", len(groupMap)),
+	)
+
+	// マスターユーザーごとに並行処理
+	var wg sync.WaitGroup
+	for _, group := range groupMap {
+		wg.Add(1)
+		go func(g *Group) {
+			defer wg.Done()
+			processGroup(ctx, g, reservationCmd)
+		}(group)
 	}
 	wg.Wait()
 
+	slog.Info("tcm-scheduler job completed")
 	return nil
 }
 
-func processReservations(masterUser entity.User, reservationList []*assemble.ReservationView) {
-	slog.Debug("official site login", slog.String("official_site_id", *masterUser.OfficialSiteID), slog.String("official_site_password", *masterUser.OfficialSitePassword))
-	for _, rsv := range reservationList {
-		slog.Debug("processing reservation", slog.String("reservation_id", rsv.Reservation.ID.String()), slog.String("date", rsv.Reservation.Date.String()), slog.String("room_id", rsv.Reservation.RoomID))
+func processGroup(ctx context.Context, group *Group, rsvCmd gateway.ReservationCommand) {
+	master := group.MasterUser
+
+	if master.OfficialSiteID == nil || master.OfficialSitePassword == nil {
+		slog.Error("master user missing official site credentials",
+			slog.String("user_id", master.ID.String()),
+		)
+		for _, rsv := range group.Reservations {
+			markFailed(ctx, rsvCmd, rsv.Reservation.ID, "missing credentials")
+		}
+		return
+	}
+
+	// 公式サイトにログイン
+	client := tcmrsv.New()
+	if err := client.Login(&tcmrsv.LoginParams{
+		UserID:   *master.OfficialSiteID,
+		Password: *master.OfficialSitePassword,
+	}); err != nil {
+		slog.Error("failed to login to official site",
+			slog.String("user_id", master.ID.String()),
+			slog.String("official_site_id", *master.OfficialSiteID),
+			slog.String("error", err.Error()),
+		)
+		for _, rsv := range group.Reservations {
+			markFailed(ctx, rsvCmd, rsv.Reservation.ID, err.Error())
+		}
+		return
+	}
+
+	slog.Info("logged in to official site",
+		slog.String("official_site_id", *master.OfficialSiteID),
+		slog.Int("reservations_count", len(group.Reservations)),
+	)
+
+	// 各予約を公式サイトに投入
+	for _, rsvView := range group.Reservations {
+		rsv := rsvView.Reservation
+
+		date := rsv.Date
+		tcmDate := tcmrsv.NewDate(date.Year, date.Month, date.Day)
+
+		err := client.Reserve(&tcmrsv.ReserveParams{
+			Campus:     tcmutil.ToTCMCampusType(rsv.CampusType),
+			RoomID:     rsv.RoomID,
+			Date:       tcmDate,
+			FromHour:   rsv.FromHour,
+			FromMinute: rsv.FromMinute,
+			ToHour:     rsv.ToHour,
+			ToMinute:   rsv.ToMinute,
+		})
+
+		if err != nil {
+			slog.Error("reservation failed",
+				slog.String("reservation_id", rsv.ID.String()),
+				slog.String("error", err.Error()),
+			)
+			markFailed(ctx, rsvCmd, rsv.ID, err.Error())
+			continue
+		}
+
+		slog.Info("reservation succeeded",
+			slog.String("reservation_id", rsv.ID.String()),
+			slog.String("room_id", rsv.RoomID),
+			slog.String("date", rsv.Date.String()),
+		)
+
+		// 成功: ステータスを更新
+		if err := rsvCmd.UpdateReservationStatus(ctx, &gateway.UpdateReservationStatusCommand{
+			ID:     rsv.ID,
+			Status: valueobject.ReservationStatusSuccess,
+		}); err != nil {
+			slog.Error("failed to update reservation status",
+				slog.String("reservation_id", rsv.ID.String()),
+				slog.String("error", err.Error()),
+			)
+		}
+	}
+}
+
+func markFailed(ctx context.Context, rsvCmd gateway.ReservationCommand, reservationID ulid.ULID, reason string) {
+	slog.Warn("marking reservation as failed",
+		slog.String("reservation_id", reservationID.String()),
+		slog.String("reason", reason),
+	)
+	if err := rsvCmd.UpdateReservationStatus(ctx, &gateway.UpdateReservationStatusCommand{
+		ID:     reservationID,
+		Status: valueobject.ReservationStatusFailed,
+	}); err != nil {
+		slog.Error("failed to update reservation status to failed",
+			slog.String("reservation_id", reservationID.String()),
+			slog.String("error", err.Error()),
+		)
 	}
 }

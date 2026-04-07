@@ -2,8 +2,8 @@
 // @generated from file reservation/v1/reservation.proto (package reservation.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
-import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
+import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
 import type { CampusType, Room } from "../../room/v1/room_pb";
 import { file_room_v1_room } from "../../room/v1/room_pb";
 import type { User } from "../../user/v1/user_pb";
@@ -16,7 +16,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file reservation/v1/reservation.proto.
  */
 export const file_reservation_v1_reservation: GenFile = /*@__PURE__*/
-  fileDesc("CiByZXNlcnZhdGlvbi92MS9yZXNlcnZhdGlvbi5wcm90bxIOcmVzZXJ2YXRpb24udjEivAIKC1Jlc2VydmF0aW9uEgoKAmlkGAEgASgJEh0KEG9mZmljaWFsX3NpdGVfaWQYAiABKAlIAIgBARIbCgR1c2VyGAMgASgLMg0udXNlci52MS5Vc2VyEigKC2NhbXB1c190eXBlGAQgASgOMhMucm9vbS52MS5DYW1wdXNUeXBlEhsKBHJvb20YBSABKAsyDS5yb29tLnYxLlJvb20SDAoEZGF0ZRgGIAEoCRIRCglmcm9tX2hvdXIYByABKAUSEwoLZnJvbV9taW51dGUYCCABKAUSDwoHdG9faG91chgJIAEoBRIRCgl0b19taW51dGUYCiABKAUSLwoLY3JlYXRlX3RpbWUYCyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wQhMKEV9vZmZpY2lhbF9zaXRlX2lkIi8KFUdldFJlc2VydmF0aW9uUmVxdWVzdBIWCg5yZXNlcnZhdGlvbl9pZBgBIAEoCSJKChZHZXRSZXNlcnZhdGlvblJlc3BvbnNlEjAKC3Jlc2VydmF0aW9uGAEgASgLMhsucmVzZXJ2YXRpb24udjEuUmVzZXJ2YXRpb24iGQoXTGlzdFJlc2VydmF0aW9uc1JlcXVlc3QiTQoYTGlzdFJlc2VydmF0aW9uc1Jlc3BvbnNlEjEKDHJlc2VydmF0aW9ucxgBIAMoCzIbLnJlc2VydmF0aW9uLnYxLlJlc2VydmF0aW9uIq8BChhDcmVhdGVSZXNlcnZhdGlvblJlcXVlc3QSKAoLY2FtcHVzX3R5cGUYASABKA4yEy5yb29tLnYxLkNhbXB1c1R5cGUSDAoEZGF0ZRgCIAEoCRIRCglmcm9tX2hvdXIYAyABKAUSEwoLZnJvbV9taW51dGUYBCABKAUSDwoHdG9faG91chgFIAEoBRIRCgl0b19taW51dGUYBiABKAUSDwoHcm9vbV9pZBgHIAEoCSJNChlDcmVhdGVSZXNlcnZhdGlvblJlc3BvbnNlEjAKC3Jlc2VydmF0aW9uGAEgASgLMhsucmVzZXJ2YXRpb24udjEuUmVzZXJ2YXRpb24iMgoYRGVsZXRlUmVzZXJ2YXRpb25SZXF1ZXN0EhYKDnJlc2VydmF0aW9uX2lkGAEgASgJIhsKGURlbGV0ZVJlc2VydmF0aW9uUmVzcG9uc2UysAMKElJlc2VydmF0aW9uU2VydmljZRJfCg5HZXRSZXNlcnZhdGlvbhIlLnJlc2VydmF0aW9uLnYxLkdldFJlc2VydmF0aW9uUmVxdWVzdBomLnJlc2VydmF0aW9uLnYxLkdldFJlc2VydmF0aW9uUmVzcG9uc2USZQoQTGlzdFJlc2VydmF0aW9ucxInLnJlc2VydmF0aW9uLnYxLkxpc3RSZXNlcnZhdGlvbnNSZXF1ZXN0GigucmVzZXJ2YXRpb24udjEuTGlzdFJlc2VydmF0aW9uc1Jlc3BvbnNlEmgKEUNyZWF0ZVJlc2VydmF0aW9uEigucmVzZXJ2YXRpb24udjEuQ3JlYXRlUmVzZXJ2YXRpb25SZXF1ZXN0GikucmVzZXJ2YXRpb24udjEuQ3JlYXRlUmVzZXJ2YXRpb25SZXNwb25zZRJoChFEZWxldGVSZXNlcnZhdGlvbhIoLnJlc2VydmF0aW9uLnYxLkRlbGV0ZVJlc2VydmF0aW9uUmVxdWVzdBopLnJlc2VydmF0aW9uLnYxLkRlbGV0ZVJlc2VydmF0aW9uUmVzcG9uc2VCygEKEmNvbS5yZXNlcnZhdGlvbi52MUIQUmVzZXJ2YXRpb25Qcm90b1ABWklnaXRodWIuY29tL2Vra3gvdGNtLXBsYXRmb3JtL2ludGVybmFsL2dlbi9wYi9yZXNlcnZhdGlvbi92MTtyZXNlcnZhdGlvbnYxogIDUlhYqgIOUmVzZXJ2YXRpb24uVjHKAg5SZXNlcnZhdGlvblxWMeICGlJlc2VydmF0aW9uXFYxXEdQQk1ldGFkYXRh6gIPUmVzZXJ2YXRpb246OlYxYgZwcm90bzM", [file_room_v1_room, file_user_v1_user, file_google_protobuf_timestamp]);
+  fileDesc("CiByZXNlcnZhdGlvbi92MS9yZXNlcnZhdGlvbi5wcm90bxIOcmVzZXJ2YXRpb24udjEi7wIKC1Jlc2VydmF0aW9uEgoKAmlkGAEgASgJEh0KEG9mZmljaWFsX3NpdGVfaWQYAiABKAlIAIgBARIbCgR1c2VyGAMgASgLMg0udXNlci52MS5Vc2VyEigKC2NhbXB1c190eXBlGAQgASgOMhMucm9vbS52MS5DYW1wdXNUeXBlEhsKBHJvb20YBSABKAsyDS5yb29tLnYxLlJvb20SDAoEZGF0ZRgGIAEoCRIRCglmcm9tX2hvdXIYByABKAUSEwoLZnJvbV9taW51dGUYCCABKAUSDwoHdG9faG91chgJIAEoBRIRCgl0b19taW51dGUYCiABKAUSLwoLY3JlYXRlX3RpbWUYCyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEjEKBnN0YXR1cxgMIAEoDjIhLnJlc2VydmF0aW9uLnYxLlJlc2VydmF0aW9uU3RhdHVzQhMKEV9vZmZpY2lhbF9zaXRlX2lkIi8KFUdldFJlc2VydmF0aW9uUmVxdWVzdBIWCg5yZXNlcnZhdGlvbl9pZBgBIAEoCSJKChZHZXRSZXNlcnZhdGlvblJlc3BvbnNlEjAKC3Jlc2VydmF0aW9uGAEgASgLMhsucmVzZXJ2YXRpb24udjEuUmVzZXJ2YXRpb24iGQoXTGlzdFJlc2VydmF0aW9uc1JlcXVlc3QiTQoYTGlzdFJlc2VydmF0aW9uc1Jlc3BvbnNlEjEKDHJlc2VydmF0aW9ucxgBIAMoCzIbLnJlc2VydmF0aW9uLnYxLlJlc2VydmF0aW9uIq8BChhDcmVhdGVSZXNlcnZhdGlvblJlcXVlc3QSKAoLY2FtcHVzX3R5cGUYASABKA4yEy5yb29tLnYxLkNhbXB1c1R5cGUSDAoEZGF0ZRgCIAEoCRIRCglmcm9tX2hvdXIYAyABKAUSEwoLZnJvbV9taW51dGUYBCABKAUSDwoHdG9faG91chgFIAEoBRIRCgl0b19taW51dGUYBiABKAUSDwoHcm9vbV9pZBgHIAEoCSJNChlDcmVhdGVSZXNlcnZhdGlvblJlc3BvbnNlEjAKC3Jlc2VydmF0aW9uGAEgASgLMhsucmVzZXJ2YXRpb24udjEuUmVzZXJ2YXRpb24iMgoYRGVsZXRlUmVzZXJ2YXRpb25SZXF1ZXN0EhYKDnJlc2VydmF0aW9uX2lkGAEgASgJIhsKGURlbGV0ZVJlc2VydmF0aW9uUmVzcG9uc2UqlgEKEVJlc2VydmF0aW9uU3RhdHVzEiIKHlJFU0VSVkFUSU9OX1NUQVRVU19VTlNQRUNJRklFRBAAEh4KGlJFU0VSVkFUSU9OX1NUQVRVU19QRU5ESU5HEAESHgoaUkVTRVJWQVRJT05fU1RBVFVTX1NVQ0NFU1MQAhIdChlSRVNFUlZBVElPTl9TVEFUVVNfRkFJTEVEEAMysAMKElJlc2VydmF0aW9uU2VydmljZRJfCg5HZXRSZXNlcnZhdGlvbhIlLnJlc2VydmF0aW9uLnYxLkdldFJlc2VydmF0aW9uUmVxdWVzdBomLnJlc2VydmF0aW9uLnYxLkdldFJlc2VydmF0aW9uUmVzcG9uc2USZQoQTGlzdFJlc2VydmF0aW9ucxInLnJlc2VydmF0aW9uLnYxLkxpc3RSZXNlcnZhdGlvbnNSZXF1ZXN0GigucmVzZXJ2YXRpb24udjEuTGlzdFJlc2VydmF0aW9uc1Jlc3BvbnNlEmgKEUNyZWF0ZVJlc2VydmF0aW9uEigucmVzZXJ2YXRpb24udjEuQ3JlYXRlUmVzZXJ2YXRpb25SZXF1ZXN0GikucmVzZXJ2YXRpb24udjEuQ3JlYXRlUmVzZXJ2YXRpb25SZXNwb25zZRJoChFEZWxldGVSZXNlcnZhdGlvbhIoLnJlc2VydmF0aW9uLnYxLkRlbGV0ZVJlc2VydmF0aW9uUmVxdWVzdBopLnJlc2VydmF0aW9uLnYxLkRlbGV0ZVJlc2VydmF0aW9uUmVzcG9uc2VCygEKEmNvbS5yZXNlcnZhdGlvbi52MUIQUmVzZXJ2YXRpb25Qcm90b1ABWklnaXRodWIuY29tL2Vra3gvdGNtLXBsYXRmb3JtL2ludGVybmFsL2dlbi9wYi9yZXNlcnZhdGlvbi92MTtyZXNlcnZhdGlvbnYxogIDUlhYqgIOUmVzZXJ2YXRpb24uVjHKAg5SZXNlcnZhdGlvblxWMeICGlJlc2VydmF0aW9uXFYxXEdQQk1ldGFkYXRh6gIPUmVzZXJ2YXRpb246OlYxYgZwcm90bzM", [file_room_v1_room, file_user_v1_user, file_google_protobuf_timestamp]);
 
 /**
  * @generated from message reservation.v1.Reservation
@@ -76,6 +76,11 @@ export type Reservation = Message<"reservation.v1.Reservation"> & {
    * @generated from field: google.protobuf.Timestamp create_time = 11;
    */
   createTime?: Timestamp;
+
+  /**
+   * @generated from field: reservation.v1.ReservationStatus status = 12;
+   */
+  status: ReservationStatus;
 };
 
 /**
@@ -244,6 +249,37 @@ export type DeleteReservationResponse = Message<"reservation.v1.DeleteReservatio
  */
 export const DeleteReservationResponseSchema: GenMessage<DeleteReservationResponse> = /*@__PURE__*/
   messageDesc(file_reservation_v1_reservation, 8);
+
+/**
+ * @generated from enum reservation.v1.ReservationStatus
+ */
+export enum ReservationStatus {
+  /**
+   * @generated from enum value: RESERVATION_STATUS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: RESERVATION_STATUS_PENDING = 1;
+   */
+  PENDING = 1,
+
+  /**
+   * @generated from enum value: RESERVATION_STATUS_SUCCESS = 2;
+   */
+  SUCCESS = 2,
+
+  /**
+   * @generated from enum value: RESERVATION_STATUS_FAILED = 3;
+   */
+  FAILED = 3,
+}
+
+/**
+ * Describes the enum reservation.v1.ReservationStatus.
+ */
+export const ReservationStatusSchema: GenEnum<ReservationStatus> = /*@__PURE__*/
+  enumDesc(file_reservation_v1_reservation, 0);
 
 /**
  * @generated from service reservation.v1.ReservationService

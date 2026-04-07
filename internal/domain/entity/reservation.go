@@ -19,5 +19,6 @@ type Reservation struct {
 	FromMinute     int
 	ToHour         int
 	ToMinute       int
+	Status         valueobject.ReservationStatus
 	CreateTime     time.Time
 }

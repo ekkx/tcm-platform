@@ -13,6 +13,13 @@ service ReservationService {
     rpc DeleteReservation(DeleteReservationRequest) returns (DeleteReservationResponse);
 }
 
+enum ReservationStatus {
+    RESERVATION_STATUS_UNSPECIFIED = 0;
+    RESERVATION_STATUS_PENDING = 1;
+    RESERVATION_STATUS_SUCCESS = 2;
+    RESERVATION_STATUS_FAILED = 3;
+}
+
 message Reservation {
     string id = 1;
     optional string official_site_id = 2;
@@ -25,6 +32,7 @@ message Reservation {
     int32 to_hour = 9;
     int32 to_minute = 10;
     google.protobuf.Timestamp create_time = 11;
+    ReservationStatus status = 12;
 }
 
 message GetReservationRequest {

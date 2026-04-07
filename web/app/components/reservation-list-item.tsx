@@ -11,7 +11,10 @@ import {
 } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { reservationClient } from "~/api";
-import type { Reservation } from "~/api/pb/reservation/v1/reservation_pb";
+import {
+  ReservationStatus,
+  type Reservation,
+} from "~/api/pb/reservation/v1/reservation_pb";
 import { CampusType } from "~/api/pb/room/v1/room_pb";
 
 export function ReservationListItem({
@@ -86,6 +89,26 @@ export function ReservationListItem({
         <div className="flex flex-col items-center min-w-12">
           <span className="text-xs">{weekday}</span>
           <span className="text-2xl">{day}</span>
+          <div>
+            {reservation.status === ReservationStatus.PENDING && (
+              <span className="flex items-center gap-1 text-[9px] text-warning">
+                <span className="w-1.5 h-1.5 rounded-full bg-warning" />
+                予約待ち
+              </span>
+            )}
+            {reservation.status === ReservationStatus.SUCCESS && (
+              <span className="flex items-center gap-1 text-[9px] text-success">
+                <span className="w-1.5 h-1.5 rounded-full bg-success" />
+                予約完了
+              </span>
+            )}
+            {reservation.status === ReservationStatus.FAILED && (
+              <span className="flex items-center gap-1 text-[9px] text-danger">
+                <span className="w-1.5 h-1.5 rounded-full bg-danger" />
+                予約失敗
+              </span>
+            )}
+          </div>
         </div>
         <Divider orientation="vertical" className="h-11 ml-2" />
         <div className="mr-auto pl-3">

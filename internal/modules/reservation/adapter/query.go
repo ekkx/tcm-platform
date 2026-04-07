@@ -34,3 +34,10 @@ func (q *QueryAdapter) ListReservationIDsByDate(ctx context.Context, date ymd.YM
 	}
 	return q.reservationRepo.ListReservationIDsByDate(ctx, date)
 }
+
+func (q *QueryAdapter) ListPendingReservationIDsByDate(ctx context.Context, date ymd.YMD) ([]ulid.ULID, error) {
+	if date.IsZero() || !date.IsValid() {
+		return nil, nil
+	}
+	return q.reservationRepo.ListPendingReservationIDsByDate(ctx, date)
+}

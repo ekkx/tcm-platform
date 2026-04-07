@@ -17,6 +17,16 @@ func ToReservation(rsv *sqlc.Reservation) *entity.Reservation {
 		campusType = valueobject.CampusTypeUnknown
 	}
 
+	var status valueobject.ReservationStatus
+	switch rsv.Status {
+	case sqlc.ReservationStatusSuccess:
+		status = valueobject.ReservationStatusSuccess
+	case sqlc.ReservationStatusFailed:
+		status = valueobject.ReservationStatusFailed
+	default:
+		status = valueobject.ReservationStatusPending
+	}
+
 	return &entity.Reservation{
 		ID:             rsv.ID,
 		OfficialSiteID: rsv.OfficialSiteID,
@@ -28,6 +38,7 @@ func ToReservation(rsv *sqlc.Reservation) *entity.Reservation {
 		FromMinute:     int(rsv.FromMinute),
 		ToHour:         int(rsv.ToHour),
 		ToMinute:       int(rsv.ToMinute),
+		Status:         status,
 		CreateTime:     rsv.CreateTime,
 	}
 }

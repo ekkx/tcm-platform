@@ -22,6 +22,7 @@ import (
 	"github.com/ekkx/tcm-platform/internal/config"
 
 	"github.com/ekkx/tcm-platform/internal/platform/logger"
+	"github.com/ekkx/tcm-platform/internal/platform/ymd"
 	"github.com/robfig/cron/v3"
 )
 
@@ -35,6 +36,7 @@ func jst() *time.Location {
 
 func main() {
 	runOnce := flag.Bool("once", false, "run immediately once instead of scheduling")
+	dateStr := flag.String("date", "", "override target date (YYYY-MM-DD) instead of today+2")
 	flag.Parse()
 
 	// This is the entry point for the TCMScheduler application.
@@ -56,9 +58,18 @@ func main() {
 	slog.Info("tcm-scheduler started successfully")
 	slog.Info("configuration loaded", slog.String("cron_expression", cfg.Scheduler.CronExpression))
 
+	var overrideDate *ymd.YMD
+	if *dateStr != "" {
+		d, err := ymd.Parse(*dateStr)
+		if err != nil {
+			log.Fatalf("invalid date format: %v", err)
+		}
+		overrideDate = &d
+	}
+
 	if *runOnce {
 		slog.Info("running once immediately (manual trigger)")
-		if err := Run(cfg); err != nil {
+		if err := Run(cfg, overrideDate); err != nil {
 			log.Fatalf("failed to run job: %v", err)
 		}
 		return
@@ -70,7 +81,7 @@ func main() {
 	)
 
 	c.AddFunc(cfg.Scheduler.CronExpression, func() {
-		if err := Run(cfg); err != nil {
+		if err := Run(cfg, nil); err != nil {
 			slog.Error("batch error: %v", err.Error(), err)
 		}
 	})

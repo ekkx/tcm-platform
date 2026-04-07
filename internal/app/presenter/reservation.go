@@ -24,6 +24,16 @@ func ToReservation(v *assemble.ReservationView) *reservationv1.Reservation {
 		campusType = roomv1.CampusType_CAMPUS_TYPE_UNSPECIFIED
 	}
 
+	var status reservationv1.ReservationStatus
+	switch v.Reservation.Status {
+	case valueobject.ReservationStatusSuccess:
+		status = reservationv1.ReservationStatus_RESERVATION_STATUS_SUCCESS
+	case valueobject.ReservationStatusFailed:
+		status = reservationv1.ReservationStatus_RESERVATION_STATUS_FAILED
+	default:
+		status = reservationv1.ReservationStatus_RESERVATION_STATUS_PENDING
+	}
+
 	return &reservationv1.Reservation{
 		Id:             v.Reservation.ID.String(),
 		OfficialSiteId: v.Reservation.OfficialSiteID,
@@ -36,6 +46,7 @@ func ToReservation(v *assemble.ReservationView) *reservationv1.Reservation {
 		ToHour:         int32(v.Reservation.ToHour),
 		ToMinute:       int32(v.Reservation.ToMinute),
 		CreateTime:     timestamppb.New(v.Reservation.CreateTime),
+		Status:         status,
 	}
 }
 

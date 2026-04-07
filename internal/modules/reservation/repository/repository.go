@@ -14,8 +14,10 @@ type Repository interface {
 	IsReservationConflicted(ctx context.Context, params *IsReservationConflictedParams) (bool, error)
 	ListReservationsByIDs(ctx context.Context, reservationIDs []ulid.ULID) ([]*entity.Reservation, error)
 	ListReservationIDsByDate(ctx context.Context, date ymd.YMD) ([]ulid.ULID, error)
+	ListPendingReservationIDsByDate(ctx context.Context, date ymd.YMD) ([]ulid.ULID, error)
 	ListUserReservationIDs(ctx context.Context, params *ListUserReservationIDsParams) ([]ulid.ULID, error)
 	CreateReservation(ctx context.Context, params *CreateReservationParams) (*ulid.ULID, error)
+	UpdateReservationStatus(ctx context.Context, params *UpdateReservationStatusParams) error
 	DeleteReservationByID(ctx context.Context, reservationID ulid.ULID) error
 }
 
