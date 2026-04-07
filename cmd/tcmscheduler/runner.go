@@ -4,7 +4,6 @@ import (
 	"context"
 	"log/slog"
 	"sync"
-
 	"github.com/ekkx/tcm-platform/internal/app/assemble"
 	"github.com/ekkx/tcm-platform/internal/app/gateway"
 	"github.com/ekkx/tcm-platform/internal/config"
@@ -35,7 +34,7 @@ type Group struct {
 	Reservations []*assemble.ReservationView
 }
 
-func Run(cfg *config.Config, overrideDate *ymd.YMD) error {
+func Run(cfg *config.Config, clientFactory OfficialClientFactory, overrideDate *ymd.YMD) error {
 	slog.Info("tcm-scheduler job started")
 
 	ctx := context.Background()
@@ -98,13 +97,21 @@ func Run(cfg *config.Config, overrideDate *ymd.YMD) error {
 		slog.Int("user_groups", len(groupMap)),
 	)
 
-	// マスターユーザーごとに並行処理
+	// マスターユーザーごとに並行処理（セマフォで並行数を制限）
+	maxJobs := cfg.Scheduler.MaxConcurrentJobs
+	if maxJobs <= 0 {
+		maxJobs = 1
+	}
+	sem := make(chan struct{}, maxJobs)
+
 	var wg sync.WaitGroup
 	for _, group := range groupMap {
 		wg.Add(1)
+		sem <- struct{}{} // セマフォ取得
 		go func(g *Group) {
 			defer wg.Done()
-			processGroup(ctx, g, reservationCmd)
+			defer func() { <-sem }() // セマフォ解放
+			processGroup(ctx, g, clientFactory, reservationCmd)
 		}(group)
 	}
 	wg.Wait()
@@ -113,7 +120,7 @@ func Run(cfg *config.Config, overrideDate *ymd.YMD) error {
 	return nil
 }
 
-func processGroup(ctx context.Context, group *Group, rsvCmd gateway.ReservationCommand) {
+func processGroup(ctx context.Context, group *Group, clientFactory OfficialClientFactory, rsvCmd gateway.ReservationCommand) {
 	master := group.MasterUser
 
 	if master.OfficialSiteID == nil || master.OfficialSitePassword == nil {
@@ -127,7 +134,7 @@ func processGroup(ctx context.Context, group *Group, rsvCmd gateway.ReservationC
 	}
 
 	// 公式サイトにログイン
-	client := tcmrsv.New()
+	client := clientFactory()
 	if err := client.Login(&tcmrsv.LoginParams{
 		UserID:   *master.OfficialSiteID,
 		Password: *master.OfficialSitePassword,
