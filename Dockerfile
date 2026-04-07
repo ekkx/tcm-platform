@@ -1,14 +1,16 @@
-FROM golang:1.24-alpine AS builder
+FROM --platform=$BUILDPLATFORM golang:1.24-alpine AS builder
 
 RUN apk add --no-cache ca-certificates git
+
+ARG TARGETARCH
 
 WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-RUN CGO_ENABLED=0 go build -o /bin/api ./cmd/api
-RUN CGO_ENABLED=0 go build -o /bin/scheduler ./cmd/tcmscheduler
+RUN CGO_ENABLED=0 GOARCH=$TARGETARCH go build -o /bin/api ./cmd/api
+RUN CGO_ENABLED=0 GOARCH=$TARGETARCH go build -o /bin/scheduler ./cmd/tcmscheduler
 
 FROM alpine:3.21
 

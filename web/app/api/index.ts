@@ -7,9 +7,8 @@ import { RoomService } from "./pb/room/v1/room_pb";
 import { UserService } from "./pb/user/v1/user_pb";
 
 const transport = createConnectTransport({
-  baseUrl: "http://localhost:50051",
+  baseUrl: import.meta.env.VITE_API_BASE_URL ?? "http://localhost:50051",
   interceptors: [authInterceptor],
-  // useBinaryFormat: true,
 });
 
 export const authClient = createClient(AuthService, transport);
