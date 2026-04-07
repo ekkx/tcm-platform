@@ -27,10 +27,7 @@ func initMux(deps *Deps) http.Handler {
 	}
 
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{
-			"http://localhost:5173", // TODO: load from config
-			"http://0.0.0.0:5173",
-		},
+		AllowedOrigins: deps.Cfg.Server.AllowedOrigins,
 		AllowCredentials: true,
 		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
 		AllowedHeaders: []string{
