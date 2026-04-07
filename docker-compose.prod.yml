@@ -1,0 +1,74 @@
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      TZ: Asia/Tokyo
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  migrate:
+    image: ghcr.io/${GITHUB_REPOSITORY}/server:latest
+    entrypoint:
+      - sh
+      - -c
+      - |
+        apk add --no-cache curl &&
+        curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.3/migrate.linux-arm64.tar.gz | tar xz -C /usr/local/bin &&
+        migrate -path /migrations -database "$DATABASE_DSN" up
+    environment:
+      DATABASE_DSN: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    image: ghcr.io/${GITHUB_REPOSITORY}/server:latest
+    restart: unless-stopped
+    entrypoint: ["api"]
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  scheduler:
+    image: ghcr.io/${GITHUB_REPOSITORY}/server:latest
+    restart: unless-stopped
+    entrypoint: ["scheduler"]
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  web:
+    image: ghcr.io/${GITHUB_REPOSITORY}/web:latest
+    restart: unless-stopped
+    environment:
+      PORT: "3000"
+    depends_on:
+      - api
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - api
+      - web
+
+volumes:
+  db-data:
