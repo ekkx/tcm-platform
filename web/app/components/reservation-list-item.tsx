@@ -55,43 +55,31 @@ function getPianoLabel(pianoType: PianoType) {
 }
 
 function StatusChip({ status }: { status: ReservationStatus }) {
-  switch (status) {
-    case ReservationStatus.PENDING:
-      return (
-        <Chip
-          size="sm"
-          variant="flat"
-          color="warning"
-          classNames={{ content: "text-[10px] font-semibold" }}
-        >
-          予約待ち
-        </Chip>
-      );
-    case ReservationStatus.SUCCESS:
-      return (
-        <Chip
-          size="sm"
-          variant="flat"
-          color="success"
-          classNames={{ content: "text-[10px] font-semibold" }}
-        >
-          予約確定
-        </Chip>
-      );
-    case ReservationStatus.FAILED:
-      return (
-        <Chip
-          size="sm"
-          variant="flat"
-          color="danger"
-          classNames={{ content: "text-[10px] font-semibold" }}
-        >
-          予約失敗
-        </Chip>
-      );
-    default:
-      return null;
-  }
+  const configMap: Partial<
+    Record<ReservationStatus, { color: string; label: string }>
+  > = {
+    [ReservationStatus.PENDING]: { color: "bg-warning", label: "予約待ち" },
+    [ReservationStatus.SUCCESS]: { color: "bg-success", label: "予約確定" },
+    [ReservationStatus.FAILED]: { color: "bg-danger", label: "予約失敗" },
+  };
+  const config = configMap[status];
+
+  if (!config) return null;
+
+  return (
+    <Chip
+      size="sm"
+      classNames={{
+        base: "bg-foreground-100 gap-1 px-2",
+        content: "text-[10px] font-semibold px-0",
+      }}
+      startContent={
+        <span className={`inline-block w-2 h-2 rounded-full ${config.color}`} />
+      }
+    >
+      {config.label}
+    </Chip>
+  );
 }
 
 export function ReservationListItem({
@@ -174,7 +162,7 @@ export function ReservationListItem({
 
   return (
     <div className="bg-content1 rounded-3xl p-6">
-      <div className="grid gap-3 rounded-2xl">
+      <div className="grid gap-6 rounded-2xl">
         {/* Header: Date + Time + Status */}
         <div className="flex items-start justify-between">
           <div className="grid gap-1">
@@ -226,6 +214,7 @@ export function ReservationListItem({
           color="default"
           size="lg"
           className="border-1 rounded-3xl text-sm"
+          isDisabled={reservation.status === ReservationStatus.SUCCESS}
           onPress={onOpen}
         >
           キャンセル
@@ -285,7 +274,9 @@ export function ReservationListItem({
             {(onClose) => (
               <ModalBody className="p-0 gap-0">
                 <div className="grid gap-4 px-3 py-6 text-center">
-                  <p className="text-xl font-bold">予約をキャンセルしますか？</p>
+                  <p className="text-xl font-bold">
+                    予約をキャンセルしますか？
+                  </p>
                   <p className="text-xs">
                     この予約をキャンセルしてもよろしいですか？
                   </p>
