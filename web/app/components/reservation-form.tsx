@@ -4,49 +4,42 @@ import {
   DatePicker,
   Select,
   SelectItem,
-  Slider,
   Spinner,
   type DateValue,
 } from "@heroui/react";
 import { today } from "@internationalized/date";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { I18nProvider } from "react-aria-components";
 import { reservationClient, roomClient } from "~/api";
 import type { Reservation } from "~/api/pb/reservation/v1/reservation_pb";
 import { CampusType, type Room } from "~/api/pb/room/v1/room_pb";
 
-const selectableTimes = [
-  "7:30",
-  "8:00",
-  "8:30",
-  "9:00",
-  "9:30",
-  "10:00",
-  "10:30",
-  "11:00",
-  "11:30",
-  "12:00",
-  "12:30",
-  "13:00",
-  "13:30",
-  "14:00",
-  "14:30",
-  "15:00",
-  "15:30",
-  "16:00",
-  "16:30",
-  "17:00",
-  "17:30",
-  "18:00",
-  "18:30",
-  "19:00",
-  "19:30",
-  "20:00",
-  "20:30",
-  "21:00",
-  "21:30",
-  "22:00",
-];
+// 30分刻みの時刻リストを生成する
+function generateTimes(startHour: number, startMinute: number, endHour: number, endMinute: number): string[] {
+  const times: string[] = [];
+  let h = startHour;
+  let m = startMinute;
+  while (h < endHour || (h === endHour && m <= endMinute)) {
+    times.push(`${h}:${String(m).padStart(2, "0")}`);
+    m += 30;
+    if (m >= 60) {
+      h += 1;
+      m = 0;
+    }
+  }
+  return times;
+}
+
+function parseTime(time: string): { hour: number; minute: number } {
+  const [h, m] = time.split(":");
+  return { hour: parseInt(h, 10), minute: parseInt(m, 10) };
+}
+
+// キャンパスごとの最終時刻
+const CAMPUS_END_TIME: Record<string, { hour: number; minute: number }> = {
+  nakameguro: { hour: 21, minute: 30 },
+  ikebukuro: { hour: 22, minute: 30 },
+};
 
 const getCampusType = (key: "nakameguro" | "ikebukuro" | null): CampusType => {
   switch (key) {
@@ -73,28 +66,43 @@ export function ReservationForm({
   const [selectedStartTime, setSelectedStartTime] = useState<string | null>(
     null
   );
-  const [sliderValue, setSliderValue] = useState<number>(0);
+  const [selectedEndTime, setSelectedEndTime] = useState<string | null>(null);
   const [availableRooms, setAvailableRooms] = useState<Room[]>([]);
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
   const [isLoadingRooms, setIsLoadingRooms] = useState(false);
   const [isReservating, setIsReservating] = useState(false);
-  const [selectedFromHour, setSelectedFromHour] = useState<number | null>(null);
-  const [selectedFromMinute, setSelectedFromMinute] = useState<number | null>(
-    null
-  );
-  const [selectedToHour, setSelectedToHour] = useState<number | null>(null);
-  const [selectedToMinute, setSelectedToMinute] = useState<number | null>(null);
 
-  const canSelectTimeRange = () => {
+  // キャンパスに応じた開始時刻の選択肢
+  const startTimes = useMemo(() => {
+    if (!selectedCampus) return [];
+    const end = CAMPUS_END_TIME[selectedCampus];
+    // 開始時刻は最終時刻の30分前まで（最低30分の予約を確保）
+    return generateTimes(7, 30, end.hour, end.minute - 30 >= 0 ? end.minute - 30 : end.minute);
+  }, [selectedCampus]);
+
+  // 開始時刻の後の終了時刻の選択肢
+  const endTimes = useMemo(() => {
+    if (!selectedCampus || !selectedStartTime) return [];
+    const start = parseTime(selectedStartTime);
+    const end = CAMPUS_END_TIME[selectedCampus];
+    // 開始時刻の30分後から最終時刻まで
+    let startM = start.minute + 30;
+    let startH = start.hour;
+    if (startM >= 60) {
+      startH += 1;
+      startM = 0;
+    }
+    return generateTimes(startH, startM, end.hour, end.minute);
+  }, [selectedCampus, selectedStartTime]);
+
+  const canCreateReservation = () => {
     return (
       selectedCampus !== null &&
       selectedDate !== null &&
-      selectedStartTime !== null
+      selectedStartTime !== null &&
+      selectedEndTime !== null &&
+      selectedRoomId !== null
     );
-  };
-
-  const canCreateReservation = () => {
-    return canSelectTimeRange() && sliderValue > 0 && selectedRoomId !== null;
   };
 
   const clearRoomSelection = () => {
@@ -102,53 +110,31 @@ export function ReservationForm({
     setAvailableRooms([]);
   };
 
-  const resetTimeAndRooms = () => {
+  const resetEndTimeAndRooms = () => {
+    setSelectedEndTime(null);
     clearRoomSelection();
-    setSliderValue(0);
   };
 
-  const getTimeRangeFromSlider = (startTime: string, value: number) => {
-    const [fromHourStr, fromMinuteStr] = startTime.split(":");
-    const fromHour = parseInt(fromHourStr, 10);
-    const fromMinute = parseInt(fromMinuteStr, 10);
-    const startMinutes = fromHour * 60 + fromMinute;
+  const handleSelectEndTime = async (endTime: string) => {
+    if (!selectedStartTime || !selectedCampus || !selectedDate) return;
 
-    const durationMinutes = Math.round((value / 100) * 6 * 60);
-    const endMinutes = startMinutes + durationMinutes;
-
-    return {
-      fromHour,
-      fromMinute,
-      toHour: Math.floor(endMinutes / 60),
-      toMinute: endMinutes % 60,
-    };
-  };
-
-  const handleSelectTimeRange = async (value: number | number[]) => {
-    const actualValue = Array.isArray(value) ? value[0] : value;
-    if (!selectedStartTime) return;
-
-    const { fromHour, fromMinute, toHour, toMinute } = getTimeRangeFromSlider(
-      selectedStartTime,
-      actualValue
-    );
-
-    if (fromHour === toHour && fromMinute === toMinute) return;
-
+    setSelectedEndTime(endTime);
     setIsLoadingRooms(true);
     setAvailableRooms([]);
+    setSelectedRoomId(null);
+
+    const from = parseTime(selectedStartTime);
+    const to = parseTime(endTime);
 
     try {
       const response = await roomClient.listAvailableRooms({
         campusType: getCampusType(selectedCampus),
-        date: selectedDate?.toString(),
-        fromHour: fromHour,
-        fromMinute: fromMinute,
-        toHour: toHour,
-        toMinute: toMinute,
+        date: selectedDate.toString(),
+        fromHour: from.hour,
+        fromMinute: from.minute,
+        toHour: to.hour,
+        toMinute: to.minute,
       });
-
-      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       setAvailableRooms(response.rooms);
     } catch (error) {
@@ -156,15 +142,13 @@ export function ReservationForm({
     } finally {
       setIsLoadingRooms(false);
     }
-
-    setSelectedFromHour(fromHour);
-    setSelectedFromMinute(fromMinute);
-    setSelectedToHour(toHour);
-    setSelectedToMinute(toMinute);
   };
 
   const handleCreateReservation = async () => {
     if (!canCreateReservation()) return;
+
+    const from = parseTime(selectedStartTime!);
+    const to = parseTime(selectedEndTime!);
 
     setIsReservating(true);
 
@@ -172,10 +156,10 @@ export function ReservationForm({
       const response = await reservationClient.createReservation({
         campusType: getCampusType(selectedCampus),
         date: selectedDate?.toString(),
-        fromHour: selectedFromHour!,
-        fromMinute: selectedFromMinute!,
-        toHour: selectedToHour!,
-        toMinute: selectedToMinute!,
+        fromHour: from.hour,
+        fromMinute: from.minute,
+        toHour: to.hour,
+        toMinute: to.minute,
         roomId: selectedRoomId!,
       });
       onReservationCreated?.(response.reservation!);
@@ -200,7 +184,8 @@ export function ReservationForm({
           selectedKeys={selectedCampus ? [selectedCampus] : []}
           onChange={(event) => {
             setSelectedCampus(event.target.value as "nakameguro" | "ikebukuro");
-            resetTimeAndRooms();
+            setSelectedStartTime(null);
+            resetEndTimeAndRooms();
           }}
         >
           <SelectItem key="nakameguro">中目黒・代官山キャンパス</SelectItem>
@@ -218,7 +203,8 @@ export function ReservationForm({
             value={selectedDate}
             onChange={(value) => {
               setSelectedDate(value);
-              resetTimeAndRooms();
+              setSelectedStartTime(null);
+              resetEndTimeAndRooms();
             }}
           />
         </I18nProvider>
@@ -227,78 +213,44 @@ export function ReservationForm({
         <h4 className="text-sm text-default-700 opacity-60">開始時刻</h4>
         <Select
           isRequired
+          isDisabled={!selectedCampus}
           placeholder="開始時刻を選択"
-          name="campus"
+          name="startTime"
           selectedKeys={selectedStartTime ? [selectedStartTime] : []}
           onChange={(event) => {
             setSelectedStartTime(event.target.value);
-            resetTimeAndRooms();
+            resetEndTimeAndRooms();
           }}
         >
-          {selectableTimes.map((time) => {
-            return <SelectItem key={time}>{time}</SelectItem>;
-          })}
+          {startTimes.map((time) => (
+            <SelectItem key={time}>{time}</SelectItem>
+          ))}
         </Select>
       </div>
-      <div className="grid px-6">
-        <h4 className="text-sm text-default-700 opacity-60">利用時間</h4>
-        <Slider
-          showSteps
-          color="foreground"
-          label=" "
-          getValue={(value) => {
-            const hours = (parseInt(value.toString()) / 100) * 6;
-            const rounded = Math.ceil(hours * 2) / 2;
-            const h = Math.floor(rounded);
-            const m = rounded % 1 === 0.5 ? 30 : 0;
-            if (h === 0 && m === 30) return "30分";
-            if (h > 0 && m === 0) return `${h}時間`;
-            if (h > 0 && m === 30) return `${h}時間30分`;
-            return "0分";
+      <div className="grid gap-3 px-6">
+        <h4 className="text-sm text-default-700 opacity-60">終了時刻</h4>
+        <Select
+          isRequired
+          isDisabled={!selectedStartTime}
+          placeholder="終了時刻を選択"
+          name="endTime"
+          selectedKeys={selectedEndTime ? [selectedEndTime] : []}
+          onChange={(event) => {
+            handleSelectEndTime(event.target.value);
           }}
-          formatOptions={{ style: "unit", unit: "hour" }}
-          marks={[
-            {
-              value: (100 / 6) * 1,
-              label: "1h",
-            },
-            {
-              value: (100 / 6) * 2,
-              label: "2h",
-            },
-            {
-              value: (100 / 6) * 3,
-              label: "3h",
-            },
-            {
-              value: (100 / 6) * 4,
-              label: "4h",
-            },
-            {
-              value: (100 / 6) * 5,
-              label: "5h",
-            },
-          ]}
-          size="lg"
-          step={(100 / 6) * 0.5}
-          isDisabled={!canSelectTimeRange()}
-          onChange={(value) => {
-            // 選択中のとき
-            const actualValue = Array.isArray(value) ? value[0] : value;
-            setSliderValue(actualValue);
-            clearRoomSelection();
-            setIsLoadingRooms(true);
-          }}
-          onChangeEnd={handleSelectTimeRange}
-        />
+        >
+          {endTimes.map((time) => (
+            <SelectItem key={time}>{time}</SelectItem>
+          ))}
+        </Select>
       </div>
       <div className="grid gap-3 px-6 pb-24">
         <h4 className="text-sm text-default-700 opacity-60">練習室</h4>
         <div>
-          {sliderValue === 0 ? (
+          {!selectedEndTime ? (
             <div className="grid place-items-center h-32">
               <p className="text-sm text-default-400">
-                利用時間を選択してください
+                終了時刻を選択してください
               </p>
             </div>
           ) : isLoadingRooms ? (
