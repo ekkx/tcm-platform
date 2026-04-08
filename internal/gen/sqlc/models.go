@@ -111,6 +111,7 @@ type Reservation struct {
 	ToMinute       int32             `json:"to_minute"`
 	CreateTime     time.Time         `json:"create_time"`
 	Status         ReservationStatus `json:"status"`
+	Note           *string           `json:"note"`
 }
 
 type User struct {

@@ -24,6 +24,7 @@ INSERT INTO
         from_minute,
         to_hour,
         to_minute,
+        note,
         create_time
     )
 VALUES
@@ -37,6 +38,7 @@ VALUES
         $7::INT,
         $8::INT,
         $9::INT,
+        $10::TEXT,
         NOW()
     )
 RETURNING reservations.id
@@ -52,6 +54,7 @@ type CreateReservationParams struct {
 	FromMinute int32      `json:"from_minute"`
 	ToHour     int32      `json:"to_hour"`
 	ToMinute   int32      `json:"to_minute"`
+	Note       *string    `json:"note"`
 }
 
 func (q *Queries) CreateReservation(ctx context.Context, arg CreateReservationParams) (ulid.ULID, error) {
@@ -65,6 +68,7 @@ func (q *Queries) CreateReservation(ctx context.Context, arg CreateReservationPa
 		arg.FromMinute,
 		arg.ToHour,
 		arg.ToMinute,
+		arg.Note,
 	)
 	var id ulid.ULID
 	err := row.Scan(&id)

@@ -42,6 +42,9 @@ const (
 	// ReservationServiceCreateReservationProcedure is the fully-qualified name of the
 	// ReservationService's CreateReservation RPC.
 	ReservationServiceCreateReservationProcedure = "/reservation.v1.ReservationService/CreateReservation"
+	// ReservationServiceUpdateReservationNoteProcedure is the fully-qualified name of the
+	// ReservationService's UpdateReservationNote RPC.
+	ReservationServiceUpdateReservationNoteProcedure = "/reservation.v1.ReservationService/UpdateReservationNote"
 	// ReservationServiceDeleteReservationProcedure is the fully-qualified name of the
 	// ReservationService's DeleteReservation RPC.
 	ReservationServiceDeleteReservationProcedure = "/reservation.v1.ReservationService/DeleteReservation"
@@ -52,6 +55,7 @@ type ReservationServiceClient interface {
 	GetReservation(context.Context, *connect.Request[v1.GetReservationRequest]) (*connect.Response[v1.GetReservationResponse], error)
 	ListReservations(context.Context, *connect.Request[v1.ListReservationsRequest]) (*connect.Response[v1.ListReservationsResponse], error)
 	CreateReservation(context.Context, *connect.Request[v1.CreateReservationRequest]) (*connect.Response[v1.CreateReservationResponse], error)
+	UpdateReservationNote(context.Context, *connect.Request[v1.UpdateReservationNoteRequest]) (*connect.Response[v1.UpdateReservationNoteResponse], error)
 	DeleteReservation(context.Context, *connect.Request[v1.DeleteReservationRequest]) (*connect.Response[v1.DeleteReservationResponse], error)
 }
 
@@ -84,6 +88,12 @@ func NewReservationServiceClient(httpClient connect.HTTPClient, baseURL string, 
 			connect.WithSchema(reservationServiceMethods.ByName("CreateReservation")),
 			connect.WithClientOptions(opts...),
 		),
+		updateReservationNote: connect.NewClient[v1.UpdateReservationNoteRequest, v1.UpdateReservationNoteResponse](
+			httpClient,
+			baseURL+ReservationServiceUpdateReservationNoteProcedure,
+			connect.WithSchema(reservationServiceMethods.ByName("UpdateReservationNote")),
+			connect.WithClientOptions(opts...),
+		),
 		deleteReservation: connect.NewClient[v1.DeleteReservationRequest, v1.DeleteReservationResponse](
 			httpClient,
 			baseURL+ReservationServiceDeleteReservationProcedure,
@@ -95,10 +105,11 @@ func NewReservationServiceClient(httpClient connect.HTTPClient, baseURL string, 
 
 // reservationServiceClient implements ReservationServiceClient.
 type reservationServiceClient struct {
-	getReservation    *connect.Client[v1.GetReservationRequest, v1.GetReservationResponse]
-	listReservations  *connect.Client[v1.ListReservationsRequest, v1.ListReservationsResponse]
-	createReservation *connect.Client[v1.CreateReservationRequest, v1.CreateReservationResponse]
-	deleteReservation *connect.Client[v1.DeleteReservationRequest, v1.DeleteReservationResponse]
+	getReservation        *connect.Client[v1.GetReservationRequest, v1.GetReservationResponse]
+	listReservations      *connect.Client[v1.ListReservationsRequest, v1.ListReservationsResponse]
+	createReservation     *connect.Client[v1.CreateReservationRequest, v1.CreateReservationResponse]
+	updateReservationNote *connect.Client[v1.UpdateReservationNoteRequest, v1.UpdateReservationNoteResponse]
+	deleteReservation     *connect.Client[v1.DeleteReservationRequest, v1.DeleteReservationResponse]
 }
 
 // GetReservation calls reservation.v1.ReservationService.GetReservation.
@@ -116,6 +127,11 @@ func (c *reservationServiceClient) CreateReservation(ctx context.Context, req *c
 	return c.createReservation.CallUnary(ctx, req)
 }
 
+// UpdateReservationNote calls reservation.v1.ReservationService.UpdateReservationNote.
+func (c *reservationServiceClient) UpdateReservationNote(ctx context.Context, req *connect.Request[v1.UpdateReservationNoteRequest]) (*connect.Response[v1.UpdateReservationNoteResponse], error) {
+	return c.updateReservationNote.CallUnary(ctx, req)
+}
+
 // DeleteReservation calls reservation.v1.ReservationService.DeleteReservation.
 func (c *reservationServiceClient) DeleteReservation(ctx context.Context, req *connect.Request[v1.DeleteReservationRequest]) (*connect.Response[v1.DeleteReservationResponse], error) {
 	return c.deleteReservation.CallUnary(ctx, req)
@@ -126,6 +142,7 @@ type ReservationServiceHandler interface {
 	GetReservation(context.Context, *connect.Request[v1.GetReservationRequest]) (*connect.Response[v1.GetReservationResponse], error)
 	ListReservations(context.Context, *connect.Request[v1.ListReservationsRequest]) (*connect.Response[v1.ListReservationsResponse], error)
 	CreateReservation(context.Context, *connect.Request[v1.CreateReservationRequest]) (*connect.Response[v1.CreateReservationResponse], error)
+	UpdateReservationNote(context.Context, *connect.Request[v1.UpdateReservationNoteRequest]) (*connect.Response[v1.UpdateReservationNoteResponse], error)
 	DeleteReservation(context.Context, *connect.Request[v1.DeleteReservationRequest]) (*connect.Response[v1.DeleteReservationResponse], error)
 }
 
@@ -154,6 +171,12 @@ func NewReservationServiceHandler(svc ReservationServiceHandler, opts ...connect
 		connect.WithSchema(reservationServiceMethods.ByName("CreateReservation")),
 		connect.WithHandlerOptions(opts...),
 	)
+	reservationServiceUpdateReservationNoteHandler := connect.NewUnaryHandler(
+		ReservationServiceUpdateReservationNoteProcedure,
+		svc.UpdateReservationNote,
+		connect.WithSchema(reservationServiceMethods.ByName("UpdateReservationNote")),
+		connect.WithHandlerOptions(opts...),
+	)
 	reservationServiceDeleteReservationHandler := connect.NewUnaryHandler(
 		ReservationServiceDeleteReservationProcedure,
 		svc.DeleteReservation,
@@ -168,6 +191,8 @@ func NewReservationServiceHandler(svc ReservationServiceHandler, opts ...connect
 			reservationServiceListReservationsHandler.ServeHTTP(w, r)
 		case ReservationServiceCreateReservationProcedure:
 			reservationServiceCreateReservationHandler.ServeHTTP(w, r)
+		case ReservationServiceUpdateReservationNoteProcedure:
+			reservationServiceUpdateReservationNoteHandler.ServeHTTP(w, r)
 		case ReservationServiceDeleteReservationProcedure:
 			reservationServiceDeleteReservationHandler.ServeHTTP(w, r)
 		default:
@@ -189,6 +214,10 @@ func (UnimplementedReservationServiceHandler) ListReservations(context.Context, 
 
 func (UnimplementedReservationServiceHandler) CreateReservation(context.Context, *connect.Request[v1.CreateReservationRequest]) (*connect.Response[v1.CreateReservationResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("reservation.v1.ReservationService.CreateReservation is not implemented"))
+}
+
+func (UnimplementedReservationServiceHandler) UpdateReservationNote(context.Context, *connect.Request[v1.UpdateReservationNoteRequest]) (*connect.Response[v1.UpdateReservationNoteResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("reservation.v1.ReservationService.UpdateReservationNote is not implemented"))
 }
 
 func (UnimplementedReservationServiceHandler) DeleteReservation(context.Context, *connect.Request[v1.DeleteReservationRequest]) (*connect.Response[v1.DeleteReservationResponse], error) {

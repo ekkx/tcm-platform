@@ -1,13 +1,12 @@
 import {
   addToast,
   Button,
-  Card,
-  CardBody,
   Chip,
   Divider,
   Modal,
   ModalBody,
   ModalContent,
+  Textarea,
   useDisclosure,
 } from "@heroui/react";
 import { useState } from "react";
@@ -98,12 +97,21 @@ function StatusChip({ status }: { status: ReservationStatus }) {
 export function ReservationListItem({
   reservation,
   onDelete,
+  onNoteUpdated,
 }: {
   reservation: Reservation;
   onDelete?: (reservationId: string) => void;
+  onNoteUpdated?: (reservationId: string, note: string | undefined) => void;
 }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isNoteOpen,
+    onOpen: onNoteOpen,
+    onOpenChange: onNoteOpenChange,
+  } = useDisclosure();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [noteText, setNoteText] = useState(reservation.note ?? "");
+  const [isSavingNote, setIsSavingNote] = useState(false);
 
   const timeRange = `${formatTime(
     reservation.fromHour,
@@ -116,6 +124,31 @@ export function ReservationListItem({
     ? getPianoLabel(reservation.room.pianoType)
     : "";
 
+  const handleSaveNote = async (onClose: () => void) => {
+    setIsSavingNote(true);
+    try {
+      const trimmed = noteText.trim();
+      await reservationClient.updateReservationNote({
+        reservationId: reservation.id,
+        note: trimmed || undefined,
+      });
+      addToast({
+        title: "メモを保存しました",
+        color: "success",
+      });
+      onNoteUpdated?.(reservation.id, trimmed || undefined);
+      onClose();
+    } catch {
+      addToast({
+        title: "メモの保存に失敗しました",
+        description: "もう一度お試しください。",
+        color: "danger",
+      });
+    } finally {
+      setIsSavingNote(false);
+    }
+  };
+
   const handleDelete = async (onClose: () => void) => {
     setIsDeleting(true);
     try {
@@ -123,13 +156,13 @@ export function ReservationListItem({
         reservationId: reservation.id,
       });
       addToast({
-        title: "予約を削除しました",
+        title: "予約をキャンセルしました",
         color: "success",
       });
       onDelete?.(reservation.id);
     } catch (error) {
       addToast({
-        title: "予約の削除に失敗しました",
+        title: "予約のキャンセルに失敗しました",
         description: "もう一度お試しください。",
         color: "danger",
       });
@@ -165,17 +198,22 @@ export function ReservationListItem({
           </div>
         </div>
 
-        {/* Memo */}
+        {/* Note */}
         <div className="flex items-start justify-between rounded-xl px-3 pt-2 pb-3 bg-foreground-100">
           <div className="flex-1 min-w-0">
             <p className="text-[10px] text-default-400 mb-1">NOTE</p>
-            <p className="text-xs text-default-500">メモなし</p>
+            <p className="text-xs text-default-500 whitespace-pre-wrap">
+              {reservation.note || "メモなし"}
+            </p>
           </div>
           <Button
             size="sm"
             variant="light"
-            className="text-[10px] min-w-0 h-6 px-1 py-2 underline underline-offset-2"
-            isDisabled
+            className="text-[10px] min-w-0 h-6 px-1 py-2 underline underline-offset-2 text-foreground-600"
+            onPress={() => {
+              setNoteText(reservation.note ?? "");
+              onNoteOpen();
+            }}
           >
             メモを編集
           </Button>
@@ -194,8 +232,8 @@ export function ReservationListItem({
         </Button>
 
         <Modal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
+          isOpen={isNoteOpen}
+          onOpenChange={onNoteOpenChange}
           placement="center"
           size="xs"
           closeButton={<></>}
@@ -203,11 +241,14 @@ export function ReservationListItem({
           <ModalContent>
             {(onClose) => (
               <ModalBody className="p-0 gap-0">
-                <div className="grid gap-4 px-3 py-6 text-center">
-                  <p className="text-xl font-bold">予約を削除しますか？</p>
-                  <p className="text-xs">
-                    この予約を削除してもよろしいですか？
-                  </p>
+                <div className="grid gap-4 px-3 py-6">
+                  <p className="text-xl font-bold text-center">メモを編集</p>
+                  <Textarea
+                    placeholder="練習内容やメモを入力"
+                    value={noteText}
+                    onValueChange={setNoteText}
+                    maxRows={5}
+                  />
                 </div>
                 <Divider />
                 <div className="flex justify-center gap-6 py-3">
@@ -220,12 +261,52 @@ export function ReservationListItem({
                   </Button>
                   <Button
                     className="w-32 font-bold"
+                    color="primary"
+                    variant="flat"
+                    isLoading={isSavingNote}
+                    onPress={() => handleSaveNote(onClose)}
+                  >
+                    保存
+                  </Button>
+                </div>
+              </ModalBody>
+            )}
+          </ModalContent>
+        </Modal>
+
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          placement="center"
+          size="xs"
+          closeButton={<></>}
+        >
+          <ModalContent>
+            {(onClose) => (
+              <ModalBody className="p-0 gap-0">
+                <div className="grid gap-4 px-3 py-6 text-center">
+                  <p className="text-xl font-bold">予約をキャンセルしますか？</p>
+                  <p className="text-xs">
+                    この予約をキャンセルしてもよろしいですか？
+                  </p>
+                </div>
+                <Divider />
+                <div className="flex justify-center gap-6 py-3">
+                  <Button
+                    className="w-32 font-bold"
+                    variant="flat"
+                    onPress={onClose}
+                  >
+                    閉じる
+                  </Button>
+                  <Button
+                    className="w-32 font-bold"
                     color="danger"
                     variant="flat"
                     isLoading={isDeleting}
                     onPress={() => handleDelete(onClose)}
                   >
-                    削除
+                    キャンセル
                   </Button>
                 </div>
               </ModalBody>

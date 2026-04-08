@@ -1,0 +1,2 @@
+ALTER TABLE reservations
+    ADD COLUMN note TEXT DEFAULT NULL;

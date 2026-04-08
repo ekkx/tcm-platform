@@ -20,6 +20,7 @@ type CreateReservationParams struct {
 	FromMinute int
 	ToHour     int
 	ToMinute   int
+	Note       *string
 }
 
 func (repo *RepositoryImpl) CreateReservation(ctx context.Context, params *CreateReservationParams) (*ulid.ULID, error) {
@@ -47,6 +48,7 @@ func (repo *RepositoryImpl) CreateReservation(ctx context.Context, params *Creat
 		FromMinute: int32(params.FromMinute),
 		ToHour:     int32(params.ToHour),
 		ToMinute:   int32(params.ToMinute),
+		Note:       params.Note,
 	})
 	if err != nil {
 		return nil, err

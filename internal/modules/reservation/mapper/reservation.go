@@ -39,6 +39,7 @@ func ToReservation(rsv *sqlc.Reservation) *entity.Reservation {
 		ToHour:         int(rsv.ToHour),
 		ToMinute:       int(rsv.ToMinute),
 		Status:         status,
+		Note:           rsv.Note,
 		CreateTime:     rsv.CreateTime,
 	}
 }

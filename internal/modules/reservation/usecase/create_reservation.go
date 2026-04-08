@@ -45,6 +45,7 @@ func (uc *UseCaseImpl) CreateReservation(ctx context.Context, input *CreateReser
 		FromMinute: input.FromMinute,
 		ToHour:     input.ToHour,
 		ToMinute:   input.ToMinute,
+		Note:       input.Note,
 	})
 	if err != nil {
 		return nil, err

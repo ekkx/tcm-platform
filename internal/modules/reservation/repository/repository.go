@@ -18,6 +18,7 @@ type Repository interface {
 	ListUserReservationIDs(ctx context.Context, params *ListUserReservationIDsParams) ([]ulid.ULID, error)
 	CreateReservation(ctx context.Context, params *CreateReservationParams) (*ulid.ULID, error)
 	UpdateReservationStatus(ctx context.Context, params *UpdateReservationStatusParams) error
+	UpdateReservationNote(ctx context.Context, params *UpdateReservationNoteParams) error
 	DeleteReservationByID(ctx context.Context, reservationID ulid.ULID) error
 }
 

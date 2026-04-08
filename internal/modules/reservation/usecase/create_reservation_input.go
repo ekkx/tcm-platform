@@ -22,6 +22,7 @@ type CreateReservationInput struct {
 	ToHour     int
 	ToMinute   int
 	RoomID     string
+	Note       *string
 }
 
 func NewCreateReservationInputFromRequest(ctx context.Context, req *connect.Request[reservationv1.CreateReservationRequest]) (*CreateReservationInput, error) {
@@ -57,6 +58,7 @@ func NewCreateReservationInputFromRequest(ctx context.Context, req *connect.Requ
 	st.ToHour = int(req.Msg.ToHour)
 	st.ToMinute = int(req.Msg.ToMinute)
 	st.RoomID = req.Msg.RoomId
+	st.Note = req.Msg.Note
 
 	return st, nil
 }

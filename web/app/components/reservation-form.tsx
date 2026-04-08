@@ -5,6 +5,7 @@ import {
   Select,
   SelectItem,
   Spinner,
+  Textarea,
   type DateValue,
 } from "@heroui/react";
 import { today } from "@internationalized/date";
@@ -15,7 +16,12 @@ import type { Reservation } from "~/api/pb/reservation/v1/reservation_pb";
 import { CampusType, type Room } from "~/api/pb/room/v1/room_pb";
 
 // 30分刻みの時刻リストを生成する
-function generateTimes(startHour: number, startMinute: number, endHour: number, endMinute: number): string[] {
+function generateTimes(
+  startHour: number,
+  startMinute: number,
+  endHour: number,
+  endMinute: number
+): string[] {
   const times: string[] = [];
   let h = startHour;
   let m = startMinute;
@@ -70,6 +76,7 @@ export function ReservationForm({
   const [availableRooms, setAvailableRooms] = useState<Room[]>([]);
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
   const [isLoadingRooms, setIsLoadingRooms] = useState(false);
+  const [note, setNote] = useState("");
   const [isReservating, setIsReservating] = useState(false);
 
   // キャンパスに応じた開始時刻の選択肢
@@ -77,7 +84,12 @@ export function ReservationForm({
     if (!selectedCampus) return [];
     const end = CAMPUS_END_TIME[selectedCampus];
     // 開始時刻は最終時刻の30分前まで（最低30分の予約を確保）
-    return generateTimes(7, 30, end.hour, end.minute - 30 >= 0 ? end.minute - 30 : end.minute);
+    return generateTimes(
+      7,
+      30,
+      end.hour,
+      end.minute - 30 >= 0 ? end.minute - 30 : end.minute
+    );
   }, [selectedCampus]);
 
   // 開始時刻の後の終了時刻の選択肢
@@ -161,6 +173,7 @@ export function ReservationForm({
         toHour: to.hour,
         toMinute: to.minute,
         roomId: selectedRoomId!,
+        note: note.trim() || undefined,
       });
       onReservationCreated?.(response.reservation!);
     } catch (error) {
@@ -243,6 +256,15 @@ export function ReservationForm({
             <SelectItem key={time}>{time}</SelectItem>
           ))}
         </Select>
+      </div>
+      <div className="grid gap-3 px-6">
+        <h4 className="text-sm text-default-700 opacity-60">メモ</h4>
+        <Textarea
+          placeholder="メモを入力"
+          value={note}
+          onValueChange={setNote}
+          maxRows={3}
+        />
       </div>
       <div className="grid gap-3 px-6 pb-24">
         <h4 className="text-sm text-default-700 opacity-60">練習室</h4>

@@ -47,6 +47,7 @@ func ToReservation(v *assemble.ReservationView) *reservationv1.Reservation {
 		ToMinute:       int32(v.Reservation.ToMinute),
 		CreateTime:     timestamppb.New(v.Reservation.CreateTime),
 		Status:         status,
+		Note:           v.Reservation.Note,
 	}
 }
 

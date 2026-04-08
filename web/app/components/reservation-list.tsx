@@ -23,9 +23,11 @@ const groupByYearMonth = (reservations: Reservation[]) => {
 export function ReservationList({
   reservations,
   onDelete,
+  onNoteUpdated,
 }: {
   reservations: Reservation[];
   onDelete?: (reservationId: string) => void;
+  onNoteUpdated?: (reservationId: string, note: string | undefined) => void;
 }) {
   const grouped = groupByYearMonth(reservations);
   const sortedYearMonths = Object.keys(grouped).sort();
@@ -53,6 +55,7 @@ export function ReservationList({
                   key={reservation.id}
                   reservation={reservation}
                   onDelete={onDelete}
+                  onNoteUpdated={onNoteUpdated}
                 />
               ))}
           </div>

@@ -36,6 +36,15 @@ export default function Home() {
     setReservations((prev) => prev.filter((r) => r.id !== reservationId));
   };
 
+  const handleNoteUpdated = (
+    reservationId: string,
+    note: string | undefined
+  ) => {
+    setReservations((prev) =>
+      prev.map((r) => (r.id === reservationId ? { ...r, note } : r))
+    );
+  };
+
   return (
     <div className="grid gap-4">
       <div className="grid gap-4 p-6">
@@ -115,6 +124,7 @@ export default function Home() {
         <ReservationList
           reservations={reservations}
           onDelete={handleDeleteReservation}
+          onNoteUpdated={handleNoteUpdated}
         />
       )}
     </div>

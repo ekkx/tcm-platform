@@ -16,7 +16,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file reservation/v1/reservation.proto.
  */
 export const file_reservation_v1_reservation: GenFile = /*@__PURE__*/
-  fileDesc("CiByZXNlcnZhdGlvbi92MS9yZXNlcnZhdGlvbi5wcm90bxIOcmVzZXJ2YXRpb24udjEi7wIKC1Jlc2VydmF0aW9uEgoKAmlkGAEgASgJEh0KEG9mZmljaWFsX3NpdGVfaWQYAiABKAlIAIgBARIbCgR1c2VyGAMgASgLMg0udXNlci52MS5Vc2VyEigKC2NhbXB1c190eXBlGAQgASgOMhMucm9vbS52MS5DYW1wdXNUeXBlEhsKBHJvb20YBSABKAsyDS5yb29tLnYxLlJvb20SDAoEZGF0ZRgGIAEoCRIRCglmcm9tX2hvdXIYByABKAUSEwoLZnJvbV9taW51dGUYCCABKAUSDwoHdG9faG91chgJIAEoBRIRCgl0b19taW51dGUYCiABKAUSLwoLY3JlYXRlX3RpbWUYCyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEjEKBnN0YXR1cxgMIAEoDjIhLnJlc2VydmF0aW9uLnYxLlJlc2VydmF0aW9uU3RhdHVzQhMKEV9vZmZpY2lhbF9zaXRlX2lkIi8KFUdldFJlc2VydmF0aW9uUmVxdWVzdBIWCg5yZXNlcnZhdGlvbl9pZBgBIAEoCSJKChZHZXRSZXNlcnZhdGlvblJlc3BvbnNlEjAKC3Jlc2VydmF0aW9uGAEgASgLMhsucmVzZXJ2YXRpb24udjEuUmVzZXJ2YXRpb24iGQoXTGlzdFJlc2VydmF0aW9uc1JlcXVlc3QiTQoYTGlzdFJlc2VydmF0aW9uc1Jlc3BvbnNlEjEKDHJlc2VydmF0aW9ucxgBIAMoCzIbLnJlc2VydmF0aW9uLnYxLlJlc2VydmF0aW9uIq8BChhDcmVhdGVSZXNlcnZhdGlvblJlcXVlc3QSKAoLY2FtcHVzX3R5cGUYASABKA4yEy5yb29tLnYxLkNhbXB1c1R5cGUSDAoEZGF0ZRgCIAEoCRIRCglmcm9tX2hvdXIYAyABKAUSEwoLZnJvbV9taW51dGUYBCABKAUSDwoHdG9faG91chgFIAEoBRIRCgl0b19taW51dGUYBiABKAUSDwoHcm9vbV9pZBgHIAEoCSJNChlDcmVhdGVSZXNlcnZhdGlvblJlc3BvbnNlEjAKC3Jlc2VydmF0aW9uGAEgASgLMhsucmVzZXJ2YXRpb24udjEuUmVzZXJ2YXRpb24iMgoYRGVsZXRlUmVzZXJ2YXRpb25SZXF1ZXN0EhYKDnJlc2VydmF0aW9uX2lkGAEgASgJIhsKGURlbGV0ZVJlc2VydmF0aW9uUmVzcG9uc2UqlgEKEVJlc2VydmF0aW9uU3RhdHVzEiIKHlJFU0VSVkFUSU9OX1NUQVRVU19VTlNQRUNJRklFRBAAEh4KGlJFU0VSVkFUSU9OX1NUQVRVU19QRU5ESU5HEAESHgoaUkVTRVJWQVRJT05fU1RBVFVTX1NVQ0NFU1MQAhIdChlSRVNFUlZBVElPTl9TVEFUVVNfRkFJTEVEEAMysAMKElJlc2VydmF0aW9uU2VydmljZRJfCg5HZXRSZXNlcnZhdGlvbhIlLnJlc2VydmF0aW9uLnYxLkdldFJlc2VydmF0aW9uUmVxdWVzdBomLnJlc2VydmF0aW9uLnYxLkdldFJlc2VydmF0aW9uUmVzcG9uc2USZQoQTGlzdFJlc2VydmF0aW9ucxInLnJlc2VydmF0aW9uLnYxLkxpc3RSZXNlcnZhdGlvbnNSZXF1ZXN0GigucmVzZXJ2YXRpb24udjEuTGlzdFJlc2VydmF0aW9uc1Jlc3BvbnNlEmgKEUNyZWF0ZVJlc2VydmF0aW9uEigucmVzZXJ2YXRpb24udjEuQ3JlYXRlUmVzZXJ2YXRpb25SZXF1ZXN0GikucmVzZXJ2YXRpb24udjEuQ3JlYXRlUmVzZXJ2YXRpb25SZXNwb25zZRJoChFEZWxldGVSZXNlcnZhdGlvbhIoLnJlc2VydmF0aW9uLnYxLkRlbGV0ZVJlc2VydmF0aW9uUmVxdWVzdBopLnJlc2VydmF0aW9uLnYxLkRlbGV0ZVJlc2VydmF0aW9uUmVzcG9uc2VCygEKEmNvbS5yZXNlcnZhdGlvbi52MUIQUmVzZXJ2YXRpb25Qcm90b1ABWklnaXRodWIuY29tL2Vra3gvdGNtLXBsYXRmb3JtL2ludGVybmFsL2dlbi9wYi9yZXNlcnZhdGlvbi92MTtyZXNlcnZhdGlvbnYxogIDUlhYqgIOUmVzZXJ2YXRpb24uVjHKAg5SZXNlcnZhdGlvblxWMeICGlJlc2VydmF0aW9uXFYxXEdQQk1ldGFkYXRh6gIPUmVzZXJ2YXRpb246OlYxYgZwcm90bzM", [file_room_v1_room, file_user_v1_user, file_google_protobuf_timestamp]);
+  fileDesc("CiByZXNlcnZhdGlvbi92MS9yZXNlcnZhdGlvbi5wcm90bxIOcmVzZXJ2YXRpb24udjEiiwMKC1Jlc2VydmF0aW9uEgoKAmlkGAEgASgJEh0KEG9mZmljaWFsX3NpdGVfaWQYAiABKAlIAIgBARIbCgR1c2VyGAMgASgLMg0udXNlci52MS5Vc2VyEigKC2NhbXB1c190eXBlGAQgASgOMhMucm9vbS52MS5DYW1wdXNUeXBlEhsKBHJvb20YBSABKAsyDS5yb29tLnYxLlJvb20SDAoEZGF0ZRgGIAEoCRIRCglmcm9tX2hvdXIYByABKAUSEwoLZnJvbV9taW51dGUYCCABKAUSDwoHdG9faG91chgJIAEoBRIRCgl0b19taW51dGUYCiABKAUSLwoLY3JlYXRlX3RpbWUYCyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEjEKBnN0YXR1cxgMIAEoDjIhLnJlc2VydmF0aW9uLnYxLlJlc2VydmF0aW9uU3RhdHVzEhEKBG5vdGUYDSABKAlIAYgBAUITChFfb2ZmaWNpYWxfc2l0ZV9pZEIHCgVfbm90ZSIvChVHZXRSZXNlcnZhdGlvblJlcXVlc3QSFgoOcmVzZXJ2YXRpb25faWQYASABKAkiSgoWR2V0UmVzZXJ2YXRpb25SZXNwb25zZRIwCgtyZXNlcnZhdGlvbhgBIAEoCzIbLnJlc2VydmF0aW9uLnYxLlJlc2VydmF0aW9uIhkKF0xpc3RSZXNlcnZhdGlvbnNSZXF1ZXN0Ik0KGExpc3RSZXNlcnZhdGlvbnNSZXNwb25zZRIxCgxyZXNlcnZhdGlvbnMYASADKAsyGy5yZXNlcnZhdGlvbi52MS5SZXNlcnZhdGlvbiLLAQoYQ3JlYXRlUmVzZXJ2YXRpb25SZXF1ZXN0EigKC2NhbXB1c190eXBlGAEgASgOMhMucm9vbS52MS5DYW1wdXNUeXBlEgwKBGRhdGUYAiABKAkSEQoJZnJvbV9ob3VyGAMgASgFEhMKC2Zyb21fbWludXRlGAQgASgFEg8KB3RvX2hvdXIYBSABKAUSEQoJdG9fbWludXRlGAYgASgFEg8KB3Jvb21faWQYByABKAkSEQoEbm90ZRgIIAEoCUgAiAEBQgcKBV9ub3RlIk0KGUNyZWF0ZVJlc2VydmF0aW9uUmVzcG9uc2USMAoLcmVzZXJ2YXRpb24YASABKAsyGy5yZXNlcnZhdGlvbi52MS5SZXNlcnZhdGlvbiJSChxVcGRhdGVSZXNlcnZhdGlvbk5vdGVSZXF1ZXN0EhYKDnJlc2VydmF0aW9uX2lkGAEgASgJEhEKBG5vdGUYAiABKAlIAIgBAUIHCgVfbm90ZSJRCh1VcGRhdGVSZXNlcnZhdGlvbk5vdGVSZXNwb25zZRIwCgtyZXNlcnZhdGlvbhgBIAEoCzIbLnJlc2VydmF0aW9uLnYxLlJlc2VydmF0aW9uIjIKGERlbGV0ZVJlc2VydmF0aW9uUmVxdWVzdBIWCg5yZXNlcnZhdGlvbl9pZBgBIAEoCSIbChlEZWxldGVSZXNlcnZhdGlvblJlc3BvbnNlKpYBChFSZXNlcnZhdGlvblN0YXR1cxIiCh5SRVNFUlZBVElPTl9TVEFUVVNfVU5TUEVDSUZJRUQQABIeChpSRVNFUlZBVElPTl9TVEFUVVNfUEVORElORxABEh4KGlJFU0VSVkFUSU9OX1NUQVRVU19TVUNDRVNTEAISHQoZUkVTRVJWQVRJT05fU1RBVFVTX0ZBSUxFRBADMqYEChJSZXNlcnZhdGlvblNlcnZpY2USXwoOR2V0UmVzZXJ2YXRpb24SJS5yZXNlcnZhdGlvbi52MS5HZXRSZXNlcnZhdGlvblJlcXVlc3QaJi5yZXNlcnZhdGlvbi52MS5HZXRSZXNlcnZhdGlvblJlc3BvbnNlEmUKEExpc3RSZXNlcnZhdGlvbnMSJy5yZXNlcnZhdGlvbi52MS5MaXN0UmVzZXJ2YXRpb25zUmVxdWVzdBooLnJlc2VydmF0aW9uLnYxLkxpc3RSZXNlcnZhdGlvbnNSZXNwb25zZRJoChFDcmVhdGVSZXNlcnZhdGlvbhIoLnJlc2VydmF0aW9uLnYxLkNyZWF0ZVJlc2VydmF0aW9uUmVxdWVzdBopLnJlc2VydmF0aW9uLnYxLkNyZWF0ZVJlc2VydmF0aW9uUmVzcG9uc2USdAoVVXBkYXRlUmVzZXJ2YXRpb25Ob3RlEiwucmVzZXJ2YXRpb24udjEuVXBkYXRlUmVzZXJ2YXRpb25Ob3RlUmVxdWVzdBotLnJlc2VydmF0aW9uLnYxLlVwZGF0ZVJlc2VydmF0aW9uTm90ZVJlc3BvbnNlEmgKEURlbGV0ZVJlc2VydmF0aW9uEigucmVzZXJ2YXRpb24udjEuRGVsZXRlUmVzZXJ2YXRpb25SZXF1ZXN0GikucmVzZXJ2YXRpb24udjEuRGVsZXRlUmVzZXJ2YXRpb25SZXNwb25zZULKAQoSY29tLnJlc2VydmF0aW9uLnYxQhBSZXNlcnZhdGlvblByb3RvUAFaSWdpdGh1Yi5jb20vZWtreC90Y20tcGxhdGZvcm0vaW50ZXJuYWwvZ2VuL3BiL3Jlc2VydmF0aW9uL3YxO3Jlc2VydmF0aW9udjGiAgNSWFiqAg5SZXNlcnZhdGlvbi5WMcoCDlJlc2VydmF0aW9uXFYx4gIaUmVzZXJ2YXRpb25cVjFcR1BCTWV0YWRhdGHqAg9SZXNlcnZhdGlvbjo6VjFiBnByb3RvMw", [file_room_v1_room, file_user_v1_user, file_google_protobuf_timestamp]);
 
 /**
  * @generated from message reservation.v1.Reservation
@@ -81,6 +81,11 @@ export type Reservation = Message<"reservation.v1.Reservation"> & {
    * @generated from field: reservation.v1.ReservationStatus status = 12;
    */
   status: ReservationStatus;
+
+  /**
+   * @generated from field: optional string note = 13;
+   */
+  note?: string;
 };
 
 /**
@@ -194,6 +199,11 @@ export type CreateReservationRequest = Message<"reservation.v1.CreateReservation
    * @generated from field: string room_id = 7;
    */
   roomId: string;
+
+  /**
+   * @generated from field: optional string note = 8;
+   */
+  note?: string;
 };
 
 /**
@@ -221,6 +231,45 @@ export const CreateReservationResponseSchema: GenMessage<CreateReservationRespon
   messageDesc(file_reservation_v1_reservation, 6);
 
 /**
+ * @generated from message reservation.v1.UpdateReservationNoteRequest
+ */
+export type UpdateReservationNoteRequest = Message<"reservation.v1.UpdateReservationNoteRequest"> & {
+  /**
+   * @generated from field: string reservation_id = 1;
+   */
+  reservationId: string;
+
+  /**
+   * @generated from field: optional string note = 2;
+   */
+  note?: string;
+};
+
+/**
+ * Describes the message reservation.v1.UpdateReservationNoteRequest.
+ * Use `create(UpdateReservationNoteRequestSchema)` to create a new message.
+ */
+export const UpdateReservationNoteRequestSchema: GenMessage<UpdateReservationNoteRequest> = /*@__PURE__*/
+  messageDesc(file_reservation_v1_reservation, 7);
+
+/**
+ * @generated from message reservation.v1.UpdateReservationNoteResponse
+ */
+export type UpdateReservationNoteResponse = Message<"reservation.v1.UpdateReservationNoteResponse"> & {
+  /**
+   * @generated from field: reservation.v1.Reservation reservation = 1;
+   */
+  reservation?: Reservation;
+};
+
+/**
+ * Describes the message reservation.v1.UpdateReservationNoteResponse.
+ * Use `create(UpdateReservationNoteResponseSchema)` to create a new message.
+ */
+export const UpdateReservationNoteResponseSchema: GenMessage<UpdateReservationNoteResponse> = /*@__PURE__*/
+  messageDesc(file_reservation_v1_reservation, 8);
+
+/**
  * @generated from message reservation.v1.DeleteReservationRequest
  */
 export type DeleteReservationRequest = Message<"reservation.v1.DeleteReservationRequest"> & {
@@ -235,7 +284,7 @@ export type DeleteReservationRequest = Message<"reservation.v1.DeleteReservation
  * Use `create(DeleteReservationRequestSchema)` to create a new message.
  */
 export const DeleteReservationRequestSchema: GenMessage<DeleteReservationRequest> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 7);
+  messageDesc(file_reservation_v1_reservation, 9);
 
 /**
  * @generated from message reservation.v1.DeleteReservationResponse
@@ -248,7 +297,7 @@ export type DeleteReservationResponse = Message<"reservation.v1.DeleteReservatio
  * Use `create(DeleteReservationResponseSchema)` to create a new message.
  */
 export const DeleteReservationResponseSchema: GenMessage<DeleteReservationResponse> = /*@__PURE__*/
-  messageDesc(file_reservation_v1_reservation, 8);
+  messageDesc(file_reservation_v1_reservation, 10);
 
 /**
  * @generated from enum reservation.v1.ReservationStatus
@@ -308,6 +357,14 @@ export const ReservationService: GenService<{
     methodKind: "unary";
     input: typeof CreateReservationRequestSchema;
     output: typeof CreateReservationResponseSchema;
+  },
+  /**
+   * @generated from rpc reservation.v1.ReservationService.UpdateReservationNote
+   */
+  updateReservationNote: {
+    methodKind: "unary";
+    input: typeof UpdateReservationNoteRequestSchema;
+    output: typeof UpdateReservationNoteResponseSchema;
   },
   /**
    * @generated from rpc reservation.v1.ReservationService.DeleteReservation

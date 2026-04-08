@@ -10,6 +10,7 @@ INSERT INTO
         from_minute,
         to_hour,
         to_minute,
+        note,
         create_time
     )
 VALUES
@@ -23,6 +24,7 @@ VALUES
         sqlc.arg(from_minute)::INT,
         sqlc.arg(to_hour)::INT,
         sqlc.arg(to_minute)::INT,
+        sqlc.narg(note)::TEXT,
         NOW()
     )
 RETURNING reservations.id;

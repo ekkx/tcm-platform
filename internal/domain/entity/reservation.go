@@ -20,5 +20,6 @@ type Reservation struct {
 	ToHour         int
 	ToMinute       int
 	Status         valueobject.ReservationStatus
+	Note           *string
 	CreateTime     time.Time
 }
