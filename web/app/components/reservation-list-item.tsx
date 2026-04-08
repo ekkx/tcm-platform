@@ -237,6 +237,7 @@ export function ReservationListItem({
                     value={noteText}
                     onValueChange={setNoteText}
                     maxRows={5}
+                    classNames={{ input: "text-base" }}
                   />
                 </div>
                 <Divider />

@@ -264,6 +264,7 @@ export function ReservationForm({
           value={note}
           onValueChange={setNote}
           maxRows={3}
+          classNames={{ input: "text-base" }}
         />
       </div>
       <div className="grid gap-3 px-6 pb-24">
