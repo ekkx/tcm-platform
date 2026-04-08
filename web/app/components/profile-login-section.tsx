@@ -1,6 +1,12 @@
 import { Button } from "@heroui/react";
+import { Cookie } from "~/store/cookies";
 
 export function ProfileLoginSection() {
+  const handleLogout = () => {
+    Cookie.destroy();
+    window.location.href = "/";
+  };
+
   return (
     <div className="grid gap-2">
       <h4 className="ml-2 text-xs text-foreground-400">ログイン</h4>
@@ -9,6 +15,7 @@ export function ProfileLoginSection() {
         variant="light"
         color="danger"
         className="justify-start bg-content1"
+        onPress={handleLogout}
         startContent={
           <svg
             className="w-5 h-5"

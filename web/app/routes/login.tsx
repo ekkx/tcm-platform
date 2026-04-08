@@ -33,7 +33,17 @@ export default function Login() {
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
+  const ALLOWED_USER_IDS = ["G2025-15"];
+
   const handleLogin = async () => {
+    if (!ALLOWED_USER_IDS.includes(userId.toUpperCase())) {
+      return addToast({
+        title: "アクセス制限",
+        description: "現在このサイトは限定公開中です。",
+        color: "danger",
+      });
+    }
+
     setIsLoading(true);
 
     try {
