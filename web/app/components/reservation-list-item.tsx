@@ -233,6 +233,14 @@ export function ReservationListItem({
               <ModalBody className="p-0 gap-0">
                 <div className="grid gap-4 px-3 py-6">
                   <p className="text-xl font-bold text-center">メモを編集</p>
+                  <div className="text-center text-xs text-default-500">
+                    <p>
+                      {dateLabel}・{timeRange}
+                    </p>
+                    <p>
+                      {roomName}・{campusLabel}
+                    </p>
+                  </div>
                   <Textarea
                     placeholder="練習内容やメモを入力"
                     value={noteText}
@@ -279,9 +287,14 @@ export function ReservationListItem({
                   <p className="text-xl font-bold">
                     予約をキャンセルしますか？
                   </p>
-                  <p className="text-xs">
-                    この予約をキャンセルしてもよろしいですか？
-                  </p>
+                  <div className="text-xs text-default-500">
+                    <p>
+                      {dateLabel}・{timeRange}
+                    </p>
+                    <p>
+                      {roomName}・{campusLabel}
+                    </p>
+                  </div>
                 </div>
                 <Divider />
                 <div className="flex justify-center gap-6 py-3">
