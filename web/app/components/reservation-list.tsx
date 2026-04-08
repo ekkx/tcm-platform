@@ -31,13 +31,13 @@ export function ReservationList({
   const sortedYearMonths = Object.keys(grouped).sort();
 
   return (
-    <div className="grid gap-6 px-4">
+    <div className="grid gap-6 p-6">
       {sortedYearMonths.map((yearMonth) => (
         <div key={yearMonth} className="grid gap-2">
-          <h4 className="ml-2 text-sm text-foreground-400">
+          <h4 className="ml-2 text-base font-bold text-foreground-400">
             {getYearMonthLabel(yearMonth)}
           </h4>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-6">
             {grouped[yearMonth]
               .slice()
               .sort((a, b) => {

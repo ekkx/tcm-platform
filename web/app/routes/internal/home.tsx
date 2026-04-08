@@ -37,8 +37,8 @@ export default function Home() {
   };
 
   return (
-    <div className="grid gap-6">
-      <div className="grid gap-4 px-4 pt-6">
+    <div className="grid gap-4">
+      <div className="grid gap-4 p-6">
         <div className="flex gap-2">
           <Button
             isDisabled

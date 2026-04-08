@@ -3,19 +3,97 @@ import {
   Button,
   Card,
   CardBody,
+  Chip,
   Divider,
   Modal,
   ModalBody,
   ModalContent,
   useDisclosure,
 } from "@heroui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { reservationClient } from "~/api";
 import {
   ReservationStatus,
   type Reservation,
 } from "~/api/pb/reservation/v1/reservation_pb";
-import { CampusType } from "~/api/pb/room/v1/room_pb";
+import { CampusType, PianoType } from "~/api/pb/room/v1/room_pb";
+
+function formatTime(hour: number, minute: number) {
+  return `${hour}:${String(minute).padStart(2, "0")}`;
+}
+
+function formatDate(dateStr: string) {
+  const date = new Date(`${dateStr}T00:00:00+09:00`);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
+  const weekday = daysOfWeek[date.getDay()];
+  return `${month}月${day}日（${weekday}）`;
+}
+
+function getCampusLabel(campusType: CampusType) {
+  switch (campusType) {
+    case CampusType.NAKAMEGURO:
+      return "中目黒・代官山キャンパス";
+    case CampusType.IKEBUKURO:
+      return "池袋キャンパス";
+    default:
+      return "Unknown Campus";
+  }
+}
+
+function getPianoLabel(pianoType: PianoType) {
+  switch (pianoType) {
+    case PianoType.GRAND:
+      return "グランドピアノ";
+    case PianoType.UPRIGHT:
+      return "アップライトピアノ";
+    case PianoType.NONE:
+      return "ピアノ無";
+    default:
+      return "";
+  }
+}
+
+function StatusChip({ status }: { status: ReservationStatus }) {
+  switch (status) {
+    case ReservationStatus.PENDING:
+      return (
+        <Chip
+          size="sm"
+          variant="flat"
+          color="warning"
+          classNames={{ content: "text-[10px] font-semibold" }}
+        >
+          予約待ち
+        </Chip>
+      );
+    case ReservationStatus.SUCCESS:
+      return (
+        <Chip
+          size="sm"
+          variant="flat"
+          color="success"
+          classNames={{ content: "text-[10px] font-semibold" }}
+        >
+          予約確定
+        </Chip>
+      );
+    case ReservationStatus.FAILED:
+      return (
+        <Chip
+          size="sm"
+          variant="flat"
+          color="danger"
+          classNames={{ content: "text-[10px] font-semibold" }}
+        >
+          予約失敗
+        </Chip>
+      );
+    default:
+      return null;
+  }
+}
 
 export function ReservationListItem({
   reservation,
@@ -25,44 +103,22 @@ export function ReservationListItem({
   onDelete?: (reservationId: string) => void;
 }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [campusName, setCampusName] = useState<string>("");
-  const [timeRange, setTimeRange] = useState<string>("");
-  const [day, setDay] = useState<number>(0);
-  const [weekday, setWeekday] = useState<string>("");
-  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
-    switch (reservation.campusType) {
-      case CampusType.IKEBUKURO:
-        setCampusName("池袋");
-        break;
-      case CampusType.NAKAMEGURO:
-        setCampusName("中目黒・代官山");
-        break;
-      default:
-        setCampusName("不明なキャンパス");
-        break;
-    }
-
-    const date = new Date(`${reservation.date}T00:00:00+09:00`);
-    const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
-    setDay(date.getDate());
-    setWeekday(daysOfWeek[date.getDay()]);
-
-    const startTime = formatTime(reservation.fromHour, reservation.fromMinute);
-    const endTime = formatTime(reservation.toHour, reservation.toMinute);
-    setTimeRange(`${startTime} ~ ${endTime}`);
-  }, []);
-
-  const formatTime = (hour: number, minute: number) => {
-    const paddedMinute = String(minute).padStart(2, "0");
-    return `${hour}:${paddedMinute}`;
-  };
+  const timeRange = `${formatTime(
+    reservation.fromHour,
+    reservation.fromMinute
+  )} - ${formatTime(reservation.toHour, reservation.toMinute)}`;
+  const dateLabel = formatDate(reservation.date);
+  const campusLabel = getCampusLabel(reservation.campusType);
+  const roomName = reservation.room?.name ?? "未設定";
+  const pianoLabel = reservation.room
+    ? getPianoLabel(reservation.room.pianoType)
+    : "";
 
   const handleDelete = async (onClose: () => void) => {
     setIsDeleting(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       await reservationClient.deleteReservation({
         reservationId: reservation.id,
       });
@@ -84,106 +140,59 @@ export function ReservationListItem({
   };
 
   return (
-    <Card>
-      <CardBody className="flex flex-row items-center">
-        <div className="flex flex-col items-center min-w-12">
-          <span className="text-xs">{weekday}</span>
-          <span className="text-2xl">{day}</span>
-          <div>
-            {reservation.status === ReservationStatus.PENDING && (
-              <span className="flex items-center gap-1 text-[9px] text-warning">
-                <span className="w-1.5 h-1.5 rounded-full bg-warning" />
-                予約待ち
-              </span>
-            )}
-            {reservation.status === ReservationStatus.SUCCESS && (
-              <span className="flex items-center gap-1 text-[9px] text-success">
-                <span className="w-1.5 h-1.5 rounded-full bg-success" />
-                予約完了
-              </span>
-            )}
-            {reservation.status === ReservationStatus.FAILED && (
-              <span className="flex items-center gap-1 text-[9px] text-danger">
-                <span className="w-1.5 h-1.5 rounded-full bg-danger" />
-                予約失敗
-              </span>
-            )}
+    <div className="bg-content1 rounded-3xl p-6">
+      <div className="grid gap-3 rounded-2xl">
+        {/* Header: Date + Time + Status */}
+        <div className="flex items-start justify-between">
+          <div className="grid gap-1">
+            <p className="text-xs text-default-400">{dateLabel}</p>
+            <p className="text-xl font-bold leading-tight">{timeRange}</p>
+          </div>
+          <StatusChip status={reservation.status} />
+        </div>
+
+        {/* Location + Instrument */}
+        <div className="flex gap-4 items-center">
+          <div className="w-1/2">
+            <p className="text-[10px] text-default-400 mb-1">LOCATION</p>
+            <p className="text-base font-semibold">{roomName}</p>
+            <p className="text-[10px] text-default-500">{campusLabel}</p>
+          </div>
+          <Divider orientation="vertical" className="h-auto self-stretch" />
+          <div className="w-1/2">
+            <p className="text-[10px] text-default-400 mb-1">INSTRUMENT</p>
+            <p className="text-base font-semibold">{pianoLabel || "-"}</p>
           </div>
         </div>
-        <Divider orientation="vertical" className="h-11 ml-2" />
-        <div className="mr-auto pl-3">
-          <ul className="text-xs text-[10px] opacity-60">
-            <li className="flex items-center gap-1.5">
-              <svg
-                className="w-3 h-3"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <defs>
-                  <mask id="solarClockCircleBold0">
-                    <g fill="none">
-                      <path
-                        fill="#fff"
-                        d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10"
-                      />
-                      <path
-                        fill="#000"
-                        fill-rule="evenodd"
-                        d="M12 7.25a.75.75 0 0 1 .75.75v3.69l2.28 2.28a.75.75 0 1 1-1.06 1.06l-2.5-2.5a.75.75 0 0 1-.22-.53V8a.75.75 0 0 1 .75-.75"
-                        clip-rule="evenodd"
-                      />
-                    </g>
-                  </mask>
-                </defs>
-                <path
-                  fill="currentColor"
-                  d="M0 0h24v24H0z"
-                  mask="url(#solarClockCircleBold0)"
-                />
-              </svg>
-              {timeRange}
-            </li>
-            <li className="flex items-center gap-1.5">
-              <svg
-                className="w-3 h-3"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                  d="M12 2c-4.418 0-8 4.003-8 8.5c0 4.462 2.553 9.312 6.537 11.174a3.45 3.45 0 0 0 2.926 0C17.447 19.812 20 14.962 20 10.5C20 6.003 16.418 2 12 2m0 10a2 2 0 1 0 0-4a2 2 0 0 0 0 4"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              {campusName}
-            </li>
-            <li className="flex items-center gap-1.5">
-              <svg
-                className="w-3 h-3"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                  d="M22 8.293c0 3.476-2.83 6.294-6.32 6.294c-.636 0-2.086-.146-2.791-.732l-.882.878c-.519.517-.379.669-.148.919c.096.105.208.226.295.399c0 0 .735 1.024 0 2.049c-.441.585-1.676 1.404-3.086 0l-.294.292s.881 1.025.147 2.05c-.441.585-1.617 1.17-2.646.146l-1.028 1.024c-.706.703-1.568.293-1.91 0l-.883-.878c-.823-.82-.343-1.708 0-2.05l7.642-7.61s-.735-1.17-.735-2.78c0-3.476 2.83-6.294 6.32-6.294S22 4.818 22 8.293m-6.319 2.196a2.2 2.2 0 0 0 2.204-2.195a2.2 2.2 0 0 0-2.204-2.196a2.2 2.2 0 0 0-2.204 2.196a2.2 2.2 0 0 0 2.204 2.195"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              {reservation.room?.name}
-            </li>
-          </ul>
+
+        {/* Memo */}
+        <div className="flex items-start justify-between rounded-xl px-3 pt-2 pb-3 bg-foreground-100">
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] text-default-400 mb-1">NOTE</p>
+            <p className="text-xs text-default-500">メモなし</p>
+          </div>
+          <Button
+            size="sm"
+            variant="light"
+            className="text-[10px] min-w-0 h-6 px-1 py-2 underline underline-offset-2"
+            isDisabled
+          >
+            メモを編集
+          </Button>
         </div>
-        <Button size="sm" onPress={onOpen}>
-          削除
+
+        {/* Delete Button */}
+        <Button
+          fullWidth
+          variant="bordered"
+          color="default"
+          size="lg"
+          className="border-1 rounded-3xl text-sm"
+          onPress={onOpen}
+        >
+          キャンセル
         </Button>
+
         <Modal
           isOpen={isOpen}
           onOpenChange={onOpenChange}
@@ -193,39 +202,37 @@ export function ReservationListItem({
         >
           <ModalContent>
             {(onClose) => (
-              <>
-                <ModalBody className="p-0 gap-0">
-                  <div className="grid gap-4 px-3 py-6 text-center">
-                    <p className="text-xl font-bold">予約を削除しますか？</p>
-                    <p className="text-xs">
-                      この予約を削除してもよろしいですか？
-                    </p>
-                  </div>
-                  <Divider />
-                  <div className="flex justify-center gap-6 py-3">
-                    <Button
-                      className="w-32 font-bold"
-                      variant="flat"
-                      onPress={onClose}
-                    >
-                      キャンセル
-                    </Button>
-                    <Button
-                      className="w-32 font-bold"
-                      color="danger"
-                      variant="flat"
-                      isLoading={isDeleting}
-                      onPress={() => handleDelete(onClose)}
-                    >
-                      削除
-                    </Button>
-                  </div>
-                </ModalBody>
-              </>
+              <ModalBody className="p-0 gap-0">
+                <div className="grid gap-4 px-3 py-6 text-center">
+                  <p className="text-xl font-bold">予約を削除しますか？</p>
+                  <p className="text-xs">
+                    この予約を削除してもよろしいですか？
+                  </p>
+                </div>
+                <Divider />
+                <div className="flex justify-center gap-6 py-3">
+                  <Button
+                    className="w-32 font-bold"
+                    variant="flat"
+                    onPress={onClose}
+                  >
+                    キャンセル
+                  </Button>
+                  <Button
+                    className="w-32 font-bold"
+                    color="danger"
+                    variant="flat"
+                    isLoading={isDeleting}
+                    onPress={() => handleDelete(onClose)}
+                  >
+                    削除
+                  </Button>
+                </div>
+              </ModalBody>
             )}
           </ModalContent>
         </Modal>
-      </CardBody>
-    </Card>
+      </div>
+    </div>
   );
 }
