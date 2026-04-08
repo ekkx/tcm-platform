@@ -1,25 +1,6 @@
 import type { Reservation } from "~/api/pb/reservation/v1/reservation_pb";
 import { ReservationListItem } from "./reservation-list-item";
 
-// "2025-08" → "2025年8月"
-const getYearMonthLabel = (yearMonth: string) => {
-  const [_, month] = yearMonth.split("-");
-  // return `${year}年${parseInt(month, 10)}月`;
-  return `${parseInt(month, 10)}月`;
-};
-
-// 月ごとにグルーピング
-const groupByYearMonth = (reservations: Reservation[]) => {
-  return reservations.reduce((acc, reservation) => {
-    const yearMonth = reservation.date.slice(0, 7); // "YYYY-MM"
-    if (!acc[yearMonth]) {
-      acc[yearMonth] = [];
-    }
-    acc[yearMonth].push(reservation);
-    return acc;
-  }, {} as Record<string, Reservation[]>);
-};
-
 export function ReservationList({
   reservations,
   onDelete,
@@ -29,37 +10,24 @@ export function ReservationList({
   onDelete?: (reservationId: string) => void;
   onNoteUpdated?: (reservationId: string, note: string | undefined) => void;
 }) {
-  const grouped = groupByYearMonth(reservations);
-  const sortedYearMonths = Object.keys(grouped).sort();
+  const sorted = reservations.slice().sort((a, b) => {
+    const getTime = (r: Reservation) => {
+      const hour = String(r.fromHour).padStart(2, "0");
+      const minute = String(r.fromMinute ?? 0).padStart(2, "0");
+      return new Date(`${r.date}T${hour}:${minute}`).getTime();
+    };
+    return getTime(a) - getTime(b);
+  });
 
   return (
-    <div className="grid gap-6 p-6">
-      {sortedYearMonths.map((yearMonth) => (
-        <div key={yearMonth} className="grid gap-2">
-          <h4 className="ml-2 text-base font-bold text-foreground-400">
-            {getYearMonthLabel(yearMonth)}
-          </h4>
-          <div className="flex flex-col gap-6">
-            {grouped[yearMonth]
-              .slice()
-              .sort((a, b) => {
-                const getTime = (r: Reservation) => {
-                  const hour = String(r.fromHour).padStart(2, "0");
-                  const minute = String(r.fromMinute ?? 0).padStart(2, "0");
-                  return new Date(`${r.date}T${hour}:${minute}`).getTime();
-                };
-                return getTime(a) - getTime(b);
-              })
-              .map((reservation) => (
-                <ReservationListItem
-                  key={reservation.id}
-                  reservation={reservation}
-                  onDelete={onDelete}
-                  onNoteUpdated={onNoteUpdated}
-                />
-              ))}
-          </div>
-        </div>
+    <div className="flex flex-col gap-6 p-6">
+      {sorted.map((reservation) => (
+        <ReservationListItem
+          key={reservation.id}
+          reservation={reservation}
+          onDelete={onDelete}
+          onNoteUpdated={onNoteUpdated}
+        />
       ))}
     </div>
   );

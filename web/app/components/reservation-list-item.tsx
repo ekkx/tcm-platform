@@ -27,7 +27,8 @@ function formatDate(dateStr: string) {
   const day = date.getDate();
   const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
   const weekday = daysOfWeek[date.getDay()];
-  return `${month}月${day}日（${weekday}）`;
+  const year = date.getFullYear();
+  return `${year}年${month}月${day}日（${weekday}）`;
 }
 
 function getCampusLabel(campusType: CampusType) {
@@ -162,7 +163,7 @@ export function ReservationListItem({
 
   return (
     <div className="bg-content1 rounded-3xl p-6">
-      <div className="grid gap-6 rounded-2xl">
+      <div className="grid gap-4 rounded-2xl">
         {/* Header: Date + Time + Status */}
         <div className="flex items-start justify-between">
           <div className="grid gap-1">
