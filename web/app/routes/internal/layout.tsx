@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Outlet } from "react-router";
+import { Header, type FilterValues } from "~/components/header";
 import { Navigation } from "~/components/navigation";
 import { AuthProvider } from "~/providers/auth-provider";
 import type { Route } from "./+types/layout";
@@ -14,10 +16,17 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Layout() {
+  const [filters, setFilters] = useState<FilterValues>({
+    dateRange: null,
+    campusType: null,
+    pianoType: null,
+  });
+
   return (
     <AuthProvider>
-      <main className="w-dvw h-dvh pb-28 overflow-y-auto">
-        <Outlet />
+      <Header onFilter={setFilters} />
+      <main className="w-dvw h-dvh pt-[88px] pb-28 overflow-y-auto">
+        <Outlet context={{ filters }} />
         <Navigation />
       </main>
     </AuthProvider>
