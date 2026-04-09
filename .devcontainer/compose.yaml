@@ -20,6 +20,8 @@ services:
       - ..:/tcmrsv-api:cached
     env_file:
       - ../.env.development
+      - path: ../.env.development.local
+        required: false
     command: sleep infinity
     depends_on:
       - tcmrsv-db

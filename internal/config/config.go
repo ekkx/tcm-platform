@@ -19,6 +19,7 @@ type Config struct {
 	Auth      AuthConfig
 	Log       LoggingConfig
 	Scheduler SchedulerConfig
+	Discord   DiscordConfig
 }
 
 func New() (*Config, error) {
@@ -40,6 +41,9 @@ func New() (*Config, error) {
 		return nil, err
 	}
 	if err := env.Parse(&cfg.Scheduler); err != nil {
+		return nil, err
+	}
+	if err := env.Parse(&cfg.Discord); err != nil {
 		return nil, err
 	}
 

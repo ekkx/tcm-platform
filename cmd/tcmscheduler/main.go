@@ -68,10 +68,11 @@ func main() {
 	}
 
 	clientFactory := newTCMRSVClientFactory()
+	notifier := NewDiscordNotifier(cfg.Discord)
 
 	if *runOnce {
 		slog.Info("running once immediately (manual trigger)")
-		if err := Run(cfg, clientFactory, overrideDate); err != nil {
+		if err := Run(cfg, clientFactory, notifier, overrideDate); err != nil {
 			log.Fatalf("failed to run job: %v", err)
 		}
 		return
@@ -83,7 +84,7 @@ func main() {
 	)
 
 	c.AddFunc(cfg.Scheduler.CronExpression, func() {
-		if err := Run(cfg, clientFactory, nil); err != nil {
+		if err := Run(cfg, clientFactory, notifier, nil); err != nil {
 			slog.Error("batch error: %v", err.Error(), err)
 		}
 	})
