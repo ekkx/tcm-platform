@@ -29,10 +29,12 @@ export default function Layout() {
     mainRef.current?.scrollTo({ top: 0 });
   }, [pathname]);
 
+  const isProfile = pathname === "/profile";
+
   return (
     <AuthProvider>
-      <Header onFilter={setFilters} />
-      <main ref={mainRef} className="w-dvw h-dvh pt-[88px] pb-28 overflow-y-auto">
+      {!isProfile && <Header onFilter={setFilters} />}
+      <main ref={mainRef} className={`w-dvw h-dvh pb-28 overflow-y-auto ${isProfile ? "" : "pt-[88px]"}`}>
         <Outlet context={{ filters }} />
         <Navigation />
       </main>
