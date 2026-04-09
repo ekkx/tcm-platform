@@ -88,18 +88,30 @@ export function Header({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="bg-background pt-24 pb-6 px-6 rounded-b-3xl shadow-lg">
+        <div className="bg-background pt-28 pb-6 px-6 rounded-b-3xl shadow-lg">
           <div className="grid gap-4 max-w-lg mx-auto">
-            <I18nProvider locale="ja">
-              <DateRangePicker
-                label="日付"
-                labelPlacement="outside"
-                fullWidth
-                minValue={today("Asia/Tokyo")}
-                value={dateRange}
-                onChange={setDateRange}
-              />
-            </I18nProvider>
+            <div className="grid gap-1">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">日付</span>
+                {dateRange && (
+                  <button
+                    type="button"
+                    className="text-xs text-default-400 underline underline-offset-2"
+                    onClick={() => setDateRange(null)}
+                  >
+                    解除
+                  </button>
+                )}
+              </div>
+              <I18nProvider locale="ja">
+                <DateRangePicker
+                  fullWidth
+                  minValue={today("Asia/Tokyo")}
+                  value={dateRange}
+                  onChange={setDateRange}
+                />
+              </I18nProvider>
+            </div>
             <Select
               label="キャンパス"
               labelPlacement="outside"
