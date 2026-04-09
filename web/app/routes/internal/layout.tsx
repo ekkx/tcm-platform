@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Outlet } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { Outlet, useLocation } from "react-router";
 import { Header, type FilterValues } from "~/components/header";
 import { Navigation } from "~/components/navigation";
 import { AuthProvider } from "~/providers/auth-provider";
@@ -22,10 +22,17 @@ export default function Layout() {
     pianoType: null,
   });
 
+  const mainRef = useRef<HTMLElement>(null);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0 });
+  }, [pathname]);
+
   return (
     <AuthProvider>
       <Header onFilter={setFilters} />
-      <main className="w-dvw h-dvh pt-[88px] pb-28 overflow-y-auto">
+      <main ref={mainRef} className="w-dvw h-dvh pt-[88px] pb-28 overflow-y-auto">
         <Outlet context={{ filters }} />
         <Navigation />
       </main>
