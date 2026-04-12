@@ -14,14 +14,14 @@ export function CreateSlaveAccountButton() {
 
   return (
     <>
-      <Button
-        isDisabled
-        disableRipple
-        onPress={onOpen}
-        className="px-0 gap-3 justify-start bg-transparent"
-        startContent={
+      <button
+        type="button"
+        className="flex items-center gap-3 w-full py-3 opacity-40"
+        disabled
+      >
+        <div className="w-8 h-8 rounded-xl bg-success/10 flex items-center justify-center flex-shrink-0">
           <svg
-            className="w-5 h-5"
+            className="w-4 h-4 text-success"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -35,33 +35,30 @@ export function CreateSlaveAccountButton() {
             />
             <path
               fill="currentColor"
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M16.5 22c-1.65 0-2.475 0-2.987-.513C13 20.975 13 20.15 13 18.5s0-2.475.513-2.987C14.025 15 14.85 15 16.5 15s2.475 0 2.987.513C20 16.025 20 16.85 20 18.5s0 2.475-.513 2.987C18.975 22 18.15 22 16.5 22m.583-5.056a.583.583 0 1 0-1.166 0v.973h-.973a.583.583 0 1 0 0 1.166h.973v.973a.583.583 0 1 0 1.166 0v-.973h.973a.583.583 0 1 0 0-1.166h-.973z"
-              clip-rule="evenodd"
+              clipRule="evenodd"
             />
           </svg>
-        }
-        endContent={
-          <svg
-            className="w-4 h-4 text-foreground-400 ml-auto"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="m9 5l6 7l-6 7"
-            />
-          </svg>
-        }
-      >
-        新規追加
-      </Button>
+        </div>
+        <span className="text-sm font-medium">新規追加</span>
+        <svg
+          className="w-4 h-4 text-default-300 ml-auto"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="m9 5l6 7l-6 7"
+          />
+        </svg>
+      </button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -105,9 +102,9 @@ export function CreateSlaveAccountButton() {
                     >
                       <path
                         fill="currentColor"
-                        fill-rule="evenodd"
+                        fillRule="evenodd"
                         d="M5.25 10.055V8a6.75 6.75 0 0 1 13.5 0v2.055c1.115.083 1.84.293 2.371.824C22 11.757 22 13.172 22 16s0 4.243-.879 5.121C20.243 22 18.828 22 16 22H8c-2.828 0-4.243 0-5.121-.879C2 20.243 2 18.828 2 16s0-4.243.879-5.121c.53-.531 1.256-.741 2.371-.824M6.75 8a5.25 5.25 0 0 1 10.5 0v2.004Q16.676 9.999 16 10H8q-.677-.001-1.25.004zM14 16a2 2 0 1 1-4 0a2 2 0 0 1 4 0"
-                        clip-rule="evenodd"
+                        clipRule="evenodd"
                       />
                     </svg>
                   }

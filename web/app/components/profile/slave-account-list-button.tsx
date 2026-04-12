@@ -15,14 +15,14 @@ export function SlaveAccountListButton() {
 
   return (
     <>
-      <Button
-        isDisabled
-        disableRipple
-        onPress={onOpen}
-        className="px-0 gap-3 justify-start bg-transparent"
-        startContent={
+      <button
+        type="button"
+        className="flex items-center gap-3 w-full py-3.5  opacity-40"
+        // onClick={onOpen}
+      >
+        <div className="w-8 h-8 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
           <svg
-            className="w-5 h-5"
+            className="w-4 h-4 text-secondary"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -47,28 +47,25 @@ export function SlaveAccountListButton() {
               opacity="0.4"
             />
           </svg>
-        }
-        endContent={
-          <svg
-            className="w-4 h-4 text-foreground-400 ml-auto"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="m9 5l6 7l-6 7"
-            />
-          </svg>
-        }
-      >
-        アカウント一覧
-      </Button>
+        </div>
+        <span className="text-sm font-medium">共有アカウント管理</span>
+        <svg
+          className="w-4 h-4 text-default-300 ml-auto"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="m9 5l6 7l-6 7"
+          />
+        </svg>
+      </button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

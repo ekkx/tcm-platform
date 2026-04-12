@@ -29,7 +29,7 @@ export default function Layout() {
     mainRef.current?.scrollTo({ top: 0 });
   }, [pathname]);
 
-  const isProfile = pathname === "/profile";
+  const isProfile = pathname === "/profile" || pathname === "/plans";
 
   return (
     <AuthProvider>

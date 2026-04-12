@@ -6,5 +6,6 @@ export default [
   layout("./routes/internal/layout.tsx", [
     route("/home", "./routes/internal/home.tsx"),
     route("/profile", "./routes/internal/profile.tsx"),
+    route("/plans", "./routes/internal/plans.tsx"),
   ]),
 ] satisfies RouteConfig;

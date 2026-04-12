@@ -1,13 +1,12 @@
 import {
   addToast,
+  Avatar,
   Button,
+  Divider,
   Input,
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Snippet,
   useDisclosure,
 } from "@heroui/react";
 import { useState } from "react";
@@ -19,43 +18,46 @@ export function UpdateProfileButton({ user }: { user?: User }) {
   const { setUser } = useAuth();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [newUserName, setNewUserName] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleUpdateProfile = async (onClose: () => void) => {
+  const handleOpen = () => {
+    setNewUserName(user?.displayName ?? "");
+    onOpen();
+  };
+
+  const handleSave = async (onClose: () => void) => {
     if (!newUserName.trim()) {
-      onClose();
-      addToast({
-        title: "ユーザー名を入力してください",
-        color: "warning",
-      });
-      return; // ユーザー名が空の場合は何もしない
+      addToast({ title: "ユーザー名を入力してください", color: "warning" });
+      return;
     }
 
+    setIsSaving(true);
     try {
       await userClient.updateUser({ displayName: newUserName });
       setUser((prev) => (prev ? { ...prev, displayName: newUserName } : prev));
       onClose();
-      addToast({
-        title: "ユーザー名を更新しました",
-        color: "success",
-      });
-    } catch (error) {
+      addToast({ title: "ユーザー名を更新しました", color: "success" });
+    } catch {
       addToast({
         title: "ユーザー名の更新に失敗しました",
         description: "もう一度お試しください。",
         color: "danger",
       });
+    } finally {
+      setIsSaving(false);
     }
   };
 
   return (
     <>
-      <Button
-        disableRipple
-        onPress={onOpen}
-        className="px-0 gap-3 justify-start bg-transparent"
-        startContent={
+      <button
+        type="button"
+        className="flex items-center gap-3 w-full py-3.5 active:opacity-60 transition-opacity"
+        onClick={handleOpen}
+      >
+        <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
           <svg
-            className="w-5 h-5"
+            className="w-4 h-4 text-primary"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -71,82 +73,72 @@ export function UpdateProfileButton({ user }: { user?: User }) {
               d="M13.25 9a.75.75 0 0 1 .75-.75h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75m1 3a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75m1 3a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1-.75-.75M9 11a2 2 0 1 0 0-4a2 2 0 0 0 0 4m0 6c4 0 4-.895 4-2s-1.79-2-4-2s-4 .895-4 2s0 2 4 2"
             />
           </svg>
-        }
-        endContent={
-          <svg
-            className="w-4 h-4 text-foreground-400 ml-auto"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="m9 5l6 7l-6 7"
-            />
-          </svg>
-        }
-      >
-        プロフィール
-      </Button>
+        </div>
+        <span className="text-sm font-medium">プロフィール編集</span>
+        <svg
+          className="w-4 h-4 text-default-300 ml-auto"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="m9 5l6 7l-6 7"
+          />
+        </svg>
+      </button>
+
       {user && (
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          placement="center"
+          size="xs"
+          closeButton={<></>}
+        >
           <ModalContent>
             {(onClose) => (
-              <>
-                <ModalHeader>プロフィールを編集</ModalHeader>
-                <ModalBody>
-                  {/* <div className="grid gap-2"> */}
-                  <div className="grid">
-                    <span className="text-xs text-foreground-400">
-                      ユーザーID
-                    </span>
-                    <Snippet
-                      className="border-none p-0"
-                      variant="bordered"
-                      symbol={<></>}
-                    >
-                      {user.id}
-                    </Snippet>
+              <ModalBody className="p-0 gap-0">
+                <div className="grid gap-4 px-6 py-6">
+                  <div className="flex flex-col items-center gap-2">
+                    <Avatar size="lg" className="w-16 h-16" />
+                    <p className="text-xs text-default-400">ID: {user.id}</p>
                   </div>
                   <Input
-                    label="新しいユーザー名"
+                    fullWidth
+                    label="ユーザー名"
                     labelPlacement="outside"
-                    placeholder="新しいユーザー名を入力"
+                    placeholder="ユーザー名を入力"
                     classNames={{ label: "text-xs opacity-60" }}
                     value={newUserName}
                     onChange={(e) => setNewUserName(e.target.value)}
-                    endContent={
-                      <svg
-                        className="w-5 h-5 text-default-400 pointer-events-none flex-shrink-0"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle cx="12" cy="6" r="4" fill="currentColor" />
-                        <path
-                          fill="currentColor"
-                          d="M20 17.5c0 2.485 0 4.5-8 4.5s-8-2.015-8-4.5S7.582 13 12 13s8 2.015 8 4.5"
-                        />
-                      </svg>
-                    }
                   />
-                </ModalBody>
-                <ModalFooter>
+                </div>
+                <Divider />
+                <div className="flex justify-center gap-6 py-3">
                   <Button
-                    fullWidth
-                    color="primary"
-                    onPress={() => handleUpdateProfile(onClose)}
+                    className="w-32 font-bold"
+                    variant="flat"
+                    onPress={onClose}
                   >
-                    保存する
+                    キャンセル
                   </Button>
-                </ModalFooter>
-              </>
+                  <Button
+                    className="w-32 font-bold"
+                    color="primary"
+                    variant="flat"
+                    isLoading={isSaving}
+                    onPress={() => handleSave(onClose)}
+                  >
+                    保存
+                  </Button>
+                </div>
+              </ModalBody>
             )}
           </ModalContent>
         </Modal>
