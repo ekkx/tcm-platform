@@ -7,10 +7,12 @@ import (
 	"github.com/ekkx/tcm-platform/internal/gen/pb/auth/v1/authv1connect"
 	"github.com/ekkx/tcm-platform/internal/gen/pb/reservation/v1/reservationv1connect"
 	"github.com/ekkx/tcm-platform/internal/gen/pb/room/v1/roomv1connect"
+	"github.com/ekkx/tcm-platform/internal/gen/pb/subscription/v1/subscriptionv1connect"
 	"github.com/ekkx/tcm-platform/internal/gen/pb/user/v1/userv1connect"
 	"github.com/ekkx/tcm-platform/internal/modules/auth"
 	"github.com/ekkx/tcm-platform/internal/modules/reservation"
 	"github.com/ekkx/tcm-platform/internal/modules/room"
+	"github.com/ekkx/tcm-platform/internal/modules/subscription"
 	"github.com/ekkx/tcm-platform/internal/modules/user"
 	"github.com/ekkx/tcm-platform/internal/platform/jwt"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -49,6 +51,15 @@ func initServices(cfg *config.Config, dbPool *pgxpool.Pool, jwtManager *jwt.JWTM
 			RegisterHandler: func(mux *http.ServeMux) {
 				mux.Handle(roomv1connect.NewRoomServiceHandler(
 					room.InitModule(dbPool),
+					authed...,
+				))
+			},
+		},
+		{
+			Name: subscriptionv1connect.SubscriptionServiceName,
+			RegisterHandler: func(mux *http.ServeMux) {
+				mux.Handle(subscriptionv1connect.NewSubscriptionServiceHandler(
+					subscription.InitModule(dbPool, cfg.Stripe),
 					authed...,
 				))
 			},

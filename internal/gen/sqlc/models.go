@@ -55,6 +55,50 @@ func (ns NullCampusType) Value() (driver.Value, error) {
 	return string(ns.CampusType), nil
 }
 
+type PlanType string
+
+const (
+	PlanTypeUnlimited PlanType = "unlimited"
+	PlanTypeLite      PlanType = "lite"
+	PlanTypeStandard  PlanType = "standard"
+	PlanTypePro       PlanType = "pro"
+)
+
+func (e *PlanType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = PlanType(s)
+	case string:
+		*e = PlanType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for PlanType: %T", src)
+	}
+	return nil
+}
+
+type NullPlanType struct {
+	PlanType PlanType `json:"plan_type"`
+	Valid    bool     `json:"valid"` // Valid is true if PlanType is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullPlanType) Scan(value interface{}) error {
+	if value == nil {
+		ns.PlanType, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.PlanType.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullPlanType) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.PlanType), nil
+}
+
 type ReservationStatus string
 
 const (
@@ -112,6 +156,21 @@ type Reservation struct {
 	CreateTime     time.Time         `json:"create_time"`
 	Status         ReservationStatus `json:"status"`
 	Note           *string           `json:"note"`
+}
+
+type Subscription struct {
+	ID                   ulid.ULID  `json:"id"`
+	UserID               ulid.ULID  `json:"user_id"`
+	StripeCustomerID     *string    `json:"stripe_customer_id"`
+	StripeSubscriptionID *string    `json:"stripe_subscription_id"`
+	StripePriceID        *string    `json:"stripe_price_id"`
+	Plan                 PlanType   `json:"plan"`
+	MonthlyHours         *int32     `json:"monthly_hours"`
+	Status               string     `json:"status"`
+	CurrentPeriodStart   *time.Time `json:"current_period_start"`
+	CurrentPeriodEnd     *time.Time `json:"current_period_end"`
+	CreateTime           time.Time  `json:"create_time"`
+	UpdateTime           time.Time  `json:"update_time"`
 }
 
 type User struct {

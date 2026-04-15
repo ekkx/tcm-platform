@@ -169,7 +169,7 @@ export function Header({
         <header className="flex items-center justify-between w-full max-w-lg px-5 h-16 rounded-full bg-foreground/10 backdrop-blur-xl border-[0.5px] border-default-300">
           <div className="flex items-center gap-2">
             <span className="text-lg">🎹</span>
-            <span className="text-base font-bold">TCMRSV</span>
+            <span className="text-base font-bold">TCM Reserve</span>
           </div>
           <Button
             size="md"

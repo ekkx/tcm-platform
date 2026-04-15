@@ -16,6 +16,8 @@ require (
 
 require github.com/robfig/cron/v3 v3.0.1
 
+require github.com/stripe/stripe-go/v85 v85.0.1 // indirect
+
 require (
 	connectrpc.com/grpcreflect v1.3.0
 	github.com/google/go-cmp v0.6.0 // indirect

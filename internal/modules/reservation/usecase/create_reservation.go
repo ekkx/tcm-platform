@@ -13,6 +13,28 @@ func (uc *UseCaseImpl) CreateReservation(ctx context.Context, input *CreateReser
 		return nil, err
 	}
 
+	// サブスクリプションのチェック
+	sub, err := uc.subRepo.GetSubscriptionByUserID(ctx, input.Actor.ID)
+	if err != nil {
+		return nil, err
+	}
+	if sub == nil || (!sub.IsUnlimited() && sub.Status != "active") {
+		return nil, errs.ErrNoActiveSubscription
+	}
+
+	// 利用時間の制限チェック（unlimited以外）
+	if !sub.IsUnlimited() && sub.MonthlyHours != nil {
+		usedMinutes, err := uc.subRepo.GetUsedMinutesByUserID(ctx, input.Actor.ID)
+		if err != nil {
+			return nil, err
+		}
+		newMinutes := int32((input.ToHour*60 + input.ToMinute) - (input.FromHour*60 + input.FromMinute))
+		limitMinutes := int32(*sub.MonthlyHours * 60)
+		if usedMinutes+newMinutes > limitMinutes {
+			return nil, errs.ErrUsageLimitExceeded
+		}
+	}
+
 	// ルームの存在チェック
 	rooms := tcmrsv.New().GetRoomsFiltered(tcmrsv.GetRoomsFilteredParams{
 		ID: &input.RoomID,

@@ -6,6 +6,7 @@ import (
 	"github.com/ekkx/tcm-platform/internal/app/assemble"
 	"github.com/ekkx/tcm-platform/internal/app/gateway"
 	"github.com/ekkx/tcm-platform/internal/modules/reservation/repository"
+	subrepo "github.com/ekkx/tcm-platform/internal/modules/subscription/repository"
 )
 
 type UseCase interface {
@@ -18,17 +19,20 @@ type UseCase interface {
 
 type UseCaseImpl struct {
 	reservationRepo repository.Repository
+	subRepo         subrepo.Repository
 	reservationAsm  assemble.ReservationAssembler
 	userQuery       gateway.UserQuery
 }
 
 func New(
 	reservationRepo repository.Repository,
+	subRepo subrepo.Repository,
 	reservationAsm assemble.ReservationAssembler,
 	userQuery gateway.UserQuery,
 ) UseCase {
 	return &UseCaseImpl{
 		reservationRepo: reservationRepo,
+		subRepo:         subRepo,
 		reservationAsm:  reservationAsm,
 		userQuery:       userQuery,
 	}

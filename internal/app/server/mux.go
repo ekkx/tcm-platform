@@ -5,7 +5,9 @@ import (
 
 	"connectrpc.com/grpcreflect"
 	"github.com/ekkx/tcm-platform/internal/config"
+	"github.com/ekkx/tcm-platform/internal/modules/subscription/webhook"
 	"github.com/rs/cors"
+	stripe "github.com/stripe/stripe-go/v85"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )
@@ -20,6 +22,8 @@ func initMux(deps *Deps) http.Handler {
 	}
 
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
+	stripeClient := stripe.NewClient(deps.Cfg.Stripe.SecretKey)
+	mux.HandleFunc("/webhook/stripe", webhook.NewHandler(deps.Pool, deps.Cfg.Stripe, stripeClient))
 
 	// Enable gRPC reflection in development mode
 	if deps.Cfg.Env == config.EnvDevelopment {

@@ -1,14 +1,41 @@
 import { Button, cn } from "@heroui/react";
 
 const plans = [
-  { name: "LITE", price: 1400, hours: 30, unitPrice: 47 },
-  { name: "STANDARD", price: 2400, hours: 60, unitPrice: 40, popular: true },
-  { name: "PRO", price: 3300, hours: 90, unitPrice: 37 },
+  {
+    name: "LITE",
+    price: 1400,
+    hours: 30,
+    unitPrice: 47,
+    priceId: import.meta.env.VITE_STRIPE_PRICE_LITE ?? "",
+  },
+  {
+    name: "STANDARD",
+    price: 2400,
+    hours: 60,
+    unitPrice: 40,
+    popular: true,
+    priceId: import.meta.env.VITE_STRIPE_PRICE_STANDARD ?? "",
+  },
+  {
+    name: "PRO",
+    price: 3300,
+    hours: 90,
+    unitPrice: 37,
+    priceId: import.meta.env.VITE_STRIPE_PRICE_PRO ?? "",
+  },
 ];
 
 const baseUnitPrice = plans[0].unitPrice;
 
-export function ProfilePlanSection({ currentPlan }: { currentPlan: string }) {
+export function ProfilePlanSection({
+  currentPlan,
+  onSelectPlan,
+  onChangePlan,
+}: {
+  currentPlan: string;
+  onSelectPlan?: (priceId: string) => void;
+  onChangePlan?: () => void;
+}) {
   return (
     <>
       {/* セクションヘッダー */}
@@ -141,13 +168,22 @@ export function ProfilePlanSection({ currentPlan }: { currentPlan: string }) {
                 radius="full"
                 className={cn(
                   "font-semibold text-sm bg-default-100 text-foreground"
-                  // isDark
-                  //   ? "bg-background text-foreground"
-                  //   : "bg-default-100 text-foreground"
                 )}
                 isDisabled={isCurrent}
+                onPress={() => {
+                  if (isCurrent) return;
+                  if (onSelectPlan) {
+                    onSelectPlan(plan.priceId);
+                  } else if (onChangePlan) {
+                    onChangePlan();
+                  }
+                }}
               >
-                {isCurrent ? "現在のプラン" : "このプランを選択"}
+                {isCurrent
+                  ? "現在のプラン"
+                  : onChangePlan
+                    ? "プランを変更"
+                    : "このプランを選択"}
               </Button>
             </div>
           </div>

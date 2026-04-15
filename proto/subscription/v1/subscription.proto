@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package subscription.v1;
+
+import "google/protobuf/timestamp.proto";
+
+service SubscriptionService {
+    rpc GetSubscription(GetSubscriptionRequest) returns (GetSubscriptionResponse);
+    rpc GetUsage(GetUsageRequest) returns (GetUsageResponse);
+    rpc CreateCheckoutSession(CreateCheckoutSessionRequest) returns (CreateCheckoutSessionResponse);
+    rpc CreatePortalSession(CreatePortalSessionRequest) returns (CreatePortalSessionResponse);
+}
+
+enum PlanType {
+    PLAN_TYPE_UNSPECIFIED = 0;
+    PLAN_TYPE_UNLIMITED = 1;
+    PLAN_TYPE_LITE = 2;
+    PLAN_TYPE_STANDARD = 3;
+    PLAN_TYPE_PRO = 4;
+}
+
+message Subscription {
+    string id = 1;
+    string user_id = 2;
+    PlanType plan = 3;
+    optional int32 monthly_hours = 4;  // null = 無制限
+    string status = 5;
+    optional google.protobuf.Timestamp current_period_start = 6;
+    optional google.protobuf.Timestamp current_period_end = 7;
+    google.protobuf.Timestamp create_time = 8;
+}
+
+message Usage {
+    int32 used_minutes = 1;
+    optional int32 total_minutes = 2;  // null = 無制限
+}
+
+// GetSubscription
+message GetSubscriptionRequest {}
+
+message GetSubscriptionResponse {
+    Subscription subscription = 1;
+}
+
+// GetUsage
+message GetUsageRequest {}
+
+message GetUsageResponse {
+    Usage usage = 1;
+}
+
+// CreateCheckoutSession
+message CreateCheckoutSessionRequest {
+    string price_id = 1;
+}
+
+message CreateCheckoutSessionResponse {
+    string checkout_url = 1;
+}
+
+// CreatePortalSession
+message CreatePortalSessionRequest {}
+
+message CreatePortalSessionResponse {
+    string portal_url = 1;
+}

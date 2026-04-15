@@ -183,11 +183,18 @@ export default function Login() {
             ログイン
           </Button>
         </Form>
-        <p className="text-center text-small">
+        <div className="flex flex-col items-center gap-1 text-small">
           <Link href="https://www.tokyo-ondai-career.jp/" size="sm" isExternal>
             公式サイトへ
           </Link>
-        </p>
+          <Link
+            href="/legal"
+            size="sm"
+            className="text-default-300 text-[10px]"
+          >
+            特定商取引法に基づく表記
+          </Link>
+        </div>
       </div>
     </div>
   );

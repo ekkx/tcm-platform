@@ -20,6 +20,7 @@ type Config struct {
 	Log       LoggingConfig
 	Scheduler SchedulerConfig
 	Discord   DiscordConfig
+	Stripe    StripeConfig
 }
 
 func New() (*Config, error) {
@@ -44,6 +45,9 @@ func New() (*Config, error) {
 		return nil, err
 	}
 	if err := env.Parse(&cfg.Discord); err != nil {
+		return nil, err
+	}
+	if err := env.Parse(&cfg.Stripe); err != nil {
 		return nil, err
 	}
 

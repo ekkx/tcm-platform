@@ -5,6 +5,7 @@ sql:
     queries:
       - "./internal/modules/reservation/sql"
       - "./internal/modules/room/sql"
+      - "./internal/modules/subscription/sql"
       - "./internal/modules/user/sql"
     gen:
       go:

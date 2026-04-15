@@ -8,22 +8,65 @@ import {
   ModalBody,
   ModalContent,
   Progress,
+  Skeleton,
   useDisclosure,
 } from "@heroui/react";
+import { useEffect, useState } from "react";
+import { subscriptionClient } from "~/api";
+import {
+  PlanType,
+  type Subscription,
+  type Usage,
+} from "~/api/pb/subscription/v1/subscription_pb";
 import { UpdateProfileButton } from "~/components/profile/update-profile-button";
 import { UpdatePasswordButton } from "~/components/profile/update-password-button";
 import { SlaveAccountListButton } from "~/components/profile/slave-account-list-button";
 import { useAuth } from "~/providers/auth-provider";
 import { Cookie } from "~/store/cookies";
 
+const planLabel: Record<number, string> = {
+  [PlanType.UNLIMITED]: "UNLIMITED",
+  [PlanType.LITE]: "LITE",
+  [PlanType.STANDARD]: "STANDARD",
+  [PlanType.PRO]: "PRO",
+};
+
 export default function Profile() {
   const { user } = useAuth();
-  // TODO: APIから取得する
-  const currentPlan = "STANDARD";
-  const usedHours = 12.5;
-  const totalHours = 60;
-  const remainingHours = totalHours - usedHours;
-  const usagePercent = Math.round((usedHours / totalHours) * 100);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [usage, setUsage] = useState<Usage | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const [subRes, usageRes] = await Promise.all([
+          subscriptionClient.getSubscription({}),
+          subscriptionClient.getUsage({}),
+        ]);
+        setSubscription(subRes.subscription ?? null);
+        setUsage(usageRes.usage ?? null);
+      } catch {
+        // サブスクリプション未作成の場合はnullのまま
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const currentPlan = subscription
+    ? (planLabel[subscription.plan] ?? "FREE")
+    : "FREE";
+  const isUnlimited = subscription?.plan === PlanType.UNLIMITED;
+  const usedMinutes = usage?.usedMinutes ?? 0;
+  const totalMinutes = usage?.totalMinutes;
+  const usedHours = Math.round((usedMinutes / 60) * 10) / 10;
+  const totalHours = totalMinutes != null ? totalMinutes / 60 : null;
+  const remainingHours = totalHours != null ? totalHours - usedHours : null;
+  const usagePercent =
+    totalHours != null && totalHours > 0
+      ? Math.round((usedHours / totalHours) * 100)
+      : 0;
 
   const handleCopyId = async () => {
     if (!user?.id) return;
@@ -93,52 +136,87 @@ export default function Profile() {
       </div>
 
       {/* 現在の使用状況 */}
-      <div className="bg-content1 rounded-3xl p-6">
-        <p className="text-[10px] text-default-400 tracking-widest font-semibold mb-4">
-          今月の利用状況
-        </p>
-        <div className="flex items-end justify-between mb-4">
-          <div>
-            <span className="text-3xl font-bold">{usedHours}</span>
-            <span className="text-base text-default-400 font-medium">
-              /{totalHours}h
-            </span>
-          </div>
-          <div className="text-right">
-            <p className="text-[10px] text-default-400 font-semibold">残り</p>
-            <p className="text-xl font-bold">{remainingHours}h</p>
+      {currentPlan === "FREE" ? null : loading ? (
+        <div className="bg-content1 rounded-3xl p-6">
+          <Skeleton className="h-4 w-24 rounded mb-4" />
+          <Skeleton className="h-8 w-40 rounded mb-4" />
+          <Skeleton className="h-2.5 w-full rounded" />
+        </div>
+      ) : isUnlimited ? (
+        <div className="bg-content1 rounded-3xl p-6">
+          <p className="text-[10px] text-default-400 tracking-widest font-semibold mb-4">
+            今月の利用状況
+          </p>
+          <div className="flex items-end justify-between">
+            <div>
+              <span className="text-3xl font-bold">{usedHours}h</span>
+              <span className="text-base text-default-400 font-medium ml-1">
+                利用済み
+              </span>
+            </div>
+            <div className="text-right">
+              <p className="text-sm font-semibold text-success">無制限</p>
+            </div>
           </div>
         </div>
-        <Progress
-          size="sm"
-          value={usagePercent}
-          color={usagePercent >= 80 ? "danger" : "default"}
-          classNames={{
-            track: "h-2.5 bg-default-100",
-            indicator: "bg-foreground",
-          }}
-        />
-        <p className="text-[11px] text-default-400 mt-3 flex items-center gap-1">
-          <svg
-            className="w-3 h-3"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="currentColor"
-              d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2"
-              opacity="0.5"
-            />
-            <path
-              fill="currentColor"
-              d="M12 7.25a.75.75 0 0 1 .75.75v4a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 .75-.75M12 16a1 1 0 1 0 0-2a1 1 0 0 0 0 2"
-            />
-          </svg>
-          次の更新日は2026年5月1日です
-        </p>
-      </div>
+      ) : (
+        <div className="bg-content1 rounded-3xl p-6">
+          <p className="text-[10px] text-default-400 tracking-widest font-semibold mb-4">
+            今月の利用状況
+          </p>
+          <div className="flex items-end justify-between mb-4">
+            <div>
+              <span className="text-3xl font-bold">{usedHours}</span>
+              <span className="text-base text-default-400 font-medium">
+                /{totalHours}h
+              </span>
+            </div>
+            <div className="text-right">
+              <p className="text-[10px] text-default-400 font-semibold">残り</p>
+              <p className="text-xl font-bold">{remainingHours}h</p>
+            </div>
+          </div>
+          <Progress
+            size="sm"
+            value={usagePercent}
+            color={usagePercent >= 80 ? "danger" : "default"}
+            classNames={{
+              track: "h-2.5 bg-default-100",
+              indicator: "bg-foreground",
+            }}
+          />
+          {subscription?.currentPeriodEnd && (
+            <p className="text-[11px] text-default-400 mt-3 flex items-center gap-1">
+              <svg
+                className="w-3 h-3"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2"
+                  opacity="0.5"
+                />
+                <path
+                  fill="currentColor"
+                  d="M12 7.25a.75.75 0 0 1 .75.75v4a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 .75-.75M12 16a1 1 0 1 0 0-2a1 1 0 0 0 0 2"
+                />
+              </svg>
+              次の更新日は
+              {new Date(
+                Number(subscription.currentPeriodEnd.seconds) * 1000
+              ).toLocaleDateString("ja-JP", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+              です
+            </p>
+          )}
+        </div>
+      )}
 
       {/* メニュー */}
       <div className="flex flex-col">
@@ -148,31 +226,43 @@ export default function Profile() {
         <Divider />
         <SlaveAccountListButton />
         <Divider />
-        <MenuLink
-          label="サブスクリプション管理"
-          color="bg-danger/10"
-          iconColor="text-danger"
-          icon={
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="currentColor"
-                fill-rule="evenodd"
-                d="M12 16a7 7 0 1 0 0-14a7 7 0 0 0 0 14m0-10c-.284 0-.474.34-.854 1.023l-.098.176c-.108.194-.162.29-.246.354c-.085.064-.19.088-.4.135l-.19.044c-.738.167-1.107.25-1.195.532s.164.577.667 1.165l.13.152c.143.167.215.25.247.354s.021.215 0 .438l-.02.203c-.076.785-.114 1.178.115 1.352c.23.174.576.015 1.267-.303l.178-.082c.197-.09.295-.135.399-.135s.202.045.399.135l.178.082c.691.319 1.037.477 1.267.303s.191-.567.115-1.352l-.02-.203c-.021-.223-.032-.334 0-.438s.104-.187.247-.354l.13-.152c.503-.588.755-.882.667-1.165c-.088-.282-.457-.365-1.195-.532l-.19-.044c-.21-.047-.315-.07-.4-.135c-.084-.064-.138-.16-.246-.354l-.098-.176C12.474 6.34 12.284 6 12 6"
-                clip-rule="evenodd"
-              />
-              <path
-                fill="currentColor"
-                d="m7.093 15.941l-.379 1.382c-.628 2.292-.942 3.438-.523 4.065c.147.22.344.396.573.513c.652.332 1.66-.193 3.675-1.243c.67-.35 1.006-.524 1.362-.562a2 2 0 0 1 .398 0c.356.038.691.213 1.362.562c2.015 1.05 3.023 1.575 3.675 1.243c.229-.117.426-.293.573-.513c.42-.627.105-1.773-.523-4.065l-.379-1.382A8.46 8.46 0 0 1 12 17.5a8.46 8.46 0 0 1-4.907-1.559"
-              />
-            </svg>
-          }
-          onPress={() => {}}
-        />
+        {!isUnlimited && subscription && (
+          <MenuLink
+            label="サブスクリプション管理"
+            color="bg-danger/10"
+            iconColor="text-danger"
+            icon={
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                  d="M12 16a7 7 0 1 0 0-14a7 7 0 0 0 0 14m0-10c-.284 0-.474.34-.854 1.023l-.098.176c-.108.194-.162.29-.246.354c-.085.064-.19.088-.4.135l-.19.044c-.738.167-1.107.25-1.195.532s.164.577.667 1.165l.13.152c.143.167.215.25.247.354s.021.215 0 .438l-.02.203c-.076.785-.114 1.178.115 1.352c.23.174.576.015 1.267-.303l.178-.082c.197-.09.295-.135.399-.135s.202.045.399.135l.178.082c.691.319 1.037.477 1.267.303s.191-.567.115-1.352l-.02-.203c-.021-.223-.032-.334 0-.438s.104-.187.247-.354l.13-.152c.503-.588.755-.882.667-1.165c-.088-.282-.457-.365-1.195-.532l-.19-.044c-.21-.047-.315-.07-.4-.135c-.084-.064-.138-.16-.246-.354l-.098-.176C12.474 6.34 12.284 6 12 6"
+                  clip-rule="evenodd"
+                />
+                <path
+                  fill="currentColor"
+                  d="m7.093 15.941l-.379 1.382c-.628 2.292-.942 3.438-.523 4.065c.147.22.344.396.573.513c.652.332 1.66-.193 3.675-1.243c.67-.35 1.006-.524 1.362-.562a2 2 0 0 1 .398 0c.356.038.691.213 1.362.562c2.015 1.05 3.023 1.575 3.675 1.243c.229-.117.426-.293.573-.513c.42-.627.105-1.773-.523-4.065l-.379-1.382A8.46 8.46 0 0 1 12 17.5a8.46 8.46 0 0 1-4.907-1.559"
+                />
+              </svg>
+            }
+            onPress={async () => {
+              try {
+                const res = await subscriptionClient.createPortalSession({});
+                window.location.href = res.portalUrl;
+              } catch {
+                addToast({
+                  title: "ポータルの表示に失敗しました",
+                  color: "danger",
+                });
+              }
+            }}
+          />
+        )}
       </div>
 
       {/* ログアウト */}

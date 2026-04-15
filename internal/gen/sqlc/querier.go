@@ -13,9 +13,14 @@ import (
 
 type Querier interface {
 	CreateReservation(ctx context.Context, arg CreateReservationParams) (ulid.ULID, error)
+	CreateSubscription(ctx context.Context, arg CreateSubscriptionParams) (ulid.ULID, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (ulid.ULID, error)
 	DeleteReservationByID(ctx context.Context, reservationID ulid.ULID) (int32, error)
+	DeleteSubscription(ctx context.Context, dollar_1 ulid.ULID) error
 	DeleteUserByID(ctx context.Context, userID ulid.ULID) (int32, error)
+	GetSubscriptionByStripeCustomerID(ctx context.Context, stripeCustomerID string) (Subscription, error)
+	GetSubscriptionByUserID(ctx context.Context, userID ulid.ULID) (Subscription, error)
+	GetUsedMinutesByUserID(ctx context.Context, userID ulid.ULID) (int32, error)
 	GetUserIDByOfficialSiteID(ctx context.Context, officialSiteID string) (ulid.ULID, error)
 	IsReservationConflicted(ctx context.Context, arg IsReservationConflictedParams) (bool, error)
 	ListPendingReservationIDsByDate(ctx context.Context, date ymd.YMD) ([]ulid.ULID, error)
@@ -27,6 +32,7 @@ type Querier interface {
 	ListUsersByIDs(ctx context.Context, userIds []string) ([]User, error)
 	UpdateReservationNote(ctx context.Context, arg UpdateReservationNoteParams) error
 	UpdateReservationStatus(ctx context.Context, arg UpdateReservationStatusParams) error
+	UpdateSubscription(ctx context.Context, arg UpdateSubscriptionParams) (int32, error)
 	UpdateUserByID(ctx context.Context, arg UpdateUserByIDParams) (int32, error)
 }
 
